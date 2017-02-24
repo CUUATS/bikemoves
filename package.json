@@ -23,8 +23,10 @@
     "ionic-angular": "2.1.0",
     "ionic-native": "2.4.1",
     "ionicons": "3.0.0",
+    "mapbox-gl": "^0.32.1",
     "rxjs": "5.0.0-beta.12",
     "sw-toolbox": "3.4.0",
+    "turf": "^3.0.14",
     "zone.js": "0.6.26"
   },
   "devDependencies": {
@@ -47,5 +49,8 @@
       "locator": "ios"
     }
   ],
-  "description": "BikeMoves Illinois: Bicycle route recording and assistance"
+  "description": "BikeMoves Illinois: Bicycle route recording and assistance",
+  "config": {
+    "ionic_copy": "./config/copy.config.js"
+  }
 }
