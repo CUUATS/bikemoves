@@ -1,7 +1,7 @@
 {
-  "name": "ionic-hello-world",
-  "author": "Ionic Framework",
-  "homepage": "http://ionicframework.com/",
+  "name": "bikemoves",
+  "author": "Illinois Department of Transportation",
+  "homepage": "https://bikemoves.me/",
   "private": true,
   "scripts": {
     "clean": "ionic-app-scripts clean",
@@ -47,5 +47,5 @@
       "locator": "ios"
     }
   ],
-  "description": "bikemoves-v2: An Ionic project"
+  "description": "BikeMoves Illinois: Bicycle route recording and assistance"
 }
