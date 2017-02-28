@@ -8,4 +8,18 @@ page-map {
   #map {
     height: 100%;
   }
+  /* Map popup */
+  .mapboxgl-popup {
+    max-width: 80%;
+  }
+  .mapboxgl-popup-content {
+    h2 {
+      font-size: 1.4em;
+      font-weight: 400;
+      margin: 0 0 0.25em 0;
+    }
+    p {
+      margin: 0;
+    }
+  }
 }
