@@ -1,6 +1,7 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
-import { MyApp } from './app.component';
+import { BikeMoves } from './app.component';
+import { Geo } from './geo';
 import { MapPage } from '../pages/map/map';
 import { SettingsPage } from '../pages/settings/settings';
 import { StatsPage } from '../pages/stats/stats';
@@ -9,7 +10,7 @@ import { TripsPage } from '../pages/trips/trips';
 
 @NgModule({
   declarations: [
-    MyApp,
+    BikeMoves,
     MapPage,
     SettingsPage,
     StatsPage,
@@ -17,17 +18,17 @@ import { TripsPage } from '../pages/trips/trips';
     TripsPage
   ],
   imports: [
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(BikeMoves)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp,
+    BikeMoves,
     MapPage,
     SettingsPage,
     StatsPage,
     TabsPage,
     TripsPage
   ],
-  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}]
+  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, Geo]
 })
 export class AppModule {}

@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import * as mapboxgl from 'mapbox-gl/dist/mapbox-gl.js'
 import turf from 'turf';
+import { Geo } from '../../app/geo';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY3V1YXRzIiwiYSI6ImNpbm03NGFrdTB6ZTB1a2x5MHl6dTV6MXIifQ.Aq-CCCulBhKbmLGZUH6VDw';
 
@@ -66,7 +67,7 @@ class Map {
       popupPoint = this._snapToFeature(feature, e.lngLat),
       popupContent = this._getPopupContent(feature);
 
-    var popup = new mapboxgl.Popup()
+    new mapboxgl.Popup()
       .setLngLat(popupPoint)
       .setHTML(popupContent)
       .addTo(this.map);
@@ -247,15 +248,28 @@ class Map {
   templateUrl: 'map.html'
 })
 export class MapPage {
+  private map: Map;
 
-  constructor(public navCtrl: NavController) {}
+  constructor(public navCtrl: NavController, private geo: Geo) {}
 
   ionViewDidLoad() {
-    var map = new Map('map', {
+    this.map = new Map('map', {
       interactive: true,
       onLoad: () => {},
       onClick: () => {}
     });
+  }
+
+  ionViewCanLeave(): boolean {
+    return !this.geo.isRecording;
+  }
+
+  startRecording() {
+    this.geo.setRecording(true);
+  }
+
+  stopRecording() {
+    this.geo.setRecording(false);
   }
 
 }

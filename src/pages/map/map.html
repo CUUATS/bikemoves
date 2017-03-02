@@ -1,11 +1,19 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Map
+      <span class="heading-stopped" *ngIf="!geo.isRecording">Stopped</span>
+      <span class="heading-recording" *ngIf="geo.isRecording">Recording</span>
     </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-left *ngIf="!geo.isRecording" (click)="startRecording()"><ion-icon name="bicycle"></ion-icon> Start</button>
+      <button ion-button icon-left *ngIf="geo.isRecording" (click)="stopRecording()"><ion-icon name="checkmark"></ion-icon> Stop</button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
   <div id="map"></div>
+  <ion-fab bottom right>
+    <button ion-fab color="primary" *ngIf="!geo.isRecording"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
 </ion-content>
