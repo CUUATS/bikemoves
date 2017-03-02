@@ -1,5 +1,6 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
 import { BikeMoves } from './app.component';
 import { Geo } from './geo';
 import { MapPage } from '../pages/map/map';
@@ -29,6 +30,10 @@ import { TripsPage } from '../pages/trips/trips';
     TabsPage,
     TripsPage
   ],
-  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, Geo]
+  providers: [
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    Geo,
+    Storage
+  ]
 })
 export class AppModule {}
