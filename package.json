@@ -39,7 +39,14 @@
     "cordova-plugin-statusbar",
     "cordova-plugin-device",
     "cordova-plugin-splashscreen",
-    "ionic-plugin-keyboard"
+    "ionic-plugin-keyboard",
+    {
+      "locator": "https://github.com/transistorsoft/cordova-background-geolocation.git",
+      "id": "cordova-background-geolocation"
+    },
+    "cordova-plugin-dialogs",
+    "cordova-plugin-background-fetch",
+    "cordova-plugin-cocoalumberjack"
   ],
   "cordovaPlatforms": [
     "ios",
@@ -47,6 +54,11 @@
       "platform": "ios",
       "version": "",
       "locator": "ios"
+    },
+    {
+      "platform": "android",
+      "version": "",
+      "locator": "android"
     }
   ],
   "description": "BikeMoves Illinois: Bicycle route recording and assistance",
