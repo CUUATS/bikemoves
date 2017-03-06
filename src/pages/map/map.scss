@@ -22,4 +22,18 @@ page-map {
       margin: 0;
     }
   }
+  /* Map markers */
+  .marker-hidden {
+    display: none;
+  }
+  #current-location-marker {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15),
+      inset 0 0 5px rgba(219, 140, 35, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.75);
+    background-color: #FBB03B;
+    background-image: url(../assets/img/marker.svg);
+    border-radius: 15px;
+    height: 30px;
+    width: 30px;
+  }
 }

@@ -10,7 +10,7 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiY3V1YXRzIiwiYSI6ImNpbm03NGFrdTB6ZTB1a2x5MHl6d
 class Map {
   static DEFAULT_LOCATION = [-88.227203, 40.109403];
   static DEFAULT_ZOOM = 16;
-  static MAP_STYLE = 'https://tileserver.bikemoves.me/styles/bikemoves-v1.json';
+  static MAP_STYLE = 'https://tileserver.bikemoves.me/styles/bikemoves-v1.json?cachekey=1';
   static POPUP_FIELDS = [
   	{name: 'path_type', label: 'Path Type'},
   	{name:'rack_type', label: 'Rack Type'},
@@ -27,7 +27,6 @@ class Map {
   private currentLocationMarkerEl: HTMLElement;
   private loaded = false;
   private map: any;
-  private tripLinestring: any;
   private tripSource: any;
 
   constructor(public containerId: string, public options: any = {}) {
@@ -184,8 +183,8 @@ class Map {
     return this;
   }
 
-  public setTrip(linestring) {
-    this.tripLinestring = linestring;
+  public setTrip(trip) {
+    let linestring = trip.toLineString();
     this.tripSource.setData({
       type: 'FeatureCollection',
       features: (linestring) ? [linestring] : []
@@ -260,8 +259,24 @@ export class MapPage {
     });
   }
 
+  ionViewWillEnter() {
+    let page = this;
+    if (this.geo.currentLocation) this.updateMap();
+    this.geo.getCurrentLocation().then((location) => {
+      page.updateMap();
+    });
+  }
+
   ionViewCanLeave(): boolean {
     return !this.geo.isRecording;
+  }
+
+  updateMap(animate: boolean = false) {
+    if (this.geo.currentLocation) {
+      this.map.setCurrentLocation(this.geo.currentLocation);
+      this.map.setCenter(this.geo.currentLocation, animate);
+    }
+    if (this.geo.trip) this.map.setTrip(this.geo.trip);
   }
 
   startRecording() {
