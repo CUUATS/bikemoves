@@ -280,11 +280,11 @@ export class MapPage {
   }
 
   startRecording() {
-    this.geo.setRecording(true);
+    this.geo.startTrip();
   }
 
   stopRecording() {
-    this.geo.setRecording(false);
+    this.geo.endTrip();
   }
 
 }

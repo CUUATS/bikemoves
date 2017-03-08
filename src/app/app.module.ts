@@ -1,8 +1,8 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
-import { Storage } from '@ionic/storage';
 import { BikeMoves } from './app.component';
 import { Geo } from './geo';
+import { Storage } from './storage';
 import { MapPage } from '../pages/map/map';
 import { SettingsPage } from '../pages/settings/settings';
 import { StatsPage } from '../pages/stats/stats';

@@ -1,22 +1,74 @@
 import { Location } from './geo';
+import { SQLite } from 'ionic-native';
 import turf from 'turf';
+
 
 export class Trip {
 
   static NEAR_THESHOLD = 500; // Maximum distance for location guesses, in meters
   static SIMPLIFY_TOLERANCE = 0.0002; // degrees
+  static SQL_CREATE_TABLE = `
+    CREATE TABLE IF NOT EXISTS trip (
+      id INTEGER PRIMARY KEY ASC NOT NULL,
+      origin_type INTEGER NOT NULL DEFAULT 0,
+      destination_type INTEGER NOT NULL DEFAULT 0,
+      start_time DATETIME NOT NULL,
+      end_time DATETIME NOT NULL,
+      running_time DOUBLE NOT NULL,
+      distance DOUBLE NOT NULL,
+      transit BOOLEAN DEFAULT 0,
+      submitted BOOLEAN DEFAULT 0,
+      desired_accuracy integer NOT NULL DEFAULT 0,
+      app_version character varying(10) NOT NULL
+    )
+  `;
+  static SQL_INSERT = `
+    INSERT INTO trip (
+      origin_type,
+      destination_type,
+      start_time,
+      end_time,
+      running_time,
+      distance,
+      transit,
+      submitted,
+      desired_accuracy,
+      app_version
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+  static SQL_UPDATE = `
+    UPDATE trip SET
+      origin_type = ?,
+      destination_type = ?,
+      start_time = ?,
+      end_time = ?,
+      running_time = ?,
+      distance = ?,
+      transit = ?,
+      submitted = ?,
+      desired_accuracy = ?,
+      app_version = ?
+    WHERE id = ?
+  `;
+
+  static db: SQLite;
+  static all() {
+
+  }
 
   constructor(
     public locations: Array<Location> = [],
-    public startTime: Date,
-    public endTime: Date,
+    public id: number = null,
     public origin: number = 0,
     public destination: number = 0,
+    public startTime: Date = null,
+    public endTime: Date = null,
+    public runningTime = 0,
+    public distance = 0,
     public transit: boolean = false,
     public submitted: boolean = false,
-    public desiredAccuracy: number,
-    public debug: boolean = false,
-    public appVersion: string) {}
+    public desiredAccuracy: number = null,
+    public appVersion: string = null) {}
 
   private _appendLocation(location: Location) {
   	this.locations.push(location);
@@ -55,6 +107,21 @@ export class Trip {
   	};
   }
 
+  private serialize() {
+    return [
+      this.origin,
+      this.destination,
+      this.startTime.getTime(),
+      this.endTime.getTime(),
+      this.runningTime,
+      this.distance,
+      this.transit,
+      this.submitted,
+      this.desiredAccuracy,
+      this.appVersion
+    ];
+  }
+
   public getODTypes() {
   	if (this.locations.length < 2) return [];
   	var od = [];
@@ -63,7 +130,7 @@ export class Trip {
   	return od;
   }
 
-  public addLocation(location, debug) {
+  public addLocation(location) {
   	delete location.altitudeAccuracy; // Property only exists on iOS
   	var prev = this._getLocation(-1);
 
@@ -126,23 +193,19 @@ export class Trip {
   	return linestring;
   }
 
-  public getRunningTime() {
-    return this.endTime.getTime() - this.startTime.getTime();
+  public end() {
+    this.endTime = new Date();
+    this.runningTime = this.endTime.getTime() - this.startTime.getTime();
   }
 
-  public serialize() {
-  	return {
-  		deviceUuid: (<any>window).device.uuid,
-  		locations: this.locations,
-  		startTime: this.startTime,
-  		endTime: this.endTime,
-  		desiredAccuracy: this.desiredAccuracy,
-  		transit: this.transit,
-  		origin: this.origin,
-  		destination: this.destination,
-  		debug: this.debug,
-  		appVersion: this.appVersion
-  	};
+  public save() {
+    if (this.id) {
+      return Trip.db.executeSql(
+        Trip.SQL_UPDATE, this.serialize().concat([this.id]));
+    } else {
+      return Trip.db.executeSql(Trip.SQL_INSERT, this.serialize())
+        .then((data) => this.id = data.id);
+    }
   }
 
 }

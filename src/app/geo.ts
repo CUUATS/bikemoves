@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Trip } from './trip';
+import { Storage } from './storage';
+import { Service } from './service';
 
 export class Location {
   constructor(
@@ -25,8 +27,8 @@ export class Location {
   }
 }
 
-Injectable()
-export class Geo {
+@Injectable()
+export class Geo extends Service {
   static BG_DEFAULT_SETTINGS = {
 		activityType: 'OtherNavigation', // iOS activity type
 		autoSync: false, // Do not automatically post to the server
@@ -42,41 +44,22 @@ export class Geo {
 		stopTimeout: 3 // Keep tracking for 3 minutes while stationary
 	};
   private bgGeo: any;
-  private ready = false;
-  private readyQueue = [];
   private settings = Geo.BG_DEFAULT_SETTINGS;
   public isRecording: boolean = false;
   public currentLocation: Location;
   public trip: Trip;
 
-  init() {
-    this.bgGeo = (<any>window).BackgroundGeolocation;
-    if (this.bgGeo) this.bgGeo.configure(this.settings, () => {
-      this.ready = true;
-      this.readyQueue.forEach((callback) => {
-        callback();
-      });
-    });
-  }
-
-  private initPlugin() {
-    return new Promise((resolve, reject) => {
-      if (this.ready) {
-        resolve();
-      } else {
-        this.readyQueue.push(resolve);
-      }
-    });
+  constructor(private storage: Storage) {
+    super();
   }
 
   private doGeoTask(fn, options) {
-    let task,
-      geo = this;
-    return this.initPlugin().then(function() {
+    let task;
+    return this.ready().then(() => {
       return new Promise((resolve, reject) => {
-        geo.bgGeo[fn](function(e, taskId) {
+        this.bgGeo[fn]((e, taskId) => {
           resolve(e);
-          geo.bgGeo.finish(task);
+          this.bgGeo.finish(task);
         }, (e) => {
           reject(e);
         }, options);
@@ -85,40 +68,60 @@ export class Geo {
   }
 
   private getState() {
-    let geo = this;
-    return new Promise((resolve, reject) => {
-      geo.bgGeo.getState(resolve, reject);
-    });
+    return new Promise(
+      (resolve, reject) => this.bgGeo.getState(resolve, reject));
+  }
+
+  private setRecording(recording: boolean) {
+    this.isRecording = recording;
+    this.setGeolocationEnabled(recording);
+    return this.getCurrentLocation();
+  }
+
+  init() {
+    this.bgGeo = (<any>window).BackgroundGeolocation;
+    if (this.bgGeo) this.bgGeo.configure(
+      this.settings, this.setReady.bind(this));
   }
 
   getCurrentLocation(options?) {
-    let geo = this;
     return this.doGeoTask('getCurrentPosition', options).then((position) => {
-      geo.currentLocation = Location.fromPosition(position);
-      return geo.currentLocation;
+      this.currentLocation = Location.fromPosition(position);
+      return this.currentLocation;
     });
   }
 
   setGeolocationEnabled(on) {
-    let geo = this;
-    return this.initPlugin().then(() => {
-      return geo.getState();
-    }).then((state) => {
+    return this.ready().then(this.getState.bind(this)).then((state) => {
       return new Promise((resolve, reject) => {
         if ((<any>state).enabled === on) {
           resolve();
         } else if (on) {
-          geo.bgGeo.start(resolve);
+          this.bgGeo.start(resolve);
         } else {
-          geo.bgGeo.stop(resolve);
+          this.bgGeo.stop(resolve);
         }
       });
     });
   }
 
-  setRecording(recording: boolean) {
-    this.isRecording = recording;
-    this.setGeolocationEnabled(recording);
-    return this.getCurrentLocation();
+  startTrip() {
+    this.trip = new Trip();
+    return this.setRecording(true);
   }
+
+  endTrip() {
+    return this.setRecording(false);
+  }
+
+  saveTrip() {
+    this.storage.ready()
+      .then(this.trip.save.bind(this.trip))
+      .then(this.clearTrip.bind(this));
+  }
+
+  clearTrip() {
+    this.trip = undefined;
+  }
+
 }
