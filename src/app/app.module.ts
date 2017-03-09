@@ -3,6 +3,7 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { BikeMoves } from './app.component';
 import { Geo } from './geo';
 import { Storage } from './storage';
+import { Trips } from './trip';
 import { MapPage } from '../pages/map/map';
 import { SettingsPage } from '../pages/settings/settings';
 import { StatsPage } from '../pages/stats/stats';
@@ -33,7 +34,8 @@ import { TripsPage } from '../pages/trips/trips';
   providers: [
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     Geo,
-    Storage
+    Storage,
+    Trips
   ]
 })
 export class AppModule {}

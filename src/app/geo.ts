@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Trip } from './trip';
-import { Storage } from './storage';
+import { Subject } from 'rxjs/Subject';
 import { Service } from './service';
 
 export class Location {
@@ -12,7 +11,8 @@ export class Location {
     public longitude: number,
     public moving: boolean,
     public speed: number,
-    public time: number) {}
+    public time: number,
+    public locationType: number = null) {}
 
   static fromPosition(position) {
     return new Location(
@@ -45,12 +45,17 @@ export class Geo extends Service {
 	};
   private bgGeo: any;
   private settings = Geo.BG_DEFAULT_SETTINGS;
-  public isRecording: boolean = false;
-  public currentLocation: Location;
-  public trip: Trip;
 
-  constructor(private storage: Storage) {
+  public activity = new Subject();
+  public locations = new Subject();
+  public motion = new Subject();
+
+  constructor() {
     super();
+
+    this.activity.subscribe((activity) => console.log('Activity', activity));
+    this.locations.subscribe((location) => console.log('Location', location));
+    this.motion.subscribe((moving) => console.log('Motion', moving));
   }
 
   private doGeoTask(fn, options) {
@@ -72,27 +77,43 @@ export class Geo extends Service {
       (resolve, reject) => this.bgGeo.getState(resolve, reject));
   }
 
-  private setRecording(recording: boolean) {
-    this.isRecording = recording;
-    this.setGeolocationEnabled(recording);
-    return this.getCurrentLocation();
+  private onActivityChange(activity) {
+    this.activity.next(activity);
+  }
+
+  private onLocation(location, taskId) {
+    this.locations.next(Location.fromPosition(location));
+    this.finish(taskId);
+  }
+
+  private onMotionChange(isMoving, location, taskId) {
+    this.motion.next(isMoving);
+    this.finish(taskId);
   }
 
   init() {
     this.bgGeo = (<any>window).BackgroundGeolocation;
     if (this.bgGeo) this.bgGeo.configure(
-      this.settings, this.setReady.bind(this));
+      this.settings, () => {
+        this.bgGeo.on('location', this.onLocation.bind(this));
+        this.bgGeo.on('motionchange', this.onMotionChange.bind(this));
+        this.bgGeo.on('activitychange', this.onActivityChange.bind(this));
+        this.setReady();
+      });
+  }
+
+  finish(taskId) {
+    this.bgGeo.finish(taskId);
   }
 
   getCurrentLocation(options?) {
     return this.doGeoTask('getCurrentPosition', options).then((position) => {
-      this.currentLocation = Location.fromPosition(position);
-      return this.currentLocation;
+      return Location.fromPosition(position);
     });
   }
 
   setGeolocationEnabled(on) {
-    return this.ready().then(this.getState.bind(this)).then((state) => {
+    return this.ready().then(() => this.getState()).then((state) => {
       return new Promise((resolve, reject) => {
         if ((<any>state).enabled === on) {
           resolve();
@@ -105,23 +126,26 @@ export class Geo extends Service {
     });
   }
 
-  startTrip() {
-    this.trip = new Trip();
-    return this.setRecording(true);
+  setMoving(moving) {
+    return this.ready().then(() => this.getState()).then((state) => {
+      return new Promise((resolve, reject) => {
+        if ((<any>state).isMoving === moving) {
+          resolve();
+        } else {
+          this.bgGeo.changePace(moving, resolve, reject);
+        }
+      });
+    });
   }
 
-  endTrip() {
-    return this.setRecording(false);
+  startRecording() {
+    return this.setGeolocationEnabled(true)
+      .then(() => this.setMoving(true));
   }
 
-  saveTrip() {
-    this.storage.ready()
-      .then(this.trip.save.bind(this.trip))
-      .then(this.clearTrip.bind(this));
-  }
-
-  clearTrip() {
-    this.trip = undefined;
+  stopRecording() {
+    return this.setMoving(false)
+      .then(() => this.setGeolocationEnabled(false));
   }
 
 }

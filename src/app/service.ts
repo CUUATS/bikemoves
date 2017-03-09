@@ -1,5 +1,5 @@
 
-export class Service {
+export abstract class Service {
   private _isReady = false;
   private _readyQueue = [];
 
@@ -8,13 +8,18 @@ export class Service {
     while (this._readyQueue.length) this._readyQueue.shift()();
   }
 
-  public ready() {
+  public ready() : Promise<any> {
     return new Promise((resolve, reject) => {
       if (this._isReady) {
-        resolve();
+        resolve.apply(this, this.readyArguments());
       } else {
-        this._readyQueue.push(resolve);
+        this._readyQueue.push(() => resolve.apply(this, this.readyArguments()));
       }
     });
   }
+
+  protected readyArguments() {
+    return [];
+  }
+
 }

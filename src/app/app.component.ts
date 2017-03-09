@@ -3,6 +3,7 @@ import { Platform } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 import { Geo } from './geo';
 import { Storage } from './storage';
+import { Trips } from './trip';
 import { TabsPage } from '../pages/tabs/tabs';
 
 @Component({
@@ -11,13 +12,11 @@ import { TabsPage } from '../pages/tabs/tabs';
 export class BikeMoves {
   rootPage = TabsPage;
 
-  constructor(platform: Platform, geo: Geo, storage: Storage) {
+  constructor(platform: Platform, geo: Geo, storage: Storage, trips: Trips) {
     platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
       StatusBar.styleDefault();
       Splashscreen.hide();
-      storage.init();
+      storage.init([Trips.SQL_CREATE_TABLE]);
       geo.init();
     });
   }

@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import * as mapboxgl from 'mapbox-gl/dist/mapbox-gl.js'
 import turf from 'turf';
-import { Geo } from '../../app/geo';
+import { Geo, Location } from '../../app/geo';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY3V1YXRzIiwiYSI6ImNpbm03NGFrdTB6ZTB1a2x5MHl6dTV6MXIifQ.Aq-CCCulBhKbmLGZUH6VDw';
 
@@ -25,9 +25,10 @@ class Map {
   ];
   private currentLocationMarker: any;
   private currentLocationMarkerEl: HTMLElement;
-  private loaded = false;
   private map: any;
   private tripSource: any;
+
+  public loaded = false;
 
   constructor(public containerId: string, public options: any = {}) {
     // Create the map.
@@ -183,12 +184,12 @@ class Map {
     return this;
   }
 
-  public setTrip(trip) {
-    let linestring = trip.toLineString();
-    this.tripSource.setData({
-      type: 'FeatureCollection',
-      features: (linestring) ? [linestring] : []
-    });
+  public setTripLocations(locations) {
+    // let linestring = trip.toLineString();
+    // this.tripSource.setData({
+    //   type: 'FeatureCollection',
+    //   features: (linestring) ? [linestring] : []
+    // });
     return this;
   }
 
@@ -224,7 +225,7 @@ class Map {
   public reset() {
     if (this.currentLocationMarkerEl)
       this.currentLocationMarkerEl.style.display = 'none';
-    this.setTrip(undefined);
+    this.setTripLocations(undefined);
     this.map.jumpTo({
       zoom: Map.DEFAULT_ZOOM
     });
@@ -247,44 +248,65 @@ class Map {
   templateUrl: 'map.html'
 })
 export class MapPage {
-  private map: Map;
+  static STATE_STOPPED = 'stopped';
+  static STATE_RECORDING = 'recording';
+  static STATE_REPORTING = 'reporting';
 
-  constructor(public navCtrl: NavController, private geo: Geo) {}
+  private map: Map;
+  private state = MapPage.STATE_STOPPED;
+  private currentLocation: Location;
+  private tripLocations: Location[] = [];
+
+  constructor(public navCtrl: NavController, private geo: Geo) {
+    geo.motion.subscribe(this.onMotion.bind(this));
+    geo.locations.subscribe(this.onLocation.bind(this));
+  }
 
   ionViewDidLoad() {
     this.map = new Map('map', {
       interactive: true,
-      onLoad: () => {},
+      onLoad: () => this.updateMap(),
       onClick: () => {}
     });
   }
 
   ionViewWillEnter() {
-    let page = this;
-    if (this.geo.currentLocation) this.updateMap();
+    if (this.currentLocation) this.updateMap();
     this.geo.getCurrentLocation().then((location) => {
-      page.updateMap();
+      this.updateMap();
     });
   }
 
   ionViewCanLeave(): boolean {
-    return !this.geo.isRecording;
+    return this.state == MapPage.STATE_STOPPED;
+  }
+
+  private onLocation(location) {
+    console.log('Map got location', location);
+    this.currentLocation = location;
+    this.updateMap();
+  }
+
+  private onMotion(moving) {
+    console.log('Map got motion change', moving);
+    this.state = (moving) ? MapPage.STATE_RECORDING : MapPage.STATE_STOPPED;
   }
 
   updateMap(animate: boolean = false) {
-    if (this.geo.currentLocation) {
-      this.map.setCurrentLocation(this.geo.currentLocation);
-      this.map.setCenter(this.geo.currentLocation, animate);
+    if (!this.map.loaded) return;
+    if (this.currentLocation) {
+      this.map.setCurrentLocation(this.currentLocation);
+      this.map.setCenter(this.currentLocation, animate);
     }
-    if (this.geo.trip) this.map.setTrip(this.geo.trip);
+    this.map.setTripLocations(this.tripLocations);
   }
 
   startRecording() {
-    this.geo.startTrip();
+    this.geo.startRecording();
   }
 
   stopRecording() {
-    this.geo.endTrip();
+    this.geo.stopRecording();
   }
 
 }

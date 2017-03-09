@@ -1,5 +1,7 @@
-import { Location } from './geo';
-import { SQLite } from 'ionic-native';
+import { Injectable } from '@angular/core';
+import { Geo, Location } from './geo';
+import { Service } from './service';
+import { Storage } from './storage';
 import turf from 'turf';
 
 
@@ -7,56 +9,9 @@ export class Trip {
 
   static NEAR_THESHOLD = 500; // Maximum distance for location guesses, in meters
   static SIMPLIFY_TOLERANCE = 0.0002; // degrees
-  static SQL_CREATE_TABLE = `
-    CREATE TABLE IF NOT EXISTS trip (
-      id INTEGER PRIMARY KEY ASC NOT NULL,
-      origin_type INTEGER NOT NULL DEFAULT 0,
-      destination_type INTEGER NOT NULL DEFAULT 0,
-      start_time DATETIME NOT NULL,
-      end_time DATETIME NOT NULL,
-      running_time DOUBLE NOT NULL,
-      distance DOUBLE NOT NULL,
-      transit BOOLEAN DEFAULT 0,
-      submitted BOOLEAN DEFAULT 0,
-      desired_accuracy integer NOT NULL DEFAULT 0,
-      app_version character varying(10) NOT NULL
-    )
-  `;
-  static SQL_INSERT = `
-    INSERT INTO trip (
-      origin_type,
-      destination_type,
-      start_time,
-      end_time,
-      running_time,
-      distance,
-      transit,
-      submitted,
-      desired_accuracy,
-      app_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
-  static SQL_UPDATE = `
-    UPDATE trip SET
-      origin_type = ?,
-      destination_type = ?,
-      start_time = ?,
-      end_time = ?,
-      running_time = ?,
-      distance = ?,
-      transit = ?,
-      submitted = ?,
-      desired_accuracy = ?,
-      app_version = ?
-    WHERE id = ?
-  `;
-
-  static db: SQLite;
-  static all() {
-
-  }
 
   constructor(
+    private service: Trips,
     public locations: Array<Location> = [],
     public id: number = null,
     public origin: number = 0,
@@ -107,7 +62,7 @@ export class Trip {
   	};
   }
 
-  private serialize() {
+  public serialize() {
     return [
       this.origin,
       this.destination,
@@ -148,32 +103,7 @@ export class Trip {
   }
 
   public guessODTypes(trips) {
-    var that = this;
-  	if (!this.locations.length || this.origin || this.destination) return;
 
-  	var odTypes = [];
-  	trips.forEach((trip) => {
-  		odTypes.push.apply(odTypes, trip.getODTypes());
-  	});
-  	var trip = this;
-  	var origin = this._getLocation(0),
-  		destination = this._getLocation(-1),
-  		minOrigin = Trip.NEAR_THESHOLD,
-  		minDestination = Trip.NEAR_THESHOLD;
-
-  	odTypes.forEach((odType) => {
-  		var distOrigin = trip._getDistance(odType.location, origin),
-  			distDestination = trip._getDistance(odType.location, destination);
-
-  		if (distOrigin < minOrigin) {
-  			minOrigin = distOrigin;
-  			that.origin = odType.type;
-  		}
-  		if (distDestination < minDestination) {
-  			minDestination = distDestination;
-  			that.destination = odType.type;
-  		}
-  	});
   }
 
   public getDistance(simplify: boolean = true) {
@@ -199,13 +129,96 @@ export class Trip {
   }
 
   public save() {
-    if (this.id) {
-      return Trip.db.executeSql(
-        Trip.SQL_UPDATE, this.serialize().concat([this.id]));
+    return (this.id) ?
+      this.service.updateTrip(this) : this.service.insertTrip(this);
+  }
+
+}
+
+@Injectable()
+export class Trips extends Service {
+  static SQL_CREATE_TABLE = `
+    CREATE TABLE IF NOT EXISTS trip (
+      id INTEGER PRIMARY KEY ASC NOT NULL,
+      origin_type INTEGER NOT NULL DEFAULT 0,
+      destination_type INTEGER NOT NULL DEFAULT 0,
+      start_time DATETIME NOT NULL,
+      end_time DATETIME NOT NULL,
+      running_time DOUBLE NOT NULL,
+      distance DOUBLE NOT NULL,
+      transit BOOLEAN DEFAULT 0,
+      submitted BOOLEAN DEFAULT 0,
+      desired_accuracy integer NOT NULL DEFAULT 0,
+      app_version character varying(10) NOT NULL
+    )
+  `;
+  static SQL_INSERT = `
+    INSERT INTO trip (
+      origin_type,
+      destination_type,
+      start_time,
+      end_time,
+      running_time,
+      distance,
+      transit,
+      submitted,
+      desired_accuracy,
+      app_version
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+  static SQL_UPDATE = `
+    UPDATE trip SET
+      origin_type = ?,
+      destination_type = ?,
+      start_time = ?,
+      end_time = ?,
+      running_time = ?,
+      distance = ?,
+      transit = ?,
+      submitted = ?,
+      desired_accuracy = ?,
+      app_version = ?
+    WHERE id = ?
+  `;
+
+  private trip: Trip;
+
+  constructor(private geo: Geo, private storage: Storage) {
+    super();
+    geo.motion.subscribe(this.onMotion.bind(this));
+    geo.locations.subscribe(this.onLocation.bind(this));
+  }
+
+  static all() {
+
+  }
+
+  private onLocation(location) {
+    console.log('Trip got location', location);
+    if (this.trip) this.trip.addLocation(location);
+  }
+
+  private onMotion(moving) {
+    console.log('Trip got motion change', moving);
+    if (moving) {
+      this.trip = new Trip(this);
     } else {
-      return Trip.db.executeSql(Trip.SQL_INSERT, this.serialize())
-        .then((data) => this.id = data.id);
+      this.trip.save().then(() => this.trip = undefined);
     }
+  }
+
+  public insertTrip(trip) {
+    return this.storage.ready().then(
+      (db) => db.executeSql(Trips.SQL_INSERT, trip.serialize())).then(
+      (data) => trip.id = data.id
+    );
+
+  }
+
+  public updateTrip(trip) {
+    return this.storage.ready().then(
+      (db) => db.executeSql(
+        Trips.SQL_UPDATE, trip.serialize().concat([trip.id])));
   }
 
 }
