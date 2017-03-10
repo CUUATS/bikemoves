@@ -4,27 +4,36 @@ import { Service } from './service';
 
 export class Location {
   constructor(
-    public accuracy: number,
-    public altitude: number,
-    public heading: number,
-    public latitude: number,
     public longitude: number,
-    public moving: boolean,
-    public speed: number,
-    public time: number,
+    public latitude: number,
+    public time: number = null,
+    public accuracy: number = null,
+    public altitude: number = null,
+    public heading: number = null,
+    public moving: boolean = null,
+    public speed: number = null,
     public locationType: number = null) {}
 
   static fromPosition(position) {
     return new Location(
+      position.coords.longitude,
+      position.coords.latitude,
+      position.coords.time,
       position.coords.accuracy,
       position.coords.altitude,
       position.coords.heading,
-      position.coords.latitude,
-      position.coords.longitude,
       position.coords.moving,
-      position.coords.speed,
-      position.coords.time)
+      position.coords.speed)
   }
+
+  static fromLngLat(lngLat: [number, number]) {
+    return new Location(lngLat[0], lngLat[1]);
+  }
+
+  public toLngLat() {
+    return [this.longitude, this.latitude];
+  }
+
 }
 
 @Injectable()
@@ -49,6 +58,7 @@ export class Geo extends Service {
   public activity = new Subject();
   public locations = new Subject();
   public motion = new Subject();
+  public currentLocation: Location;
 
   constructor() {
     super();
@@ -81,8 +91,10 @@ export class Geo extends Service {
     this.activity.next(activity);
   }
 
-  private onLocation(location, taskId) {
-    this.locations.next(Location.fromPosition(location));
+  private onLocation(position, taskId) {
+    let location = Location.fromPosition(position);
+    this.currentLocation = location;
+    this.locations.next(location);
     this.finish(taskId);
   }
 
@@ -100,6 +112,7 @@ export class Geo extends Service {
         this.bgGeo.on('activitychange', this.onActivityChange.bind(this));
         this.setReady();
       });
+    this.getCurrentLocation();
   }
 
   finish(taskId) {

@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Geo, Location } from './geo';
 import { Service } from './service';
 import { Storage } from './storage';
+import { toLineString } from './utils';
 import turf from 'turf';
+
 
 
 export class Trip {
@@ -108,19 +110,12 @@ export class Trip {
 
   public getDistance(simplify: boolean = true) {
   	if (this.locations.length < 2) return 0;
-  	return turf.lineDistance(
-      <any>this.toLineString(simplify), 'kilometers') * 1000;
+  	return turf.lineDistance(this.toLineString(simplify), 'kilometers') * 1000;
   }
 
   public toLineString(simplify: boolean = true) {
-  	if (this.locations.length < 2) return null;
-  	var linestring = turf.lineString(this.locations.map((location) => {
-  		return [location.longitude, location.latitude];
-  	}));
-  	if (simplify && linestring.geometry.coordinates.length > 2) {
-  		return turf.simplify(linestring, Trip.SIMPLIFY_TOLERANCE, false);
-  	}
-  	return linestring;
+    return toLineString(
+      this.locations, (simplify) ? Trip.SIMPLIFY_TOLERANCE : 0);
   }
 
   public end() {
