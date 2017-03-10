@@ -278,7 +278,19 @@ export class MapPage {
   }
 
   ionViewCanLeave(): boolean {
-    return this.state == MapPage.STATE_STOPPED;
+    return this.isStopped();
+  }
+
+  private isStopped() {
+    return this.state === MapPage.STATE_STOPPED;
+  }
+
+  private isRecording() {
+    return this.state === MapPage.STATE_RECORDING;
+  }
+
+  private isReporting() {
+    return this.state === MapPage.STATE_REPORTING;
   }
 
   private onLocation(location) {
