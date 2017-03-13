@@ -28,13 +28,6 @@ export class Trip {
   	return this.locations[idx] || null;
   }
 
-  private _locationInfo(type, idx) {
-  	return {
-  		type: type,
-  		location: this.getLocation(idx)
-  	};
-  }
-
   public serialize() {
     return [
       this.origin,
@@ -49,24 +42,12 @@ export class Trip {
     ];
   }
 
-  public getODTypes() {
-  	if (this.locations.length < 2) return [];
-  	var od = [];
-  	if (this.origin > 0) od.push(this._locationInfo(this.origin, 0));
-  	if (this.destination > 0) od.push(this._locationInfo(this.destination, -1));
-  	return od;
-  }
-
   public addLocation(location: Location) {
     let prev = this.getLocation(-1);
   	if (!this.locations.length) this.startTime = location.time;
     if (!location.moving) this.endTime = location.time;
     this.locations.push(location);
     if (prev) this.distance += location.distanceTo(prev);
-  }
-
-  public guessODTypes(trips) {
-
   }
 
   public save() {
