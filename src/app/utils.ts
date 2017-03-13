@@ -16,7 +16,7 @@ export function toLineString(locations: Location[], simplify: number = 0) {
   if (!locations || locations.length < 2) return null;
 
   let linestring = turf.lineString(
-    this.locations.map((location) => location.toLngLat()));
+    locations.map((location) => location.toLngLat()));
 
   if (simplify > 0 && linestring.geometry.coordinates.length > 2)
     return (turf.simplify(linestring, simplify, false));
