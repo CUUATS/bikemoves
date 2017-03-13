@@ -26,7 +26,7 @@ page-map {
   .marker-hidden {
     display: none;
   }
-  #current-location-marker {
+  .marker-current {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15),
       inset 0 0 5px rgba(219, 140, 35, 0.5);
     border: 2px solid rgba(255, 255, 255, 0.75);

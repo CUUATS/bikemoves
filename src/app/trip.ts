@@ -110,7 +110,8 @@ export class Trip {
 
   public getDistance(simplify: boolean = true) {
   	if (this.locations.length < 2) return 0;
-  	return turf.lineDistance(this.toLineString(simplify), 'kilometers') * 1000;
+  	return turf.lineDistance(
+      (<any>this.toLineString(simplify)), 'kilometers') * 1000;
   }
 
   public toLineString(simplify: boolean = true) {

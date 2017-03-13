@@ -65,11 +65,12 @@ export class Map {
   constructor(public containerId: string, options: MapOptions = {}) {
     this.options = extend(Map.DEFAULT_OPTIONS, options);
     // Create the map.
+    console.log('Options', this.options);
     this.map = new mapboxgl.Map({
         container: this.containerId,
         style: Map.MAP_STYLE,
         zoom: this.zoom,
-        center: this.center
+        center: this.center.toLngLat()
     });
 
     // Set up event handlers.
@@ -81,13 +82,25 @@ export class Map {
     this.addTripSource();
     this.map.addLayer(Map.TRIP_LAYER);
     this.addMaker();
-    // TODO: Make sure all map elements are updated.
     this.loaded = true;
+    this.updateMap();
   }
 
   private onClick(e) {
     if (this.options.interactive) this.openPopup(e);
     this.click.next(e);
+  }
+
+  private updateMap() {
+    let oldAnimate = this.animate;
+    this.animate = false;
+
+    this.center = this.options.center;
+    this.marker = this.options.marker;
+    this.path = this.options.path;
+    this.zoom = this.options.zoom;
+
+    this.animate = oldAnimate;
   }
 
   private openPopup(e) {
@@ -188,18 +201,15 @@ export class Map {
   }
 
   set center(location: Location) {
+    this.options.center = location;
     if (this.loaded) {
-      if (location == this.center) return;
-      let latLng = location.toLngLat();
       if (this.options.animate) {
         this.map.flyTo({
-          center: latLng
+          center: location.toLngLat()
         });
       } else {
-        this.map.setCenter(latLng);
+        this.map.setCenter(location.toLngLat());
       }
-    } else {
-      this.options.center = location;
     }
   }
 
@@ -232,7 +242,7 @@ export class Map {
 
   set markerType(markerType: string) {
     this.options.markerType = markerType;
-    this.markerEl.className = markerType;
+    this.markerEl.className = 'marker-' + markerType;
   }
 
   get path() {
@@ -250,14 +260,13 @@ export class Map {
   }
 
   set zoom(zoom) {
+    this.options.zoom = zoom;
     if (this.loaded) {
       if (this.animate) {
         this.map.zoomTo(zoom);
       } else {
         this.map.setZoom(zoom);
       }
-    } else {
-      this.options.zoom = zoom;
     }
   }
 

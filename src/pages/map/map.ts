@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { Geo, Location } from '../../app/geo';
+import { Geo } from '../../app/geo';
 import { Map } from '../../app/map';
 
 @Component({
