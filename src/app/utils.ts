@@ -1,6 +1,8 @@
 import { Location } from './geo';
 import turf from 'turf';
 
+export const CURRENT_VERSION = '2.0.0';
+
 // Source: http://stackoverflow.com/questions/37042602/how-to-combine-object-properties-in-typescript
 export function extend(...args: any[]): any {
   const newObj = {};

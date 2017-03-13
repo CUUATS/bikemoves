@@ -1,29 +1,30 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Service } from './service';
+import turf from 'turf';
 
 export class Location {
   constructor(
     public longitude: number,
     public latitude: number,
-    public time: number = null,
     public accuracy: number = null,
     public altitude: number = null,
     public heading: number = null,
-    public moving: boolean = null,
     public speed: number = null,
+    public time: Date = null,
+    public moving: boolean = null,
     public locationType: number = null) {}
 
   static fromPosition(position) {
     return new Location(
       position.coords.longitude,
       position.coords.latitude,
-      position.coords.time,
       position.coords.accuracy,
       position.coords.altitude,
       position.coords.heading,
-      position.coords.moving,
-      position.coords.speed)
+      position.coords.speed,
+      position.timestamp,
+      position.is_moving)
   }
 
   static fromLngLat(lngLat: [number, number]) {
@@ -32,6 +33,14 @@ export class Location {
 
   public toLngLat() {
     return [this.longitude, this.latitude];
+  }
+
+  private toPoint() {
+  	return turf.point([this.longitude, this.latitude]);
+  }
+
+  public distanceTo(loc: Location) {
+    return turf.distance(this.toPoint(), loc.toPoint(), 'kilometers') * 1000;
   }
 
 }
