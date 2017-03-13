@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Geo } from '../../app/geo';
 import { Map } from '../../app/map';
@@ -15,9 +15,10 @@ export class MapPage {
   private map: Map;
   private state = MapPage.STATE_STOPPED;
 
-  constructor(public navCtrl: NavController, private geo: Geo) {
+  constructor(public navCtrl: NavController, private cdr: ChangeDetectorRef, private geo: Geo) {
     geo.motion.subscribe(this.onMotion.bind(this));
     geo.locations.subscribe(this.onLocation.bind(this));
+    geo.getMoving().then((moving) => this.setStateFromMoving(moving));
   }
 
   ionViewDidLoad() {
@@ -49,15 +50,19 @@ export class MapPage {
 
   private onLocation(location) {
     if (!this.map) return;
-    console.log('Map got location', location);
     this.map.center = location;
     this.map.marker = location;
     if (this.isRecording()) this.map.addLocation(location);
   }
 
   private onMotion(moving) {
-    console.log('Map got motion change', moving);
+    this.setStateFromMoving(moving);
+  }
+
+  private setStateFromMoving(moving) {
     this.state = (moving) ? MapPage.STATE_RECORDING : MapPage.STATE_STOPPED;
+    // Force the UI to update.
+    this.cdr.detectChanges();
   }
 
   startRecording() {

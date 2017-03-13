@@ -139,6 +139,11 @@ export class Geo extends Service {
     });
   }
 
+  getMoving() {
+    return this.ready().then(() => this.getState())
+      .then((state) => (<any>state).isMoving);
+  }
+
   setMoving(moving) {
     return this.ready().then(() => this.getState()).then((state) => {
       return new Promise((resolve, reject) => {
