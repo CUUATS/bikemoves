@@ -3,7 +3,7 @@ import { Platform } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 import { Geo } from './geo';
 import { Storage } from './storage';
-import { Trips } from './trip';
+import { Trips } from './trips';
 import { TabsPage } from '../pages/tabs/tabs';
 
 @Component({

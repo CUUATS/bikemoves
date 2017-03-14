@@ -1,4 +1,4 @@
-import { Location } from './geo';
+import { Location } from './location';
 import turf from 'turf';
 
 export const CURRENT_VERSION = '2.0.0';

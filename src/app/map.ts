@@ -1,7 +1,7 @@
 import * as mapboxgl from 'mapbox-gl/dist/mapbox-gl.js'
 import turf from 'turf';
 import { Subject } from 'rxjs/Subject';
-import { Location } from './geo';
+import { Location } from './location';
 import { extend, toLineString } from './utils';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY3V1YXRzIiwiYSI6ImNpbm03NGFrdTB6ZTB1a2x5MHl6dTV6MXIifQ.Aq-CCCulBhKbmLGZUH6VDw';
