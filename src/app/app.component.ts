@@ -16,7 +16,7 @@ export class BikeMoves {
     platform.ready().then(() => {
       StatusBar.styleDefault();
       Splashscreen.hide();
-      storage.init([Trips.SQL_CREATE_TABLE]);
+      storage.init();
       geo.init();
     });
   }
