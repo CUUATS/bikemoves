@@ -7,7 +7,7 @@ import { Trip } from './trip';
 @Injectable()
 export class Storage extends Service {
   static MODELS = [Trip];
-  static DB_VERSION = 1;
+  static DB_VERSION = 2;
   static SQL_CREATE_TABLE = `
     CREATE TABLE IF NOT EXISTS db_version (
       id INTEGER PRIMARY KEY ASC NOT NULL,

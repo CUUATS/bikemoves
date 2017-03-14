@@ -34,6 +34,7 @@ export class Trip extends Persistent {
 
   static getMigrations(toVersion) {
     if (toVersion == 1) return [Trip.SQL_CREATE_TABLE];
+    return [];
   }
 
   constructor(

@@ -29,13 +29,9 @@ export class Geo extends Service {
 
   constructor() {
     super();
-
-    this.activity.subscribe((activity) => console.log('Activity', activity));
-    this.locations.subscribe((location) => console.log('Location', location));
-    this.motion.subscribe((moving) => console.log('Motion', moving));
   }
 
-  private doGeoTask(fn, options) {
+  private doGeoTask(fn, options = undefined) {
     let task;
     return this.ready().then(() => {
       return new Promise((resolve, reject) => {

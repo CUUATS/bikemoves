@@ -4,7 +4,7 @@ export abstract class Persistent {
 
   public id: number;
   static storage: Storage;
-  
+
   static getMigrations(toVersion): string[] {
     return [];
   }
@@ -36,11 +36,11 @@ export abstract class Persistent {
     return '';
   }
 
-  protected getRow(): any[] {
+  protected getColumns(): string[] {
     return [];
   }
 
-  protected getColumns(): string[] {
+  protected getRow(): any[] {
     return [];
   }
 
