@@ -1,6 +1,7 @@
 import { Location } from './location';
 import { Persistent } from './persistent';
 import { CURRENT_VERSION } from './utils';
+import { ObjectManager } from './object_manager';
 
 export class Trip extends Persistent {
 
@@ -20,18 +21,21 @@ export class Trip extends Persistent {
       app_version character varying(10) NOT NULL
     )
   `;
-  static SQL_TABLE = 'trip';
-  static SQL_COLUMNS = [
-    'origin_type',
-    'destination_type',
-    'start_time',
-    'end_time',
-    'distance',
-    'transit',
-    'submitted',
-    'desired_accuracy',
-    'app_version'
-  ];
+  static objects = new ObjectManager(Location, 'location', [
+    'longitude',
+    'latitude',
+    'accuracy',
+    'altitude',
+    'heading',
+    'speed',
+    'time',
+    'moving',
+    'event',
+    'activity',
+    'confidence',
+    'location_type',
+    'trip_id'
+  ]);
 
   static fromRow(row) {
     return new Trip(
@@ -53,13 +57,6 @@ export class Trip extends Persistent {
     return [];
   }
 
-  static get(where?: string, order?: string) {
-    return Persistent.get(
-      Trip.SQL_TABLE,
-      Trip.SQL_COLUMNS,
-      where, order).then((rows) => rows.map(Trip.fromRow));
-  }
-
   constructor(
     public id: number = null,
     public origin: number = 0,
@@ -74,7 +71,7 @@ export class Trip extends Persistent {
       super();
     }
 
-  protected toRow() {
+  public toRow() {
     return [
       this.origin,
       this.destination,
@@ -89,7 +86,7 @@ export class Trip extends Persistent {
   }
 
   public getLocations() {
-    return Location.get('trip_id = ' + this.id,  'time ASC');
+    return Location.objects.filter('trip_id = ' + this.id,  'time ASC');
   }
 
 }

@@ -71,7 +71,7 @@ export class Geo extends Service {
   private onMotionChange(isMoving, location, taskId) {
     this.motion.next(isMoving);
     if (!isMoving) {
-      Location.get('trip_id IS NULL').then(
+      Location.objects.filter('trip_id IS NULL').then(
         (locations) => console.log('Locations', locations)
       );
     }

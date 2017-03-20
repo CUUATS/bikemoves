@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SQLite } from 'ionic-native';
 import { Service } from './service';
-import { Persistent } from './persistent';
+import { ObjectManager } from './object_manager';
 import { Trip } from './trip';
 import { Location } from './location';
 
@@ -23,7 +23,7 @@ export class Storage extends Service {
   private db = new SQLite();
 
   public init() {
-    Persistent.storage = this;
+    ObjectManager.storage = this;
     return this.db.openDatabase({
       name: 'bikemoves.db',
       location: 'default'

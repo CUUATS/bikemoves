@@ -1,23 +1,8 @@
 import turf from 'turf';
 import { Persistent } from './persistent';
+import { ObjectManager } from './object_manager';
 
 export class Location extends Persistent {
-  static SQL_TABLE = 'location';
-  static SQL_COLUMNS = [
-    'longitude',
-    'latitude',
-    'accuracy',
-    'altitude',
-    'heading',
-    'speed',
-    'time',
-    'moving',
-    'event',
-    'activity',
-    'confidence',
-    'location_type',
-    'trip_id'
-  ];
   static SQL_CREATE_TABLE = `
     CREATE TABLE IF NOT EXISTS location (
       id INTEGER PRIMARY KEY ASC NOT NULL,
@@ -62,6 +47,21 @@ export class Location extends Persistent {
     'heartbeat': Location.EVENT_HEARTBEAT,
     'providerchange': Location.EVENT_PROVIDER
   };
+  static objects = new ObjectManager(Location, 'location', [
+    'longitude',
+    'latitude',
+    'accuracy',
+    'altitude',
+    'heading',
+    'speed',
+    'time',
+    'moving',
+    'event',
+    'activity',
+    'confidence',
+    'location_type',
+    'trip_id'
+  ]);
 
   static fromPosition(position) {
     return new Location(
@@ -105,13 +105,6 @@ export class Location extends Persistent {
   static getMigrations(toVersion) {
     if (toVersion == 1) return [Location.SQL_CREATE_TABLE];
     return [];
-  }
-
-  static get(where?: string, order?: string) {
-    return Persistent.get(
-      Location.SQL_TABLE,
-      Location.SQL_COLUMNS,
-      where, order).then((rows) => rows.map(Location.fromRow));
   }
 
   constructor(
