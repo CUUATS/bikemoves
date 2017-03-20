@@ -65,7 +65,6 @@ export class Map {
   constructor(public containerId: string, options: MapOptions = {}) {
     this.options = extend(Map.DEFAULT_OPTIONS, options);
     // Create the map.
-    console.log('Options', this.options);
     this.map = new mapboxgl.Map({
         container: this.containerId,
         style: Map.MAP_STYLE,

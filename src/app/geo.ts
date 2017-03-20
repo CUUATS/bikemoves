@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Service } from './service';
 import { Location } from './location';
+import { Trip } from './trip';
 
 @Injectable()
 export class Geo extends Service {
@@ -68,15 +69,20 @@ export class Geo extends Service {
     }
   }
 
-  private onMotionChange(isMoving, location, taskId) {
-    this.motion.next(isMoving);
-    if (!isMoving) {
-      Location.objects.filter('trip_id IS NULL').then(
-        (locations) => console.log('Locations', locations)
-      );
+  private onMotionChange(moving, position, taskId) {
+    if (moving) {
+      this.motion.next(moving);
+      this.finish(taskId);
+    } else {
+      Location.objects.filter('trip_id IS NULL')
+        .then((locations) => Trip.fromLocations(locations).save())
+        .then((trip) => Location.objects.batchUpdate(
+          `trip_id = ${trip.id}`, 'trip_id IS NULL'))
+        .then(() => {
+          this.motion.next(moving);
+          this.finish(taskId);
+        });
     }
-
-    this.finish(taskId);
   }
 
   init() {

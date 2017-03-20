@@ -33,13 +33,16 @@ export class ObjectManager {
   public insert(obj: Persistent) {
     let sql = `INSERT INTO ${this.table} (${this.column_sql()})
       VALUES (${this.placeholder_sql()})`;
-    return this.db(sql, obj.toRow()).then((data) => obj.id = data.id);
+    return this.db(sql, obj.toRow()).then((data) => {
+      obj.id = data.insertId;
+      return obj;
+    });
   }
 
   public update(obj: Persistent) {
     let columns = this.columns.map((col) => col + ' = ?').join(', '),
       sql = `UPDATE ${this.table} SET ${columns} WHERE id = ?`;
-    return this.db(sql, obj.toRow().concat([obj.id]));
+    return this.db(sql, obj.toRow().concat([obj.id])).then((data) => obj);
   }
 
   public delete(obj: Persistent) {

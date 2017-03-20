@@ -21,20 +21,16 @@ export class Trip extends Persistent {
       app_version character varying(10) NOT NULL
     )
   `;
-  static objects = new ObjectManager(Location, 'location', [
-    'longitude',
-    'latitude',
-    'accuracy',
-    'altitude',
-    'heading',
-    'speed',
-    'time',
-    'moving',
-    'event',
-    'activity',
-    'confidence',
-    'location_type',
-    'trip_id'
+  static objects = new ObjectManager(Trip, 'trip', [
+    'origin_type',
+    'destination_type',
+    'start_time',
+    'end_time',
+    'distance',
+    'transit',
+    'submitted',
+    'desired_accuracy',
+    'app_version'
   ]);
 
   static fromRow(row) {
@@ -50,6 +46,15 @@ export class Trip extends Persistent {
       row.desired_accuracy,
       row.app_version
     )
+  }
+
+  static fromLocations(locations: Location[]) {
+    let trip = new Trip();
+    trip.startTime = locations[0].time;
+    trip.endTime = locations[locations.length - 1].time;
+    for (let i = 1; i < locations.length; i++)
+      trip.distance += locations[i-1].distanceTo(locations[i]);
+    return trip;
   }
 
   static getMigrations(toVersion) {
