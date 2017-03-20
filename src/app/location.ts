@@ -1,6 +1,7 @@
 import turf from 'turf';
 import { Persistent } from './persistent';
 import { ObjectManager } from './object_manager';
+import { Geo } from './geo';
 
 export class Location extends Persistent {
   static SQL_CREATE_TABLE = `
@@ -21,32 +22,6 @@ export class Location extends Persistent {
       trip_id INTEGER
     )
   `;
-  static ACTIVITY_STILL = 0;
-  static ACTIVITY_FOOT = 1;
-  static ACTIVITY_WALK = 2;
-  static ACTIVITY_RUN = 3;
-  static ACTIVITY_VEHICLE = 4;
-  static ACTIVITY_BICYCLE = 5;
-  static ACTIVITY_UNKNOWN = 6;
-  static ACTIVITIES = {
-    'still': Location.ACTIVITY_STILL,
-    'on_foot': Location.ACTIVITY_FOOT,
-    'walking': Location.ACTIVITY_WALK,
-    'running': Location.ACTIVITY_RUN,
-    'in_vehicle': Location.ACTIVITY_VEHICLE,
-    'on_bicycle': Location.ACTIVITY_BICYCLE,
-    'unknown': Location.ACTIVITY_UNKNOWN
-  };
-  static EVENT_MOTION = 0;
-  static EVENT_GEOFENCE = 1;
-  static EVENT_HEARTBEAT = 2;
-  static EVENT_PROVIDER = 3;
-  static EVENTS = {
-    'motionchange': Location.EVENT_MOTION,
-    'geofence': Location.EVENT_GEOFENCE,
-    'heartbeat': Location.EVENT_HEARTBEAT,
-    'providerchange': Location.EVENT_PROVIDER
-  };
   static objects = new ObjectManager(Location, 'location', [
     'longitude',
     'latitude',
@@ -73,9 +48,8 @@ export class Location extends Persistent {
       position.coords.speed,
       position.timestamp,
       position.is_moving,
-      (position.event) ? Location.EVENTS[position.event] : null,
-      (position.activity.type) ?
-        Location.ACTIVITIES[position.activity.type] : null,
+      (position.event) ? Geo.EVENTS[position.event] : null,
+      (position.activity.type) ? Geo.ACTIVITIES[position.activity.type] : null,
       position.activity.confidence)
   }
 

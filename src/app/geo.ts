@@ -3,6 +3,7 @@ import { Subject } from 'rxjs/Subject';
 import { Service } from './service';
 import { Location } from './location';
 import { Trip } from './trip';
+import { ActivityType, EventType } from './enum';
 
 @Injectable()
 export class Geo extends Service {
@@ -21,6 +22,21 @@ export class Geo extends Service {
 		stopOnTerminate: true, // Stop geolocation tracking on app exit
 		stopTimeout: 3 // Keep tracking for 3 minutes while stationary
 	};
+  static ACTIVITIES = {
+    'still': ActivityType.Still,
+    'on_foot': ActivityType.Foot,
+    'walking': ActivityType.Walk,
+    'running': ActivityType.Run,
+    'in_vehicle': ActivityType.Vehicle,
+    'on_bicycle': ActivityType.Bicycle,
+    'unknown': ActivityType.Unknown
+  };
+  static EVENTS = {
+    'motionchange': EventType.Motion,
+    'geofence': EventType.Geofence,
+    'heartbeat': EventType.Heartbeat,
+    'providerchange': EventType.Provider
+  };
   private bgGeo: any;
   private settings = Geo.BG_DEFAULT_SETTINGS;
 
@@ -62,7 +78,7 @@ export class Geo extends Service {
     this.locations.next(location);
 
     if (!position.sample &&
-        (location.moving || location.event == Location.EVENT_MOTION)) {
+        (location.moving || location.event == EventType.Motion)) {
       location.save().then(() => this.finish(taskId));
     } else {
       this.finish(taskId);
