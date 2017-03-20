@@ -21,28 +21,42 @@ export class ObjectManager {
     return '?, '.repeat(n - 1) + '?';
   }
 
+  protected createWhere(where: Persistent[] | string) {
+    if (typeof where === 'string') return where;
+    return 'id IN (' + where.map((obj) => obj.id).join(', ') + ')';
+  }
+
+  protected db(sql: string, args = []) {
+    return ObjectManager.storage.ready().then((db) => db.executeSql(sql, args));
+  }
+
   public insert(obj: Persistent) {
     let sql = `INSERT INTO ${this.table} (${this.column_sql()})
       VALUES (${this.placeholder_sql()})`;
-    console.log('Inserting row', sql);
-    return ObjectManager.storage.ready().then(
-      (db) => db.executeSql(sql, obj.toRow())).then(
-      (data) => obj.id = data.id
-    );
+    return this.db(sql, obj.toRow()).then((data) => obj.id = data.id);
   }
 
   public update(obj: Persistent) {
     let columns = this.columns.map((col) => col + ' = ?').join(', '),
       sql = `UPDATE ${this.table} SET ${columns} WHERE id = ?`;
-    console.log('Updating row', sql);
-    return ObjectManager.storage.ready().then(
-      (db) => db.executeSql(sql, obj.toRow().concat([obj.id])));
+    return this.db(sql, obj.toRow().concat([obj.id]));
   }
 
   public delete(obj: Persistent) {
     let sql = `DELETE FROM ${this.table} WHERE id = ?`;
-    return ObjectManager.storage.ready().then(
-      (db) => db.executeSql(sql, [obj.id]));
+    return this.db(sql, [obj.id]);
+  }
+
+  public batchUpdate(set: string, where: Persistent[] | string) {
+    where = this.createWhere(where);
+    let sql = `UPDATE ${this.table} SET ${set} WHERE ${where}`;
+    return this.db(sql);
+  }
+
+  public batchDelete(where: Persistent[] | string) {
+    where = this.createWhere(where);
+    let sql = `DELETE FROM ${this.table} WHERE ${where}`;
+    return this.db(sql);
   }
 
   public all(order?: string) {
