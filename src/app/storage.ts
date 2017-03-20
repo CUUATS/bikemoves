@@ -3,11 +3,12 @@ import { SQLite } from 'ionic-native';
 import { Service } from './service';
 import { Persistent } from './persistent';
 import { Trip } from './trip';
+import { Location } from './location';
 
 @Injectable()
 export class Storage extends Service {
-  static MODELS = [Trip];
-  static DB_VERSION = 2;
+  static MODELS = [Trip, Location];
+  static DB_VERSION = 1;
   static SQL_CREATE_TABLE = `
     CREATE TABLE IF NOT EXISTS db_version (
       id INTEGER PRIMARY KEY ASC NOT NULL,
@@ -52,6 +53,12 @@ export class Storage extends Service {
 
   protected readyArguments() {
     return [this.db];
+  }
+
+  public debugSql(sql, args = {}) {
+    this.ready()
+      .then(() => this.db.executeSql(sql, args))
+      .then((res) => console.log(res));
   }
 
 }

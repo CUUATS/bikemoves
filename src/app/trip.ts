@@ -20,6 +20,7 @@ export class Trip extends Persistent {
       app_version character varying(10) NOT NULL
     )
   `;
+  static SQL_TABLE = 'trip';
   static SQL_COLUMNS = [
     'origin_type',
     'destination_type',
@@ -32,9 +33,31 @@ export class Trip extends Persistent {
     'app_version'
   ];
 
+  static fromRow(row) {
+    return new Trip(
+      row.id,
+      row.origin_type,
+      row.destination_type,
+      row.start_time,
+      row.end_time,
+      row.distance,
+      row.transit,
+      row.submitted,
+      row.desired_accuracy,
+      row.app_version
+    )
+  }
+
   static getMigrations(toVersion) {
     if (toVersion == 1) return [Trip.SQL_CREATE_TABLE];
     return [];
+  }
+
+  static get(where?: string, order?: string) {
+    return Persistent.get(
+      Trip.SQL_TABLE,
+      Trip.SQL_COLUMNS,
+      where, order).then((rows) => rows.map(Trip.fromRow));
   }
 
   constructor(
@@ -47,16 +70,11 @@ export class Trip extends Persistent {
     public transit: boolean = false,
     public submitted: boolean = false,
     public desiredAccuracy: number = 0,
-    public appVersion: string = CURRENT_VERSION,
-    public locations: Location[] = []) {
+    public appVersion: string = CURRENT_VERSION) {
       super();
     }
 
-  protected getTable() {
-    return 'trip';
-  }
-
-  protected getRow() {
+  protected toRow() {
     return [
       this.origin,
       this.destination,
@@ -70,21 +88,8 @@ export class Trip extends Persistent {
     ];
   }
 
-  protected getColumns() {
-    return Trip.SQL_COLUMNS;
-  }
-
-  private getLocation(idx: number) {
-  	if (idx < 0) idx = this.locations.length + idx;
-  	return this.locations[idx] || null;
-  }
-
-  public addLocation(location: Location) {
-    let prev = this.getLocation(-1);
-  	if (!this.locations.length) this.startTime = location.time;
-    if (!location.moving) this.endTime = location.time;
-    this.locations.push(location);
-    if (prev) this.distance += location.distanceTo(prev);
+  public getLocations() {
+    return Location.get('trip_id = ' + this.id,  'time ASC');
   }
 
 }

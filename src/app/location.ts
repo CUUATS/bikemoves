@@ -2,6 +2,22 @@ import turf from 'turf';
 import { Persistent } from './persistent';
 
 export class Location extends Persistent {
+  static SQL_TABLE = 'location';
+  static SQL_COLUMNS = [
+    'longitude',
+    'latitude',
+    'accuracy',
+    'altitude',
+    'heading',
+    'speed',
+    'time',
+    'moving',
+    'event',
+    'activity',
+    'confidence',
+    'location_type',
+    'trip_id'
+  ];
   static SQL_CREATE_TABLE = `
     CREATE TABLE IF NOT EXISTS location (
       id INTEGER PRIMARY KEY ASC NOT NULL,
@@ -20,20 +36,31 @@ export class Location extends Persistent {
       trip_id INTEGER
     )
   `;
+  static ACTIVITY_STILL = 0;
+  static ACTIVITY_FOOT = 1;
+  static ACTIVITY_WALK = 2;
+  static ACTIVITY_RUN = 3;
+  static ACTIVITY_VEHICLE = 4;
+  static ACTIVITY_BICYCLE = 5;
+  static ACTIVITY_UNKNOWN = 6;
   static ACTIVITIES = {
-    'still': 0,
-    'on_foot': 1,
-    'walking': 2,
-    'running': 3,
-    'in_vehicle': 4,
-    'on_bicycle': 5,
-    'unknown': 6
+    'still': Location.ACTIVITY_STILL,
+    'on_foot': Location.ACTIVITY_FOOT,
+    'walking': Location.ACTIVITY_WALK,
+    'running': Location.ACTIVITY_RUN,
+    'in_vehicle': Location.ACTIVITY_VEHICLE,
+    'on_bicycle': Location.ACTIVITY_BICYCLE,
+    'unknown': Location.ACTIVITY_UNKNOWN
   };
+  static EVENT_MOTION = 0;
+  static EVENT_GEOFENCE = 1;
+  static EVENT_HEARTBEAT = 2;
+  static EVENT_PROVIDER = 3;
   static EVENTS = {
-    'motionchange': 0,
-    'geofence': 1,
-    'heartbeat': 2,
-    'providerchange': 3
+    'motionchange': Location.EVENT_MOTION,
+    'geofence': Location.EVENT_GEOFENCE,
+    'heartbeat': Location.EVENT_HEARTBEAT,
+    'providerchange': Location.EVENT_PROVIDER
   };
 
   static fromPosition(position) {
@@ -56,9 +83,35 @@ export class Location extends Persistent {
     return new Location(lngLat[0], lngLat[1]);
   }
 
+  static fromRow(row) {
+    return new Location(
+      row.longitude,
+      row.latitude,
+      row.accuracy,
+      row.altitude,
+      row.heading,
+      row.speed,
+      new Date(row.time),
+      row.moving == 'true',
+      row.event,
+      row.activity,
+      row.confidence,
+      row.location_type,
+      row.trip_id,
+      row.id
+    )
+  }
+
   static getMigrations(toVersion) {
-    if (toVersion == 2) return [Location.SQL_CREATE_TABLE];
+    if (toVersion == 1) return [Location.SQL_CREATE_TABLE];
     return [];
+  }
+
+  static get(where?: string, order?: string) {
+    return Persistent.get(
+      Location.SQL_TABLE,
+      Location.SQL_COLUMNS,
+      where, order).then((rows) => rows.map(Location.fromRow));
   }
 
   constructor(
@@ -85,6 +138,24 @@ export class Location extends Persistent {
 
   public toLngLat() {
     return [this.longitude, this.latitude];
+  }
+
+  public toRow() {
+    return [
+      this.longitude,
+      this.latitude,
+      this.accuracy,
+      this.altitude,
+      this.heading,
+      this.speed,
+      this.time,
+      this.moving,
+      this.event,
+      this.activity,
+      this.confidence,
+      this.locationType,
+      this.tripId
+    ];
   }
 
   public distanceTo(loc: Location) {

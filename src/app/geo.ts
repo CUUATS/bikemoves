@@ -14,6 +14,7 @@ export class Geo extends Service {
 		disableElasticity: false, // Auto-adjust distanceFilter
 		fastestLocationUpdateInterval: 1000, // Prevent updates more than once per second (Android)
 		locationUpdateInterval: 5000, // Request updates every 5 seconds (Android)
+    maxRecordsToPersist: 0, // Disable persistence
 		startOnBoot: false, // Do not start tracking on device boot
 		stationaryRadius: 20, // Activate the GPS after 20 meters (iOS)
 		stopOnTerminate: true, // Stop geolocation tracking on app exit
@@ -58,11 +59,23 @@ export class Geo extends Service {
     let location = Location.fromPosition(position);
     this.currentLocation = location;
     this.locations.next(location);
-    this.finish(taskId);
+
+    if (!position.sample &&
+        (location.moving || location.event == Location.EVENT_MOTION)) {
+      location.save().then(() => this.finish(taskId));
+    } else {
+      this.finish(taskId);
+    }
   }
 
   private onMotionChange(isMoving, location, taskId) {
     this.motion.next(isMoving);
+    if (!isMoving) {
+      Location.get('trip_id IS NULL').then(
+        (locations) => console.log('Locations', locations)
+      );
+    }
+
     this.finish(taskId);
   }
 
