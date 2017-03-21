@@ -25,9 +25,6 @@ export class TabsPage {
 
   public updateTripsBadge() {
     Trip.objects.count('submitted = 0')
-      .then((count) => {
-        console.log(count);
-        this.unsubmittedTripsCount = count
-      });
+      .then((count) => this.unsubmittedTripsCount = (count > 0) ? count : null);
   }
 }
