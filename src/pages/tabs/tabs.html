@@ -1,6 +1,6 @@
 <ion-tabs>
   <ion-tab [root]="mapRoot" tabTitle="Map" tabIcon="map"></ion-tab>
-  <ion-tab [root]="tripsRoot" tabTitle="Trips" tabIcon="bicycle"></ion-tab>
+  <ion-tab [root]="tripsRoot" tabTitle="Trips" tabIcon="bicycle" tabBadge="{{unsubmittedTripsCount}}" tabBadgeStyle="danger"></ion-tab>
   <ion-tab [root]="statsRoot" tabTitle="Stats" tabIcon="stats"></ion-tab>
   <ion-tab [root]="settingsRoot" tabTitle="Settings" tabIcon="settings"></ion-tab>
 </ion-tabs>

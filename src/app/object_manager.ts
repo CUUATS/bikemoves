@@ -70,8 +70,7 @@ export class ObjectManager {
     let sql = `SELECT ${this.column_sql()} FROM ${this.table}`;
     if (where) sql += ` WHERE ${where}`;
     if (order) sql += ` ORDER BY ${order}`;
-    return ObjectManager.storage.ready().then(
-      (db) => db.executeSql(sql, {})).then(
+    return this.db(sql).then(
       (data) => {
         let results = [];
         for (let i = 0; i < data.rows.length; i++)
@@ -79,5 +78,11 @@ export class ObjectManager {
         return results;
       }
     );
+  }
+
+  public count(where?: string) {
+    let sql = `SELECT count(*) AS row_count FROM ${this.table}`;
+    if (where) sql += ` WHERE ${where}`;
+    return this.db(sql).then((data) => data.rows.item(0).row_count);
   }
 }

@@ -18,6 +18,7 @@ export class BikeMoves {
       Splashscreen.hide();
       storage.init();
       geo.init();
+      (window as any).storage = storage;
     });
   }
 }
