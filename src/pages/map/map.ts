@@ -57,6 +57,7 @@ export class MapPage {
 
   private onMotion(moving) {
     this.setStateFromMoving(moving);
+    if (!moving) this.map.path = [];
   }
 
   private setStateFromMoving(moving) {
