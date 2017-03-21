@@ -13,13 +13,13 @@ export class Trip extends Persistent {
       id INTEGER PRIMARY KEY ASC NOT NULL,
       origin_type INTEGER NOT NULL DEFAULT 0,
       destination_type INTEGER NOT NULL DEFAULT 0,
-      start_time DATETIME NOT NULL,
-      end_time DATETIME NOT NULL,
-      distance DOUBLE NOT NULL,
-      transit BOOLEAN DEFAULT 0,
-      submitted BOOLEAN DEFAULT 0,
-      desired_accuracy integer NOT NULL DEFAULT 0,
-      app_version character varying(10) NOT NULL
+      start_time INTEGER NOT NULL,
+      end_time INTEGER NOT NULL,
+      distance REAL NOT NULL,
+      transit INTEGER DEFAULT 0,
+      submitted INTEGER DEFAULT 0,
+      desired_accuracy INTEGER NOT NULL DEFAULT 0,
+      app_version TEXT NOT NULL
     )
   `;
   static objects = new ObjectManager(Trip, 'trip', [
@@ -42,8 +42,8 @@ export class Trip extends Persistent {
       moment(row.start_time),
       moment(row.end_time),
       row.distance,
-      row.transit == 'true',
-      row.submitted == 'true',
+      row.transit === 1,
+      row.submitted === 1,
       row.desired_accuracy,
       row.app_version
     )
@@ -81,11 +81,11 @@ export class Trip extends Persistent {
     return [
       this.origin,
       this.destination,
-      this.startTime.toDate(),
-      this.endTime.toDate(),
+      this.startTime.valueOf(),
+      this.endTime.valueOf(),
       this.distance,
-      this.transit,
-      this.submitted,
+      + this.transit,
+      + this.submitted,
       this.desiredAccuracy,
       this.appVersion
     ];
