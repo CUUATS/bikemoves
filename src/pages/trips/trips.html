@@ -7,6 +7,18 @@
 </ion-header>
 
 <ion-content padding class="cards-background">
+  <ion-grid *ngIf="hasTrips === false" class="row row-center no-content no-trips">
+    <ion-row>
+      <ion-col col-12>
+        <ion-icon name="pin" class="icon-large"></ion-icon>
+        <p class="text-large">You have not recorded any trips.</p>
+        <button ion-button icon-left (click)="goToMap()">
+          <ion-icon name="bicycle"></ion-icon>
+          Start a Trip
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
   <ion-card *ngFor="let trip of trips">
     <img src="assets/img/map-image-placeholder.svg">
     <ion-item>

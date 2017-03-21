@@ -10,13 +10,21 @@ import { pad } from '../../app/utils';
 })
 export class TripsPage {
   private trips: Trip[] = [];
+  private hasTrips: boolean;
 
   constructor(public navCtrl: NavController) {
 
   }
 
   ionViewWillEnter() {
-    Trip.objects.all('start_time DESC').then((trips) => this.trips = trips);
+    Trip.objects.all('start_time DESC').then((trips) => {
+      if (trips.length) {
+        this.hasTrips = true;
+        this.trips = trips;
+      } else {
+        this.hasTrips = false;
+      }
+    });
   }
 
   formatDuration(trip) {
@@ -34,6 +42,10 @@ export class TripsPage {
 
   formatLocationType(locationType: number) {
     return Location.LOCATION_TYPES[locationType];
+  }
+
+  goToMap() {
+    this.navCtrl.parent.select(0);
   }
 
 }

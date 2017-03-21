@@ -1,6 +1,6 @@
 page-trips {
   ion-content.cards-background {
-    background-color: #f4f4f4;
+    background-color: #eeeeee;
   }
   ion-card h2 {
     font-size: 1.25em !important;
@@ -13,6 +13,28 @@ page-trips {
       .summary-value {
         margin-left: 0.75em;
       }
+    }
+  }
+  .icon-large {
+    font-size: 6em;
+  }
+  .text-large {
+    font-size: 2em;
+    line-height: 1.2em;
+    margin: 0;
+    padding: 1em;
+  }
+  .no-content {
+    height: 100%;
+    justify-content: center;
+    text-align: center;
+    .icon-large {
+      color: #bbbbbb;
+      text-shadow: 2px 2px rgba(255, 255, 255, 0.5);
+    }
+    .text-large {
+      color: #666666;
+      text-shadow: 1px 1px rgba(255, 255, 255, 0.8);
     }
   }
 }
