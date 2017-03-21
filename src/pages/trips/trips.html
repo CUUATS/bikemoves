@@ -6,6 +6,35 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  [Trips placeholder]
+<ion-content padding class="cards-background">
+  <ion-card *ngFor="let trip of trips">
+    <img src="assets/img/map-image-placeholder.svg">
+    <ion-item>
+      <h2>{{trip.startTime.calendar(null, {sameElse: 'MMMM D, YYYY [at] h:mm A'})}}</h2>
+    </ion-item>
+    <ion-item class="trip-summary">
+      <ion-grid no-padding>
+        <ion-row>
+          <ion-col col-6 col-sm><span class="summary-item time"><ion-icon name="timer"></ion-icon><span class="summary-value">{{formatDuration(trip)}}</span></span></ion-col>
+          <ion-col col-6 col-sm><span class="summary-item distance"><ion-icon name="pin"></ion-icon><span class="summary-value">{{formatDistance(trip)}} mi</span></span></ion-col>
+          <ion-col col-6 col-sm><span class="summary-item origin"><ion-icon name="arrow-back"></ion-icon><span class="summary-value">{{formatLocationType(trip.origin)}}</span></span></ion-col>
+          <ion-col col-6 col-sm><span class="summary-item destination"><ion-icon name="arrow-forward"></ion-icon><span class="summary-value">{{formatLocationType(trip.destination)}}</span></span></ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-item>
+      <span class="icon-left clear item-left" *ngIf="trip.submitted">
+        <ion-icon name="cloud-done"></ion-icon>
+        Uploaded
+      </span>
+      <button ion-button icon-left clear item-left color="danger" *ngIf="!trip.submitted">
+        <ion-icon name="cloud-upload"></ion-icon>
+        Upload
+      </button>
+      <button ion-button icon-left clear item-right>
+        <ion-icon name="information-circle"></ion-icon>
+        Details
+      </button>
+    </ion-item>
+  </ion-card>
 </ion-content>

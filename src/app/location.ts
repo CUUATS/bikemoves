@@ -2,6 +2,7 @@ import turf from 'turf';
 import { Persistent } from './persistent';
 import { ObjectManager } from './object_manager';
 import { Geo } from './geo';
+import * as moment from 'moment';
 
 export class Location extends Persistent {
   static SQL_CREATE_TABLE = `
@@ -22,6 +23,15 @@ export class Location extends Persistent {
       trip_id INTEGER
     )
   `;
+  static LOCATION_TYPES = [
+    'Not Specified',
+    'Home',
+    'Work',
+    'K-12 School',
+    'University',
+    'Shopping',
+    'Other'
+  ];
   static objects = new ObjectManager(Location, 'location', [
     'longitude',
     'latitude',
@@ -46,7 +56,7 @@ export class Location extends Persistent {
       position.coords.altitude,
       position.coords.heading,
       position.coords.speed,
-      position.timestamp,
+      moment(position.timestamp),
       position.is_moving,
       (position.event) ? Geo.EVENTS[position.event] : null,
       (position.activity.type) ? Geo.ACTIVITIES[position.activity.type] : null,
@@ -65,7 +75,7 @@ export class Location extends Persistent {
       row.altitude,
       row.heading,
       row.speed,
-      new Date(row.time),
+      moment(row.time),
       row.moving == 'true',
       row.event,
       row.activity,
@@ -88,7 +98,7 @@ export class Location extends Persistent {
     public altitude: number = null,
     public heading: number = null,
     public speed: number = null,
-    public time: Date = null,
+    public time: moment.Moment = null,
     public moving: boolean = null,
     public event: number = null,
     public activity: number = null,
@@ -115,7 +125,7 @@ export class Location extends Persistent {
       this.altitude,
       this.heading,
       this.speed,
-      this.time,
+      this.time.toDate(),
       this.moving,
       this.event,
       this.activity,

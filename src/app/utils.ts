@@ -24,3 +24,9 @@ export function toLineString(locations: Location[], simplify: number = 0) {
     return (turf.simplify(linestring, simplify, false));
   return linestring;
 }
+
+// Based on: http://stackoverflow.com/questions/10073699/pad-a-number-with-leading-zeros-in-javascript
+export function pad(n: number, w: number, z='0') {
+  let d = n.toString();
+  return (d.length >= w) ? d : new Array(w - d.length + 1).join(z) + d;
+}

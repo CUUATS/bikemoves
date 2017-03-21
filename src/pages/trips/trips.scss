@@ -1,3 +1,18 @@
 page-trips {
-
+  ion-content.cards-background {
+    background-color: #f4f4f4;
+  }
+  ion-card h2 {
+    font-size: 1.25em !important;
+    margin-top: 0.25em !important;
+  }
+  .trip-summary {
+    .summary-item {
+      display: block;
+      padding: 5px 0;
+      .summary-value {
+        margin-left: 0.75em;
+      }
+    }
+  }
 }

@@ -2,6 +2,7 @@ import { Location } from './location';
 import { Persistent } from './persistent';
 import { CURRENT_VERSION } from './utils';
 import { ObjectManager } from './object_manager';
+import * as moment from 'moment';
 
 export class Trip extends Persistent {
 
@@ -38,11 +39,11 @@ export class Trip extends Persistent {
       row.id,
       row.origin_type,
       row.destination_type,
-      row.start_time,
-      row.end_time,
+      moment(row.start_time),
+      moment(row.end_time),
       row.distance,
-      row.transit,
-      row.submitted,
+      row.transit == 'true',
+      row.submitted == 'true',
       row.desired_accuracy,
       row.app_version
     )
@@ -66,8 +67,8 @@ export class Trip extends Persistent {
     public id: number = null,
     public origin: number = 0,
     public destination: number = 0,
-    public startTime: Date = null,
-    public endTime: Date = null,
+    public startTime: moment.Moment = null,
+    public endTime: moment.Moment = null,
     public distance = 0,
     public transit: boolean = false,
     public submitted: boolean = false,
@@ -80,8 +81,8 @@ export class Trip extends Persistent {
     return [
       this.origin,
       this.destination,
-      this.startTime.getTime(),
-      this.endTime.getTime(),
+      this.startTime.toDate(),
+      this.endTime.toDate(),
       this.distance,
       this.transit,
       this.submitted,
@@ -92,6 +93,10 @@ export class Trip extends Persistent {
 
   public getLocations() {
     return Location.objects.filter('trip_id = ' + this.id,  'time ASC');
+  }
+
+  public getDuration() {
+    return moment.duration(this.endTime.diff(this.startTime));
   }
 
 }
