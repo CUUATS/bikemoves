@@ -58,7 +58,13 @@ export class Storage extends Service {
   public debugSql(sql, args = {}) {
     this.ready()
       .then(() => this.db.executeSql(sql, args))
-      .then((res) => console.log(res));
+      .then((res) => {
+        if (res.rows.length) {
+          for (let i=0; i < res.rows.length; i++) {
+            console.log(res.rows.item(i));
+          }
+        }
+      });
   }
 
 }
