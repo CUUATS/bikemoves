@@ -3,7 +3,6 @@ import { NavController } from 'ionic-angular';
 import { Trip } from '../../app/trip';
 import { Location } from '../../app/location';
 import { pad } from '../../app/utils';
-import { File } from '@ionic-native/file';
 import { Map } from '../../app/map';
 
 @Component({
@@ -16,7 +15,7 @@ export class TripsPage {
   private map: Map;
   private pendingImages = 0;
 
-  constructor(public navCtrl: NavController, private file: File) {
+  constructor(public navCtrl: NavController) {
 
   }
 
@@ -54,13 +53,9 @@ export class TripsPage {
   }
 
   loadTripImages() {
-    this.file.createDir(this.file.dataDirectory, 'images', false)
-      .catch((err) => {if (err.code !== 12) console.log(err);})
-      .then(() => {
-        this.trips.forEach((trip) => {
-          if (!trip.imageUrl) this.createTripImage(trip);
-        });
-      });
+    this.trips.forEach((trip) => {
+      if (!trip.imageUrl) this.createTripImage(trip);
+    });
   }
 
   createTripImage(trip) {
@@ -70,12 +65,8 @@ export class TripsPage {
     });
     trip.getLocations()
       .then((locations) => this.map.createPathImage(locations))
-      .then((blob) =>
-        this.file.writeFile(
-          this.file.dataDirectory, `images/trip-${trip.id}.jpg`, blob))
-      .then((entry) => {
-        trip.imageUrl = entry.nativeURL;
-        trip.save();
+      .then((blob) => trip.saveImageFile(blob))
+      .then(() => {
         if (this.pendingImages-- === 0) {
           this.map.remove();
           this.map = null;

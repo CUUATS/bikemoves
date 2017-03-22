@@ -1,6 +1,8 @@
 import { ObjectManager } from './object_manager';
+import { File } from '@ionic-native/file';
 
 export abstract class Persistent {
+  static file: File;
   public id: number;
   public objects: ObjectManager;
 
@@ -31,7 +33,7 @@ export abstract class Persistent {
 
   public delete() {
     let objects = this.getObjectManager();
-    if (this.isSaved()) return objects.delete(this);
+    return (this.isSaved()) ? objects.delete(this) : Promise.resolve();
   }
 
 }

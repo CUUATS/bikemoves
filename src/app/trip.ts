@@ -2,6 +2,7 @@ import { Location } from './location';
 import { Persistent } from './persistent';
 import { CURRENT_VERSION } from './utils';
 import { ObjectManager } from './object_manager';
+import { FileEntry } from '@ionic-native/file';
 import * as moment from 'moment';
 
 export class Trip extends Persistent {
@@ -97,11 +98,39 @@ export class Trip extends Persistent {
   }
 
   public getLocations() {
-    return Location.objects.filter('trip_id = ' + this.id,  'time ASC');
+    return Location.objects.filter(`trip_id = ${this.id}`,  'time ASC');
   }
 
   public getDuration() {
     return moment.duration(this.endTime.diff(this.startTime));
+  }
+
+  public deleteImageFile() {
+    let file = Persistent.file;
+    return file.removeFile(file.dataDirectory, `images/trip-${this.id}.jpg`);
+  }
+
+  public saveImageFile(blob) {
+    let file = Persistent.file;
+    return file.createDir(file.dataDirectory, 'images', false)
+      .catch((err) => { if (err.code !== 12) throw err })
+      .then<FileEntry>(() => file.writeFile(
+        file.dataDirectory,
+        `images/trip-${this.id}.jpg`,
+        blob, {
+          replace: true
+        }))
+      .then((entry) => {
+        this.imageUrl = entry.nativeURL;
+        return this.save();
+      });
+  }
+
+  public delete() {
+    let locationDelete = Location.objects.batchDelete(`trip_id = ${this.id}`),
+      imageDelete = (this.imageUrl) ?
+        this.deleteImageFile() : Promise.resolve();
+    return Promise.all([locationDelete, imageDelete, super.delete()]);
   }
 
 }
