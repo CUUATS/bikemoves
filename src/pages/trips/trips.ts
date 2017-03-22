@@ -14,6 +14,7 @@ export class TripsPage {
   private trips: Trip[] = [];
   private hasTrips: boolean;
   private map: Map;
+  private pendingImages = 0;
 
   constructor(public navCtrl: NavController, private file: File) {
 
@@ -63,6 +64,7 @@ export class TripsPage {
   }
 
   createTripImage(trip) {
+    this.pendingImages++;
     if (!this.map) this.map = new Map('trip-image-map', {
       interactive: false
     });
@@ -74,13 +76,10 @@ export class TripsPage {
       .then((entry) => {
         trip.imageUrl = entry.nativeURL;
         trip.save();
-        // this.assignTripImage(trip);
+        if (this.pendingImages-- === 0) {
+          this.map.remove();
+          this.map = null;
+        }
       });
   }
-
-  // assignTripImage(trip, entry) {
-  //   (document.getElementById(`trip-${trip.id}-image`) as HTMLImageElement).src =
-  //     trip.imageUrl;
-  // }
-
 }

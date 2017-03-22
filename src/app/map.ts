@@ -325,6 +325,10 @@ export class Map {
     if (this.captureOnLoad && this.map.loaded()) this.capturePathImage();
   }
 
+  public remove() {
+    this.map.remove();
+  }
+
   // public assignTo(placeholder) {
   //   var rect = placeholder.getBoundingClientRect(),
   //     top = rect.top + document.body.scrollTop,
