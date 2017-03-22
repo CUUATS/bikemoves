@@ -67,7 +67,7 @@ export class ObjectManager {
   }
 
   public filter(where?: string, order?: string) {
-    let sql = `SELECT ${this.column_sql()} FROM ${this.table}`;
+    let sql = `SELECT ${this.column_sql(true)} FROM ${this.table}`;
     if (where) sql += ` WHERE ${where}`;
     if (order) sql += ` ORDER BY ${order}`;
     return this.db(sql).then(
