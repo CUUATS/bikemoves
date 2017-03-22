@@ -30,3 +30,14 @@ export function pad(n: number, w: number, z='0') {
   let d = n.toString();
   return (d.length >= w) ? d : new Array(w - d.length + 1).join(z) + d;
 }
+
+// Source: http://stackoverflow.com/questions/12168909/blob-from-dataurl
+export function dataURItoBlob(dataURI) {
+  let byteString = atob(dataURI.split(',')[1]),
+    mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0],
+    ab = new ArrayBuffer(byteString.length),
+    ia = new Uint8Array(ab);
+
+  for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
+  return new Blob([ab], {type: mimeString});
+}

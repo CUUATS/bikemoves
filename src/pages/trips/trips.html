@@ -20,7 +20,7 @@
     </ion-row>
   </ion-grid>
   <ion-card *ngFor="let trip of trips">
-    <img src="assets/img/map-image-placeholder.svg">
+    <img id="trip-{{trip.id}}-image" src="{{(trip.imageUrl) ? trip.imageUrl : 'assets/img/map-image-placeholder.svg'}}">
     <ion-item>
       <h2>{{trip.startTime.calendar(null, {sameElse: 'MMMM D, YYYY [at] h:mm A'})}}</h2>
     </ion-item>
@@ -49,4 +49,5 @@
       </button>
     </ion-item>
   </ion-card>
+  <div id="trip-image-map"></div>
 </ion-content>

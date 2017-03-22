@@ -2,7 +2,7 @@ import * as mapboxgl from 'mapbox-gl/dist/mapbox-gl.js'
 import turf from 'turf';
 import { Subject } from 'rxjs/Subject';
 import { Location } from './location';
-import { extend, toLineString } from './utils';
+import { extend, toLineString, dataURItoBlob } from './utils';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY3V1YXRzIiwiYSI6ImNpbm03NGFrdTB6ZTB1a2x5MHl6dTV6MXIifQ.Aq-CCCulBhKbmLGZUH6VDw';
 
@@ -14,6 +14,11 @@ interface MapOptions {
   marker?: Location;
   markerType?: string;
   zoom?: number;
+}
+
+interface PathImageRequest {
+  path?: Location[];
+  resolve: any;
 }
 
 export class Map {
@@ -60,6 +65,8 @@ export class Map {
   private map: any;
   private options: MapOptions;
   private loaded = false;
+  private pathImageQueue: PathImageRequest[] = [];
+  private captureOnLoad = false;
   public click = new Subject();
 
   constructor(public containerId: string, options: MapOptions = {}) {
@@ -75,6 +82,7 @@ export class Map {
     // Set up event handlers.
     this.map.on('load', () => this.onLoad());
     this.map.on('click', (e) => this.onClick(e));
+    this.map.on('render', (e) => this.onRender(e));
   }
 
   private onLoad() {
@@ -95,9 +103,10 @@ export class Map {
     this.animate = false;
 
     this.center = this.options.center;
+    this.zoom = this.options.zoom;
     this.marker = this.options.marker;
     this.path = this.options.path;
-    this.zoom = this.options.zoom;
+    if (this.pathImageQueue.length) this.nextPathImage();
 
     this.animate = oldAnimate;
   }
@@ -269,21 +278,51 @@ export class Map {
     }
   }
 
-  public zoomToFeature(feature) {
-    if (!feature) return;
-    var bbox = turf.bbox(feature);
-    this.map.fitBounds([bbox.slice(0, 2), bbox.slice(2)], {
-      duration: 0,
-      linear: true,
-      padding: 25
-    });
-    return this;
+  public zoomToPath() {
+    if (this.loaded) {
+      let bbox = turf.bbox(toLineString(this.path) as any);
+      this.map.fitBounds([bbox.slice(0, 2), bbox.slice(2)], {
+        duration: 0,
+        linear: true,
+        padding: 25
+      });
+    }
   }
 
   public addLocation(location: Location) {
     if (!this.options.path) this.options.path = [];
     this.options.path.push(location);
     this.path = this.options.path;
+  }
+
+  public createPathImage(locations: Location[]) {
+    return new Promise((resolve, reject) => {
+      this.pathImageQueue.push({
+        path: locations,
+        resolve: resolve
+      });
+      if (this.pathImageQueue.length === 1) this.nextPathImage();
+    });
+  }
+
+  private nextPathImage() {
+    if (this.loaded && this.pathImageQueue.length) {
+      this.path = this.pathImageQueue[0].path;
+      this.captureOnLoad = true;
+      this.zoomToPath();
+    }
+  }
+
+  private capturePathImage() {
+    this.captureOnLoad = false;
+    let jpg = this.map.getCanvas().toDataURL('image/jpeg', 0.75),
+      request = this.pathImageQueue.shift();
+    request.resolve(dataURItoBlob(jpg));
+    if (this.pathImageQueue.length) this.nextPathImage();
+  }
+
+  private onRender(e) {
+    if (this.captureOnLoad && this.map.loaded()) this.capturePathImage();
   }
 
   // public assignTo(placeholder) {

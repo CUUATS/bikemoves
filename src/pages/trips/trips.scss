@@ -37,4 +37,12 @@ page-trips {
       text-shadow: 1px 1px rgba(255, 255, 255, 0.8);
     }
   }
+  #trip-image-map {
+    background-color: #999999;
+    height: 300px;
+    left: -9999px;
+    position: absolute;
+    top: -9999px;
+    width: 400px;
+  }
 }

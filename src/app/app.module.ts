@@ -9,6 +9,7 @@ import { SettingsPage } from '../pages/settings/settings';
 import { StatsPage } from '../pages/stats/stats';
 import { TabsPage } from '../pages/tabs/tabs';
 import { TripsPage } from '../pages/trips/trips';
+import { File } from '@ionic-native/file';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { TripsPage } from '../pages/trips/trips';
   ],
   providers: [
     {provide: ErrorHandler, useClass: IonicErrorHandler},
+    File,
     Geo,
     Storage,
     Trips

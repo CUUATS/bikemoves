@@ -19,7 +19,8 @@ export class Trip extends Persistent {
       transit INTEGER DEFAULT 0,
       submitted INTEGER DEFAULT 0,
       desired_accuracy INTEGER NOT NULL DEFAULT 0,
-      app_version TEXT NOT NULL
+      app_version TEXT NOT NULL,
+      image_url TEXT
     )
   `;
   static objects = new ObjectManager(Trip, 'trip', [
@@ -31,7 +32,8 @@ export class Trip extends Persistent {
     'transit',
     'submitted',
     'desired_accuracy',
-    'app_version'
+    'app_version',
+    'image_url'
   ]);
 
   static fromRow(row) {
@@ -45,7 +47,8 @@ export class Trip extends Persistent {
       row.transit === 1,
       row.submitted === 1,
       row.desired_accuracy,
-      row.app_version
+      row.app_version,
+      row.image_url
     )
   }
 
@@ -73,7 +76,8 @@ export class Trip extends Persistent {
     public transit: boolean = false,
     public submitted: boolean = false,
     public desiredAccuracy: number = 0,
-    public appVersion: string = CURRENT_VERSION) {
+    public appVersion: string = CURRENT_VERSION,
+    public imageUrl: string = null) {
       super();
     }
 
@@ -87,7 +91,8 @@ export class Trip extends Persistent {
       + this.transit,
       + this.submitted,
       this.desiredAccuracy,
-      this.appVersion
+      this.appVersion,
+      this.imageUrl
     ];
   }
 

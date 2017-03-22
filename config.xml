@@ -90,4 +90,5 @@
     <engine name="android" spec="~6.1.2" />
     <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
     <plugin name="cordova-sqlite-storage" spec="~2.0.2" />
+    <plugin name="cordova-plugin-file" spec="~4.3.2" />
 </widget>

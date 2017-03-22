@@ -3,6 +3,8 @@ import { NavController } from 'ionic-angular';
 import { Trip } from '../../app/trip';
 import { Location } from '../../app/location';
 import { pad } from '../../app/utils';
+import { File } from '@ionic-native/file';
+import { Map } from '../../app/map';
 
 @Component({
   selector: 'page-trips',
@@ -11,8 +13,9 @@ import { pad } from '../../app/utils';
 export class TripsPage {
   private trips: Trip[] = [];
   private hasTrips: boolean;
+  private map: Map;
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController, private file: File) {
 
   }
 
@@ -21,6 +24,7 @@ export class TripsPage {
       if (trips.length) {
         this.hasTrips = true;
         this.trips = trips;
+        this.loadTripImages();
       } else {
         this.hasTrips = false;
       }
@@ -47,5 +51,36 @@ export class TripsPage {
   goToMap() {
     this.navCtrl.parent.select(0);
   }
+
+  loadTripImages() {
+    this.file.createDir(this.file.dataDirectory, 'images', false)
+      .catch((err) => {if (err.code !== 12) console.log(err);})
+      .then(() => {
+        this.trips.forEach((trip) => {
+          if (!trip.imageUrl) this.createTripImage(trip);
+        });
+      });
+  }
+
+  createTripImage(trip) {
+    if (!this.map) this.map = new Map('trip-image-map', {
+      interactive: false
+    });
+    trip.getLocations()
+      .then((locations) => this.map.createPathImage(locations))
+      .then((blob) =>
+        this.file.writeFile(
+          this.file.dataDirectory, `images/trip-${trip.id}.jpg`, blob))
+      .then((entry) => {
+        trip.imageUrl = entry.nativeURL;
+        trip.save();
+        // this.assignTripImage(trip);
+      });
+  }
+
+  // assignTripImage(trip, entry) {
+  //   (document.getElementById(`trip-${trip.id}-image`) as HTMLImageElement).src =
+  //     trip.imageUrl;
+  // }
 
 }
