@@ -4,7 +4,7 @@ import { MapPage } from '../map/map';
 import { SettingsPage } from '../settings/settings';
 import { StatsPage } from '../stats/stats';
 import { TripsPage } from '../trips/trips';
-import { Trip } from '../../app/trip';
+import { Trips } from '../../app/trips';
 import { Geo } from '../../app/geo';
 
 @Component({
@@ -17,7 +17,7 @@ export class TabsPage {
   tripsRoot: any = TripsPage;
   unsubmittedTripsCount: number;
 
-  constructor(private geo: Geo) {
+  constructor(private geo: Geo, private trips: Trips) {
     geo.motion.subscribe(this.onMotion.bind(this));
   }
 
@@ -30,7 +30,7 @@ export class TabsPage {
   }
 
   public updateTripsBadge() {
-    Trip.objects.count('submitted = 0')
+    this.trips.count('submitted = ?', [0])
       .then((count) => this.unsubmittedTripsCount = (count > 0) ? count : null);
   }
 }

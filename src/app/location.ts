@@ -1,28 +1,9 @@
 import turf from 'turf';
 import { Persistent } from './persistent';
-import { ObjectManager } from './object_manager';
 import { Geo } from './geo';
 import * as moment from 'moment';
 
 export class Location extends Persistent {
-  static SQL_CREATE_TABLE = `
-    CREATE TABLE IF NOT EXISTS location (
-      id INTEGER PRIMARY KEY ASC NOT NULL,
-      longitude REAL NOT NULL,
-      latitude REAL NOT NULL,
-      accuracy REAL NOT NULL,
-      altitude REAL NOT NULL,
-      heading REAL NOT NULL,
-      speed REAL NOT NULL,
-      time INTEGER NOT NULL,
-      moving INTEGER NOT NULL,
-      event INTEGER,
-      activity INTEGER,
-      confidence INTEGER,
-      location_type INTEGER,
-      trip_id INTEGER
-    )
-  `;
   static LOCATION_TYPES = [
     'Not Specified',
     'Home',
@@ -32,21 +13,6 @@ export class Location extends Persistent {
     'Shopping',
     'Other'
   ];
-  static objects = new ObjectManager(Location, 'location', [
-    'longitude',
-    'latitude',
-    'accuracy',
-    'altitude',
-    'heading',
-    'speed',
-    'time',
-    'moving',
-    'event',
-    'activity',
-    'confidence',
-    'location_type',
-    'trip_id'
-  ]);
 
   static fromPosition(position) {
     return new Location(
@@ -65,30 +31,6 @@ export class Location extends Persistent {
 
   static fromLngLat(lngLat: [number, number]) {
     return new Location(lngLat[0], lngLat[1]);
-  }
-
-  static fromRow(row) {
-    return new Location(
-      row.longitude,
-      row.latitude,
-      row.accuracy,
-      row.altitude,
-      row.heading,
-      row.speed,
-      moment(row.time),
-      row.moving === 1,
-      row.event,
-      row.activity,
-      row.confidence,
-      row.location_type,
-      row.trip_id,
-      row.id
-    )
-  }
-
-  static getMigrations(toVersion) {
-    if (toVersion == 1) return [Location.SQL_CREATE_TABLE];
-    return [];
   }
 
   constructor(
@@ -115,24 +57,6 @@ export class Location extends Persistent {
 
   public toLngLat() {
     return [this.longitude, this.latitude];
-  }
-
-  public toRow() {
-    return [
-      this.longitude,
-      this.latitude,
-      this.accuracy,
-      this.altitude,
-      this.heading,
-      this.speed,
-      this.time.valueOf(),
-      + this.moving,
-      this.event,
-      this.activity,
-      this.confidence,
-      this.locationType,
-      this.tripId
-    ];
   }
 
   public distanceTo(loc: Location) {

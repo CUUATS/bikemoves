@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Service } from './service';
 import { Location } from './location';
+import { Locations } from './locations';
 import { Trip } from './trip';
+import { Trips } from './trips';
 import { ActivityType, EventType } from './enum';
 
 @Injectable()
@@ -45,7 +47,7 @@ export class Geo extends Service {
   public motion = new Subject();
   public currentLocation: Location;
 
-  constructor() {
+  constructor(private locationManager: Locations, private tripManager: Trips) {
     super();
   }
 
@@ -79,7 +81,7 @@ export class Geo extends Service {
 
     if (!position.sample &&
         (location.moving || location.event == EventType.Motion)) {
-      location.save().then(() => this.finish(taskId));
+      this.locationManager.save(location).then(() => this.finish(taskId));
     } else {
       this.finish(taskId);
     }
@@ -90,10 +92,11 @@ export class Geo extends Service {
       this.motion.next(moving);
       this.finish(taskId);
     } else {
-      Location.objects.filter('trip_id IS NULL')
-        .then((locations) => Trip.fromLocations(locations).save())
-        .then((trip) => Location.objects.batchUpdate(
-          `trip_id = ${trip.id}`, 'trip_id IS NULL'))
+      this.locationManager.filter('trip_id IS NULL')
+        .then((locations) =>
+          this.tripManager.save(Trip.fromLocations(locations)))
+        .then((trip) => this.locationManager.batchUpdate(
+          ['trip_id'], [trip.id], 'trip_id IS NULL'))
         .then(() => {
           this.motion.next(moving);
           this.finish(taskId);

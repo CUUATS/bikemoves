@@ -2,6 +2,7 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { BikeMoves } from './app.component';
 import { Geo } from './geo';
+import { Locations } from './locations';
 import { Storage } from './storage';
 import { Trips } from './trips';
 import { MapPage } from '../pages/map/map';
@@ -39,6 +40,7 @@ import { File } from '@ionic-native/file';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     File,
     Geo,
+    Locations,
     Storage,
     Trips
   ]

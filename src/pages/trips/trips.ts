@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Trip } from '../../app/trip';
+import { Trips } from '../../app/trips';
 import { Location } from '../../app/location';
 import { pad } from '../../app/utils';
 import { Map } from '../../app/map';
@@ -16,12 +17,12 @@ export class TripsPage {
   private map: Map;
   private pendingImages = 0;
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController, private tripManager: Trips) {
 
   }
 
   ionViewWillEnter() {
-    Trip.objects.all('start_time DESC').then((trips) => {
+    this.tripManager.all('start_time DESC').then((trips) => {
       if (trips.length) {
         this.hasTrips = true;
         this.trips = trips;
