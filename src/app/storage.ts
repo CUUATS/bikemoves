@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SQLite } from 'ionic-native';
 import { Service } from './service';
-import { ObjectManager } from './object_manager';
 
 export interface Migration {
   version: number;
@@ -32,7 +31,6 @@ export class Storage extends Service {
   }
 
   private db = new SQLite();
-  private managers: ObjectManager[];
 
   public init() {
     return this.db.openDatabase({

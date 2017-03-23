@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Trip } from '../../app/trip';
 import { Trips } from '../../app/trips';
-import { Location } from '../../app/location';
 import { Map } from '../../app/map';
 import { TripDetailPage } from '../trip-detail/trip-detail';
 

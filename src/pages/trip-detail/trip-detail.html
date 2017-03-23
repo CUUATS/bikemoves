@@ -1,8 +1,14 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Trip Detail
+      Trip Details
     </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-left color="danger" *ngIf="!trip.submitted">
+        <ion-icon name="cloud-upload"></ion-icon>
+        Upload
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
