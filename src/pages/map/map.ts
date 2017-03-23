@@ -1,7 +1,7 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Geo } from '../../app/geo';
-import { Map } from '../../app/map';
+import { Map, MapOptions } from '../../app/map';
 
 @Component({
   selector: 'page-map',
@@ -22,9 +22,10 @@ export class MapPage {
   }
 
   ionViewDidLoad() {
-    this.map = new Map('map', {
-      interactive: true
-    });
+    let options: MapOptions = {};
+    options.interactive = true;
+    if (this.geo.currentLocation) options.center = this.geo.currentLocation;
+    this.map = new Map('map', options);
   }
 
   ionViewWillEnter() {

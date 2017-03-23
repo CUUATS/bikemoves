@@ -6,6 +6,38 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <h2>{{trip.startTime.calendar(null, {sameElse: 'MMMM D, YYYY [at] h:mm A'})}}</h2>
+<ion-content>
+  <div id="trip-detail-map"></div>
+  <ion-list padding>
+    <ion-item>
+      <ion-icon name="calendar" item-left></ion-icon>
+        {{trip.startTime.format('MMMM D, YYYY [at] h:mm A')}}
+    </ion-item>
+    <ion-item *ngIf="trip.origin > 0 || trip.destination > 0">
+      <ion-icon name="bicycle" item-left></ion-icon>
+        {{trip.formatOrigin()}}
+        <ion-icon name="arrow-forward"></ion-icon>
+        {{trip.formatDestination()}}
+    </ion-item>
+    <ion-item>
+      <ion-icon name="timer" item-left></ion-icon>
+        {{trip.formatDuration()}}
+    </ion-item>
+    <ion-item>
+      <ion-icon name="pin" item-left></ion-icon>
+        {{trip.formatDistance()}} mi
+    </ion-item>
+    <ion-item>
+      <ion-icon name="speedometer" item-left></ion-icon>
+        {{trip.formatSpeed()}} MPH
+    </ion-item>
+    <ion-item>
+      <ion-icon name="pizza" item-left></ion-icon>
+        {{trip.formatCalories()}} cal
+    </ion-item>
+    <ion-item>
+      <ion-icon name="leaf" item-left></ion-icon>
+        {{trip.formatGHG()}} lb GHG
+    </ion-item>
+  </ion-list>
 </ion-content>

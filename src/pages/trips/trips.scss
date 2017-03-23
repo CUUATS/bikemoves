@@ -12,6 +12,9 @@ page-trips {
       padding: 5px 0;
       .summary-value {
         margin-left: 0.75em;
+        ion-icon {
+          margin: 0 0.2em;
+        }
       }
     }
   }

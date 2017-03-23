@@ -6,8 +6,7 @@ import { extend, toLineString, dataURItoBlob } from './utils';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY3V1YXRzIiwiYSI6ImNpbm03NGFrdTB6ZTB1a2x5MHl6dTV6MXIifQ.Aq-CCCulBhKbmLGZUH6VDw';
 
-interface MapOptions {
-  animate?: boolean;
+export interface MapOptions {
   center?: Location;
   interactive?: boolean;
   path?: Location[];
@@ -25,7 +24,6 @@ export class Map {
   static MARKER_CURRENT = 'current';
   static MARKER_INCIDENT = 'incident';
   static DEFAULT_OPTIONS: MapOptions = {
-    animate: false,
     center: new Location(-88.227203, 40.109403),
     interactive: false,
     markerType: Map.MARKER_CURRENT,
@@ -75,8 +73,8 @@ export class Map {
     this.map = new mapboxgl.Map({
         container: this.containerId,
         style: Map.MAP_STYLE,
-        zoom: this.zoom,
-        center: this.center.toLngLat()
+        zoom: this.options.zoom,
+        center: this.options.center.toLngLat()
     });
 
     // Set up event handlers.
@@ -99,16 +97,9 @@ export class Map {
   }
 
   private updateMap() {
-    let oldAnimate = this.animate;
-    this.animate = false;
-
-    this.center = this.options.center;
-    this.zoom = this.options.zoom;
     this.marker = this.options.marker;
     this.path = this.options.path;
     if (this.pathImageQueue.length) this.nextPathImage();
-
-    this.animate = oldAnimate;
   }
 
   private openPopup(e) {
@@ -195,30 +186,12 @@ export class Map {
     });
   }
 
-  get animate() {
-    return this.options.animate;
-  }
-
-  set animate(animate: boolean) {
-    this.options.animate = animate;
-  }
-
   get center() {
-    return (this.loaded) ?
-      Location.fromLngLat(this.map.getCenter()) : this.options.center;
+    return Location.fromLngLat(this.map.getCenter());
   }
 
   set center(location: Location) {
-    this.options.center = location;
-    if (this.loaded) {
-      if (this.options.animate) {
-        this.map.flyTo({
-          center: location.toLngLat()
-        });
-      } else {
-        this.map.setCenter(location.toLngLat());
-      }
-    }
+    this.map.setCenter(location.toLngLat());
   }
 
   get interactive() {
@@ -264,29 +237,20 @@ export class Map {
   }
 
   get zoom() {
-    return (this.loaded) ? this.map.getZoom() : this.options.zoom;
+    return this.map.getZoom();
   }
 
   set zoom(zoom) {
-    this.options.zoom = zoom;
-    if (this.loaded) {
-      if (this.animate) {
-        this.map.zoomTo(zoom);
-      } else {
-        this.map.setZoom(zoom);
-      }
-    }
+    this.map.setZoom(zoom);
   }
 
   public zoomToPath() {
-    if (this.loaded) {
-      let bbox = turf.bbox(toLineString(this.path) as any);
-      this.map.fitBounds([bbox.slice(0, 2), bbox.slice(2)], {
-        duration: 0,
-        linear: true,
-        padding: 25
-      });
-    }
+    let bbox = turf.bbox(toLineString(this.path) as any);
+    this.map.fitBounds([bbox.slice(0, 2), bbox.slice(2)], {
+      duration: 0,
+      linear: true,
+      padding: 25
+    });
   }
 
   public addLocation(location: Location) {
@@ -328,34 +292,6 @@ export class Map {
   public remove() {
     this.map.remove();
   }
-
-  // public assignTo(placeholder) {
-  //   var rect = placeholder.getBoundingClientRect(),
-  //     top = rect.top + document.body.scrollTop,
-  //     left = rect.left + document.body.scrollLeft,
-  //     height = placeholder.offsetHeight,
-  //     width = placeholder.offsetWidth,
-  //     container = this.map.getContainer();
-  //
-  //   container.style.position = 'absolute';
-  //   container.style.top = top + 'px';
-  //   container.style.left = left + 'px';
-  //   container.style.height = height - 1 + 'px'; // One pixel for bar border.
-  //   container.style.width = width + 'px';
-  //   this.map.resize();
-  //
-  //   return this;
-  // }
-
-  // public reset() {
-  //   if (this.markerEl)
-  //     this.markerEl.style.display = 'none';
-  //   this.setTripLocations(undefined);
-  //   this.map.jumpTo({
-  //     zoom: Map.DEFAULT_ZOOM
-  //   });
-  //   return this;
-  // };
 
   public show() {
     this.map.getContainer().style.display = 'block';
