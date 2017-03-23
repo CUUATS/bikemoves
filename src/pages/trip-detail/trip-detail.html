@@ -4,7 +4,7 @@
       Trip Details
     </ion-title>
     <ion-buttons end>
-      <button ion-button icon-left color="danger" *ngIf="!trip.submitted">
+      <button ion-button icon-left color="danger" *ngIf="!trip.submitted" (click)="showTripForm()">
         <ion-icon name="cloud-upload"></ion-icon>
         Upload
       </button>

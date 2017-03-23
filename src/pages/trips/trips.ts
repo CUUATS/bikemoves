@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { ModalController, NavController } from 'ionic-angular';
 import { Trip } from '../../app/trip';
 import { Trips } from '../../app/trips';
 import { Map } from '../../app/map';
 import { TripDetailPage } from '../trip-detail/trip-detail';
+import { TripFormPage } from '../trip-form/trip-form';
 
 @Component({
   selector: 'page-trips',
@@ -15,7 +16,7 @@ export class TripsPage {
   private map: Map;
   private pendingImages = 0;
 
-  constructor(public navCtrl: NavController, private tripManager: Trips) {
+  constructor(private navCtrl: NavController, private tripManager: Trips, private modalCtrl: ModalController) {
 
   }
 
@@ -59,5 +60,10 @@ export class TripsPage {
 
   goToTripDetail(trip: Trip) {
     this.navCtrl.push(TripDetailPage, trip);
+  }
+
+  showTripForm(trip) {
+    let modal = this.modalCtrl.create(TripFormPage, trip);
+    modal.present();
   }
 }

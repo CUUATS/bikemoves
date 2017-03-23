@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      Upload Trip
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <p padding>
+    Help improve the bike network by sharing your trip with local planners
+    and officials! The details of your trip will be kept private.
+  </p>
+  <ion-list>
+    <ion-item-group>
+      <ion-item-divider color="light">Trip Information</ion-item-divider>
+      <ion-item>
+        <ion-label>I biked from</ion-label>
+        <ion-select [(ngModel)]="trip.origin">
+          <ion-option *ngFor="let option of locationTypes" value="{{option.id}}">{{option.label}}</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label>I biked to</ion-label>
+        <ion-select [(ngModel)]="trip.destination">
+          <ion-option *ngFor="let option of locationTypes" value="{{option.id}}">{{option.label}}</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label>I took my bike on a bus.</ion-label>
+        <ion-checkbox [(ngModel)]="trip.transit"></ion-checkbox>
+      </ion-item>
+    </ion-item-group>
+  </ion-list>
+  <div padding>
+    <p>
+      <button ion-button block icon-left color="primary">
+        <ion-icon name="cloud-upload"></ion-icon>
+        Upload
+      </button>
+    </p>
+    <p>
+      <button ion-button block icon-left color="light">
+        <ion-icon name="close"></ion-icon>
+        Cancel
+      </button>
+    </p>
+  </div>
+</ion-content>

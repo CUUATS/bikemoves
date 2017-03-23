@@ -38,7 +38,7 @@
         <ion-icon name="cloud-done"></ion-icon>
         Uploaded
       </span>
-      <button ion-button icon-left clear item-left color="danger" *ngIf="!trip.submitted">
+      <button ion-button icon-left clear item-left color="danger" *ngIf="!trip.submitted" (click)="showTripForm(trip)">
         <ion-icon name="cloud-upload"></ion-icon>
         Upload
       </button>
