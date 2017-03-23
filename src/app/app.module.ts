@@ -8,6 +8,7 @@ import { MapPage } from '../pages/map/map';
 import { SettingsPage } from '../pages/settings/settings';
 import { StatsPage } from '../pages/stats/stats';
 import { TabsPage } from '../pages/tabs/tabs';
+import { TripDetailPage } from '../pages/trip-detail/trip-detail';
 import { TripsPage } from '../pages/trips/trips';
 import { File } from '@ionic-native/file';
 
@@ -18,6 +19,7 @@ import { File } from '@ionic-native/file';
     SettingsPage,
     StatsPage,
     TabsPage,
+    TripDetailPage,
     TripsPage
   ],
   imports: [
@@ -30,6 +32,7 @@ import { File } from '@ionic-native/file';
     SettingsPage,
     StatsPage,
     TabsPage,
+    TripDetailPage,
     TripsPage
   ],
   providers: [

@@ -20,7 +20,7 @@
     </ion-row>
   </ion-grid>
   <ion-card *ngFor="let trip of trips">
-    <img id="trip-{{trip.id}}-image" src="{{(trip.imageUrl) ? trip.imageUrl : 'assets/img/map-image-placeholder.svg'}}">
+    <img id="trip-{{trip.id}}-image" src="{{(trip.imageUrl) ? trip.imageUrl : 'assets/img/map-image-placeholder.svg'}}" (click)="goToTripDetail(trip)">
     <ion-item>
       <h2>{{trip.startTime.calendar(null, {sameElse: 'MMMM D, YYYY [at] h:mm A'})}}</h2>
     </ion-item>
@@ -43,7 +43,7 @@
         <ion-icon name="cloud-upload"></ion-icon>
         Upload
       </button>
-      <button ion-button icon-left clear item-right>
+      <button ion-button icon-left clear item-right (click)="goToTripDetail(trip)">
         <ion-icon name="information-circle"></ion-icon>
         Details
       </button>

@@ -4,6 +4,7 @@ import { Trip } from '../../app/trip';
 import { Location } from '../../app/location';
 import { pad } from '../../app/utils';
 import { Map } from '../../app/map';
+import { TripDetailPage } from '../trip-detail/trip-detail';
 
 @Component({
   selector: 'page-trips',
@@ -72,5 +73,9 @@ export class TripsPage {
           this.map = null;
         }
       });
+  }
+
+  goToTripDetail(trip: Trip) {
+    this.navCtrl.push(TripDetailPage, trip);
   }
 }
