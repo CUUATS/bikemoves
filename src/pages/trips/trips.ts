@@ -47,9 +47,9 @@ export class TripsPage {
     if (!this.map) this.map = new Map('trip-image-map', {
       interactive: false
     });
-    trip.getLocations()
+    this.tripManager.getLocations(trip)
       .then((locations) => this.map.createPathImage(locations))
-      .then((blob) => trip.saveImageFile(blob))
+      .then((blob) => this.tripManager.saveImage(trip, blob))
       .then(() => {
         if (this.pendingImages-- === 0) {
           this.map.remove();
