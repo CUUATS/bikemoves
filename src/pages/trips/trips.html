@@ -19,9 +19,11 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-  <ion-card *ngFor="let trip of trips">
+  <ion-card *ngFor="let trip of trips" (press)="showTripOptions(trip)">
     <div class="trip-wrapper trip-{{(trip.submitted) ? 'submitted' : 'not-submitted'}}">
-      <img id="trip-{{trip.id}}-image" class="trip-image" src="{{(trip.imageUrl) ? trip.imageUrl : 'assets/img/map-image-placeholder.svg'}}" (click)="goToTripDetail(trip)">
+      <img id="trip-{{trip.id}}-image" class="trip-image"
+        src="{{(trip.imageUrl) ? trip.imageUrl : 'assets/img/map-image-placeholder.svg'}}"
+        (click)="goToTripDetail(trip)" (press)="pressFix">
       <ion-item>
         <h2>{{trip.startTime.calendar(null, {sameElse: 'MMMM D, YYYY [at] h:mm A'})}}</h2>
       </ion-item>

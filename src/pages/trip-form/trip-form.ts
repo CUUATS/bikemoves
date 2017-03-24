@@ -5,6 +5,7 @@ import { Trip } from '../../app/trip';
 import { Trips } from '../../app/trips';
 import { Remote } from '../../app/remote';
 import { getOptions } from '../../app/utils';
+import { notify } from '../../app/utils';
 
 @Component({
   selector: 'page-trip-form',
@@ -33,22 +34,15 @@ export class TripFormPage {
     this.viewCtrl.dismiss();
   }
 
-  private notify(msg: string) {
-    let toast = this.toastCtrl.create({
-      message: msg,
-      duration: 3000
-    });
-    toast.present();
-  }
-
   private uploadTrip() {
     this.isUploading = true;
     this.remote.postTrip(this.trip)
       .then(() => {
-        this.notify('Trip uploaded successfully!')
+        notify(this.toastCtrl, 'Trip uploaded successfully!');
         this.trip.submitted = true;
       })
-      .catch(() => this.notify('Trip upload failed. Please try again later.'))
+      .catch(() =>
+        notify(this.toastCtrl, 'Trip upload failed. Please try again later.'))
       .then(() => this.tripManager.save(this.trip))
       .then(() =>
         this.appCtrl.getRootNav().first().instance.updateTripsBadge());

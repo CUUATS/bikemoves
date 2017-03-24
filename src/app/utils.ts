@@ -1,3 +1,4 @@
+import { ToastController } from 'ionic-angular';
 import { Location } from './location';
 import turf from 'turf';
 
@@ -47,4 +48,13 @@ export function getOptions(labels: any[]) {
       label: label
     }
   });
+}
+
+export function notify(toastCtrl: ToastController, msg: string, duration = 3000) {
+  let toast = toastCtrl.create({
+    message: msg,
+    duration: 3000
+  });
+  toast.present();
+  return toast;
 }
