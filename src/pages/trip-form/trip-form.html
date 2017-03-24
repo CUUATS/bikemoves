@@ -11,7 +11,7 @@
     Help improve the bike network by sharing your trip with local planners
     and officials! The details of your trip will be kept private.
   </p>
-  <ion-list>
+  <ion-list no-margin>
     <ion-item-group>
       <ion-item-divider color="light">Trip Information</ion-item-divider>
       <ion-item>
@@ -32,7 +32,7 @@
       </ion-item>
     </ion-item-group>
   </ion-list>
-  <div padding>
+  <div padding class="no-top-padding">
     <p>
       <button ion-button block icon-left color="primary">
         <ion-icon name="cloud-upload"></ion-icon>
@@ -40,7 +40,7 @@
       </button>
     </p>
     <p>
-      <button ion-button block icon-left color="light">
+      <button ion-button block icon-left color="light" (click)="closeModal()">
         <ion-icon name="close"></ion-icon>
         Cancel
       </button>

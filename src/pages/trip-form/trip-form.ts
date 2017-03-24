@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavParams } from 'ionic-angular';
+import { NavParams, ViewController } from 'ionic-angular';
 import { Trip } from '../../app/trip';
 import { Trips } from '../../app/trips';
 
@@ -14,8 +14,16 @@ export class TripFormPage {
     {id: 1, label: 'Home'}
   ];
 
-  constructor(public navParams: NavParams, public tripManager: Trips) {
+  constructor(private navParams: NavParams, private viewCtrl: ViewController, private tripManager: Trips) {
     this.trip = navParams.data;
+  }
+
+  ionViewWillLeave() {
+    this.tripManager.save(this.trip);
+  }
+
+  private closeModal() {
+    this.viewCtrl.dismiss();
   }
 
 }
