@@ -8,6 +8,10 @@
         <ion-icon name="cloud-upload"></ion-icon>
         Upload
       </button>
+      <span ion-button icon-left class="item-left" *ngIf="trip.submitted">
+        <ion-icon name="cloud-done"></ion-icon>
+        Uploaded
+      </span>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
