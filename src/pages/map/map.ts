@@ -24,7 +24,10 @@ export class MapPage {
   ionViewDidLoad() {
     let options: MapOptions = {};
     options.interactive = true;
-    if (this.geo.currentLocation) options.center = this.geo.currentLocation;
+    if (this.geo.currentLocation) {
+      options.center = this.geo.currentLocation;
+      options.marker = this.geo.currentLocation;
+    }
     this.map = new Map('map', options);
   }
 
