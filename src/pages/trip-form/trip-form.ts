@@ -16,7 +16,6 @@ export class TripFormPage {
 
   constructor(public navParams: NavParams, public tripManager: Trips) {
     this.trip = navParams.data;
-    this.trip.origin = 1;
   }
 
 }
