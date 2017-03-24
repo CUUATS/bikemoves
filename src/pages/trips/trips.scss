@@ -2,6 +2,9 @@ page-trips {
   ion-content.cards-background {
     background-color: #eeeeee;
   }
+  ion-card .trip-not-submitted {
+    border: 1px solid color($colors, danger);
+  }
   ion-card h2 {
     font-size: 1.25em !important;
     margin-top: 0.25em !important;
