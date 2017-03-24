@@ -1,29 +1,57 @@
 import { Component } from '@angular/core';
-import { NavParams, ViewController } from 'ionic-angular';
+import { App, NavParams, ViewController, ToastController } from 'ionic-angular';
+import { Location } from '../../app/location';
 import { Trip } from '../../app/trip';
 import { Trips } from '../../app/trips';
+import { Remote } from '../../app/remote';
+import { getOptions } from '../../app/utils';
 
 @Component({
   selector: 'page-trip-form',
   templateUrl: 'trip-form.html'
 })
 export class TripFormPage {
-  trip: Trip;
-  locationTypes = [
-    {id: 0, label: 'Not Specified'},
-    {id: 1, label: 'Home'}
-  ];
+  private trip: Trip;
+  private isUploading = false;
+  private locationTypeOptions = getOptions(Location.LOCATION_TYPES);
 
-  constructor(private navParams: NavParams, private viewCtrl: ViewController, private tripManager: Trips) {
+  constructor(
+      private appCtrl: App,
+      private navParams: NavParams,
+      private viewCtrl: ViewController,
+      private toastCtrl: ToastController,
+      private tripManager: Trips,
+      private remote: Remote) {
     this.trip = navParams.data;
   }
 
   ionViewWillLeave() {
-    this.tripManager.save(this.trip);
+    if (!this.isUploading) this.tripManager.save(this.trip);
   }
 
   private closeModal() {
     this.viewCtrl.dismiss();
   }
 
+  private notify(msg: string) {
+    let toast = this.toastCtrl.create({
+      message: msg,
+      duration: 3000
+    });
+    toast.present();
+  }
+
+  private uploadTrip() {
+    this.isUploading = true;
+    this.remote.postTrip(this.trip)
+      .then(() => {
+        this.notify('Trip uploaded successfully!')
+        this.trip.submitted = true;
+      })
+      .catch(() => this.notify('Trip upload failed. Please try again later.'))
+      .then(() => this.tripManager.save(this.trip))
+      .then(() =>
+        this.appCtrl.getRootNav().first().instance.updateTripsBadge());
+    this.closeModal();
+  }
 }

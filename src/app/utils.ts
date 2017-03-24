@@ -1,8 +1,6 @@
 import { Location } from './location';
 import turf from 'turf';
 
-export const CURRENT_VERSION = '2.0.0';
-
 // Source: http://stackoverflow.com/questions/37042602/how-to-combine-object-properties-in-typescript
 export function extend(...args: any[]): any {
   const newObj = {};
@@ -40,4 +38,13 @@ export function dataURItoBlob(dataURI) {
 
   for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
   return new Blob([ab], {type: mimeString});
+}
+
+export function getOptions(labels: any[]) {
+  return labels.map((label, i) => {
+    return {
+      value: i,
+      label: label
+    }
+  });
 }

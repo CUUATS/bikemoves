@@ -17,13 +17,13 @@
       <ion-item>
         <ion-label>I biked from</ion-label>
         <ion-select [(ngModel)]="trip.origin">
-          <ion-option *ngFor="let option of locationTypes" value="{{option.id}}">{{option.label}}</ion-option>
+          <ion-option *ngFor="let option of locationTypeOptions" value="{{option.value}}">{{option.label}}</ion-option>
         </ion-select>
       </ion-item>
       <ion-item>
         <ion-label>I biked to</ion-label>
         <ion-select [(ngModel)]="trip.destination">
-          <ion-option *ngFor="let option of locationTypes" value="{{option.id}}">{{option.label}}</ion-option>
+          <ion-option *ngFor="let option of locationTypeOptions" value="{{option.value}}">{{option.label}}</ion-option>
         </ion-select>
       </ion-item>
       <ion-item>
@@ -34,7 +34,7 @@
   </ion-list>
   <div padding class="no-top-padding">
     <p>
-      <button ion-button block icon-left color="primary">
+      <button ion-button block icon-left color="primary" (click)="uploadTrip()">
         <ion-icon name="cloud-upload"></ion-icon>
         Upload
       </button>

@@ -1,6 +1,7 @@
 import { Location } from './location';
 import { Persistent } from './persistent';
-import { pad, CURRENT_VERSION } from './utils';
+import { APP_VERSION } from './config';
+import { pad } from './utils';
 import * as moment from 'moment';
 
 const MILE = 0.000621371,
@@ -30,7 +31,7 @@ export class Trip extends Persistent {
     public transit: boolean = false,
     public submitted: boolean = false,
     public desiredAccuracy: number = 0,
-    public appVersion: string = CURRENT_VERSION,
+    public appVersion: string = APP_VERSION,
     public imageUrl: string = null) {
       super();
     }

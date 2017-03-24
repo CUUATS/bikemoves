@@ -5,7 +5,7 @@ import { Location } from './location';
 import { Locations } from './locations';
 import { Trip } from './trip';
 import { Trips } from './trips';
-import { ActivityType, EventType } from './enum';
+import { bikemoves as messages } from './messages';
 
 @Injectable()
 export class Geo extends Service {
@@ -25,19 +25,19 @@ export class Geo extends Service {
 		stopTimeout: 3 // Keep tracking for 3 minutes while stationary
 	};
   static ACTIVITIES = {
-    'still': ActivityType.Still,
-    'on_foot': ActivityType.Foot,
-    'walking': ActivityType.Walk,
-    'running': ActivityType.Run,
-    'in_vehicle': ActivityType.Vehicle,
-    'on_bicycle': ActivityType.Bicycle,
-    'unknown': ActivityType.Unknown
+    'still': messages.ActivityType.STILL,
+    'on_foot': messages.ActivityType.FOOT,
+    'walking': messages.ActivityType.WALK,
+    'running': messages.ActivityType.RUN,
+    'in_vehicle': messages.ActivityType.VEHICLE,
+    'on_bicycle': messages.ActivityType.BICYCLE,
+    'unknown': messages.ActivityType.UNKNOWN
   };
   static EVENTS = {
-    'motionchange': EventType.Motion,
-    'geofence': EventType.Geofence,
-    'heartbeat': EventType.Heartbeat,
-    'providerchange': EventType.Provider
+    'motionchange': messages.EventType.MOTION,
+    'geofence': messages.EventType.GEOFENCE,
+    'heartbeat': messages.EventType.HEARTBEAT,
+    'providerchange': messages.EventType.PROVIDER
   };
   private bgGeo: any;
   private settings = Geo.BG_DEFAULT_SETTINGS;
@@ -80,7 +80,7 @@ export class Geo extends Service {
     this.locations.next(location);
 
     if (!position.sample &&
-        (location.moving || location.event == EventType.Motion)) {
+        (location.moving || location.event == messages.EventType.MOTION)) {
       this.locationManager.save(location).then(() => this.finish(taskId));
     } else {
       this.finish(taskId);
