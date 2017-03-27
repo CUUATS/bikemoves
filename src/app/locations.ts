@@ -66,7 +66,7 @@ export class Locations extends ObjectManager {
 
 }
 
-Storage.addMigration(1, `
+Storage.addMigration(2, `
   CREATE TABLE IF NOT EXISTS location (
     id INTEGER PRIMARY KEY ASC NOT NULL,
     longitude REAL NOT NULL,
@@ -81,6 +81,30 @@ Storage.addMigration(1, `
     activity INTEGER,
     confidence INTEGER,
     location_type INTEGER,
-    trip_id INTEGER
+    trip_id INTEGER REFERENCES trip(id) ON DELETE CASCADE
   )
 `);
+
+Storage.addMigration(3, `
+  CREATE TRIGGER update_location_type
+  UPDATE OF origin_type, destination_type ON trip
+    BEGIN
+      UPDATE location SET location_type = new.origin_type
+      WHERE trip_id = old.id
+        AND event = 1
+        AND moving = 1;
+      UPDATE location SET location_type = new.destination_type
+      WHERE trip_id = old.id
+        AND event = 1
+        AND moving = 0;
+    END;
+`);
+
+Storage.addMigration(4,
+  'CREATE INDEX location_longitude ON location(longitude);');
+
+Storage.addMigration(5,
+  'CREATE INDEX location_latitude ON location(latitude);');
+
+Storage.addMigration(6,
+  'CREATE INDEX location_location_type ON location(location_type);');
