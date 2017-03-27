@@ -86,7 +86,7 @@ export class Trips extends ObjectManager {
   }
 
   public getLocations(trip) {
-    return this.locations.filter(`trip_id = ${trip.id}`,  'time ASC');
+    return this.locations.filter(`trip_id = ?`,  'time ASC', [trip.id]);
   }
 
 }
