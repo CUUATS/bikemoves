@@ -1,7 +1,9 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Geo } from '../../app/geo';
+import { Location } from '../../app/location';
 import { Map, MapOptions } from '../../app/map';
+import { Marker } from '../../app/marker';
 
 @Component({
   selector: 'page-map',
@@ -14,6 +16,8 @@ export class MapPage {
 
   private map: Map;
   private state = MapPage.STATE_STOPPED;
+  private currentMarker: Marker;
+  private incidentMarker: Marker;
 
   constructor(public navCtrl: NavController, private cdr: ChangeDetectorRef, private geo: Geo) {
     geo.motion.subscribe(this.onMotion.bind(this));
@@ -29,6 +33,7 @@ export class MapPage {
       options.marker = this.geo.currentLocation;
     }
     this.map = new Map('map', options);
+    this.map.click.subscribe(this.onClick.bind(this));
   }
 
   ionViewWillEnter() {
@@ -55,7 +60,11 @@ export class MapPage {
   private onLocation(location) {
     if (!this.map) return;
     this.map.center = location;
-    this.map.marker = location;
+    if (this.currentMarker) {
+      this.currentMarker.location = location;
+    } else {
+      this.currentMarker = this.map.addMarker(location, Marker.CURRENT);
+    }
     if (this.isRecording()) this.map.addLocation(location);
   }
 
@@ -70,12 +79,38 @@ export class MapPage {
     this.cdr.detectChanges();
   }
 
+  private onClick(location: Location) {
+    console.log('Map click', location);
+    if (!this.isReporting()) return;
+    if (this.incidentMarker) {
+      this.incidentMarker.location = location;
+    } else {
+      this.incidentMarker = this.map.addMarker(location, Marker.INCIDENT);
+    }
+  }
+
   startRecording() {
     this.geo.startRecording();
   }
 
   stopRecording() {
     this.geo.stopRecording();
+  }
+
+  startReporting() {
+    this.state = MapPage.STATE_REPORTING;
+    this.map.interactive = false;
+    if (this.currentMarker) this.currentMarker.hide();
+  }
+
+  stopReporting() {
+    this.state = MapPage.STATE_STOPPED;
+    this.map.interactive = true;
+    if (this.incidentMarker) {
+      this.map.removeMarker(this.incidentMarker);
+      this.incidentMarker = null;
+    }
+    if (this.currentMarker) this.currentMarker.show();
   }
 
 }

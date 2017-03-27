@@ -21,17 +21,32 @@ page-map {
     }
   }
   /* Map markers */
-  .marker-hidden {
-    display: none;
+  .marker {
+    border: 2px solid rgba(255, 255, 255, 0.75);
+    border-radius: 15px;
+    height: 30px;
+    width: 30px;
   }
   .marker-current {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15),
       inset 0 0 5px rgba(219, 140, 35, 0.5);
-    border: 2px solid rgba(255, 255, 255, 0.75);
     background-color: #FBB03B;
-    background-image: url(../assets/img/marker.svg);
-    border-radius: 15px;
-    height: 30px;
-    width: 30px;
+    background-image: url(../assets/img/marker-current.svg);
+  }
+  .marker-incident {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15),
+      inset 0 0 5px rgba(216, 58, 37, 0.5);
+    background-color: #F7533E;
+    &::after {
+      color: white;
+      content: '!';
+      display: block;
+      font-size: 22px;
+      font-weight: bold;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      vertical-align: middle;
+    }
   }
 }

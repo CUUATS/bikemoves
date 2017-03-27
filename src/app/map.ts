@@ -1,7 +1,8 @@
-import * as mapboxgl from 'mapbox-gl/dist/mapbox-gl.js'
+import * as mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
 import turf from 'turf';
 import { Subject } from 'rxjs/Subject';
 import { Location } from './location';
+import { Marker } from './marker';
 import { extend, toLineString, dataURItoBlob } from './utils';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY3V1YXRzIiwiYSI6ImNpbm03NGFrdTB6ZTB1a2x5MHl6dTV6MXIifQ.Aq-CCCulBhKbmLGZUH6VDw';
@@ -21,12 +22,9 @@ interface PathImageRequest {
 }
 
 export class Map {
-  static MARKER_CURRENT = 'current';
-  static MARKER_INCIDENT = 'incident';
   static DEFAULT_OPTIONS: MapOptions = {
     center: new Location(-88.227203, 40.109403),
     interactive: false,
-    markerType: Map.MARKER_CURRENT,
     zoom: 16
   };
   static MAP_STYLE = 'https://tileserver.bikemoves.me/styles/bikemoves-v1.json?cachekey=1';
@@ -58,11 +56,10 @@ export class Map {
     'bikemoves_bike_repair_retail',
     'bikemoves_bike_path'
   ];
-  private _marker: any;
-  private markerEl: HTMLElement;
   private map: any;
   private options: MapOptions;
   private loaded = false;
+  private markers: Marker[] = [];
   private pathImageQueue: PathImageRequest[] = [];
   private captureOnLoad = false;
   public click = new Subject();
@@ -86,18 +83,17 @@ export class Map {
   private onLoad() {
     this.addTripSource();
     this.map.addLayer(Map.TRIP_LAYER);
-    this.addMaker();
     this.loaded = true;
     this.updateMap();
   }
 
   private onClick(e) {
     if (this.options.interactive) this.openPopup(e);
-    this.click.next(e);
+    this.click.next(Location.fromLngLat([e.lngLat.lng, e.lngLat.lat]));
   }
 
   private updateMap() {
-    this.marker = this.options.marker;
+    this.markers.forEach((marker) => marker.addTo(this.map));
     this.path = this.options.path;
     if (this.pathImageQueue.length) this.nextPathImage();
   }
@@ -177,15 +173,6 @@ export class Map {
     });
   }
 
-  private addMaker() {
-    this.markerEl = document.createElement('div');
-    this.markerEl.className = 'marker-' + this.markerType;
-    this._marker = new mapboxgl.Marker(
-      this.markerEl, {
-        offset: [-15, -15]
-    });
-  }
-
   get center() {
     return Location.fromLngLat(this.map.getCenter());
   }
@@ -200,30 +187,6 @@ export class Map {
 
   set interactive(interactive: boolean) {
     this.options.interactive = interactive;
-  }
-
-  get marker() {
-    return this.options.marker;
-  }
-
-  set marker(location: Location) {
-    this.options.marker = location;
-    if (this.loaded) {
-      if (location) {
-        this._marker.setLngLat(location.toLngLat()).addTo(this.map)
-      } else {
-        this._marker.remove();
-      }
-    }
-  }
-
-  get markerType() {
-    return this.options.markerType;
-  }
-
-  set markerType(markerType: string) {
-    this.options.markerType = markerType;
-    this.markerEl.className = 'marker-' + markerType;
   }
 
   get path() {
@@ -301,5 +264,17 @@ export class Map {
   public hide() {
     this.map.getContainer().style.display = 'none';
     return this;
+  }
+
+  public addMarker(location: Location, markerType?: string) {
+    let marker = new Marker(location, markerType);
+    this.markers.push(marker);
+    if (this.loaded) marker.addTo(this.map);
+    return marker;
+  }
+
+  public removeMarker(marker: Marker) {
+    marker.remove();
+    this.markers.splice(this.markers.indexOf(marker), 1);
   }
 }
