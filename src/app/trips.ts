@@ -62,10 +62,9 @@ export class Trips extends ObjectManager {
   }
 
   public delete(trip: Trip) {
-    let locationDelete = this.locations.batchDelete(`trip_id = ?`, [trip.id]),
-      imageDelete = (trip.imageUrl) ?
+    let imageDelete = (trip.imageUrl) ?
         this.deleteImage(trip) : Promise.resolve();
-    return Promise.all([locationDelete, imageDelete, super.delete(trip)]);
+    return Promise.all([imageDelete, super.delete(trip)]);
   }
 
   public deleteImage(trip) {
