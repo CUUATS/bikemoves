@@ -3,6 +3,7 @@ import { ObjectManager } from './object_manager';
 import { Location } from './location';
 import { Storage } from './storage';
 import * as moment from 'moment';
+import { LOCATION_NEAR_THRESHOLD } from './config';
 
 @Injectable()
 export class Locations extends ObjectManager {
@@ -62,6 +63,27 @@ export class Locations extends ObjectManager {
       location.locationType,
       location.tripId
     ];
+  }
+
+  public guessLocationTypes(locations: Location[]) {
+    return Promise.all(locations.map((location) => {
+      let bbox = location.getBufferBbox(LOCATION_NEAR_THRESHOLD);
+      return this.filter(`location_type > 0
+          AND longitude > ? AND latitude > ?
+          AND longitude < ? AND latitude < ?`, null, bbox)
+        .then((candidates) => {
+          let distance = LOCATION_NEAR_THRESHOLD,
+            locationType = 0;
+          candidates.forEach((candidate) => {
+            let candidateDistance = candidate.distanceTo(location);
+            if (candidateDistance < distance) {
+              distance = candidateDistance;
+              locationType = candidate.locationType;
+            }
+          });
+          return locationType;
+        });
+    }));
   }
 
 }

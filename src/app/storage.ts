@@ -74,10 +74,11 @@ export class Storage extends Service {
     return this.ready().then((db) => db.executeSql(sql, args));
   }
 
-  public select(table: string, columns: string[], where?: string, order?: string, values = []) {
+  public select(table: string, columns: string[], where?: string, order?: string, values = [], limit = 0) {
     let sql = `SELECT ${columns.join(', ')} FROM ${table}`;
     if (where) sql += ` WHERE ${where}`;
     if (order) sql += ` ORDER BY ${order}`;
+    if (limit) sql += ` LIMIT ${limit}`;
     return this.exec(sql, values);
   }
 

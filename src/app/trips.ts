@@ -5,6 +5,7 @@ import { ObjectManager } from './object_manager';
 import { Storage } from './storage';
 import { Locations } from './locations';
 import * as moment from 'moment';
+import { bikemoves as messages } from './messages';
 
 @Injectable()
 export class Trips extends ObjectManager {
@@ -72,7 +73,7 @@ export class Trips extends ObjectManager {
       this.file.dataDirectory, this.imagePath(trip));
   }
 
-  public saveImage(trip, blob) {
+  public saveImage(trip: Trip, blob) {
     return this.file.createDir(this.file.dataDirectory, 'images', false)
       .catch((err) => { if (err.code !== 12) throw err })
       .then<FileEntry>(() => this.file.writeFile(
@@ -85,8 +86,13 @@ export class Trips extends ObjectManager {
       });
   }
 
-  public getLocations(trip) {
+  public getLocations(trip: Trip) {
     return this.locations.filter(`trip_id = ?`,  'time ASC', [trip.id]);
+  }
+
+  public getODLocations(trip: Trip) {
+    return this.locations.filter(`trip_id = ? AND event = ?`,
+        'moving DESC', [trip.id, messages.EventType.MOTION]);
   }
 
 }

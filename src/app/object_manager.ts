@@ -54,9 +54,9 @@ export abstract class ObjectManager {
     return this.filter(null, order);
   }
 
-  public filter(where?: string, order?: string, values = []) {
+  public filter(where?: string, order?: string, values = [], limit = 0) {
     return this.storage.select(
-        this.table, this.columns.concat(['id']), where, order, values)
+        this.table, this.columns.concat(['id']), where, order, values, limit)
       .then((data) => {
         let results = [];
         for (let i = 0; i < data.rows.length; i++)

@@ -63,4 +63,8 @@ export class Location extends Persistent {
     return turf.distance(this.toPoint(), loc.toPoint(), 'kilometers') * 1000;
   }
 
+  public getBufferBbox(radius: number) {
+    return turf.bbox(turf.buffer(this.toPoint(), radius, 'meters'));
+  }
+
 }
