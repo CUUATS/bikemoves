@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      Report a Problem
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button icon-left (click)="closeModal()"><ion-icon name="close"></ion-icon>Cancel</button>
+    </ion-buttons>
+    <ion-buttons end>
+      <button ion-button icon-left (click)="sendIncident()"><ion-icon name="send"></ion-icon>Send</button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list radio-group [(ngModel)]="incident.category">
+    <ion-list-header>
+      Type of Problem
+    </ion-list-header>
+    <ion-item *ngFor="let category of categories">
+      <ion-label>{{category}}</ion-label>
+      <ion-radio value="{{category}}"></ion-radio>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>Description</ion-label>
+      <ion-textarea [(ngModel)]="incident.comment"></ion-textarea>
+    </ion-item>
+  </ion-list>
+</ion-content>

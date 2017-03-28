@@ -11,7 +11,7 @@
     <ion-buttons end>
       <button ion-button icon-left *ngIf="isStopped()" (click)="startRecording()"><ion-icon name="bicycle"></ion-icon>Start</button>
       <button ion-button icon-left *ngIf="isRecording()" (click)="stopRecording()"><ion-icon name="checkmark"></ion-icon>Stop</button>
-      <button ion-button icon-left *ngIf="isReporting()" [disabled]="!incidentMarker"><ion-icon name="checkmark"></ion-icon>OK</button>
+      <button ion-button icon-left *ngIf="isReporting()" (click)="showIncidentForm()" [disabled]="!incidentMarker"><ion-icon name="checkmark"></ion-icon>OK</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>

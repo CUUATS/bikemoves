@@ -1,9 +1,10 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { ModalController, NavController } from 'ionic-angular';
 import { Geo } from '../../app/geo';
 import { Location } from '../../app/location';
 import { Map, MapOptions } from '../../app/map';
 import { Marker } from '../../app/marker';
+import { IncidentFormPage } from '../incident-form/incident-form';
 
 @Component({
   selector: 'page-map',
@@ -19,7 +20,10 @@ export class MapPage {
   private currentMarker: Marker;
   private incidentMarker: Marker;
 
-  constructor(public navCtrl: NavController, private cdr: ChangeDetectorRef, private geo: Geo) {
+  constructor(public navCtrl: NavController,
+    private cdr: ChangeDetectorRef,
+    private geo: Geo,
+    private modalCtrl: ModalController) {
     geo.motion.subscribe(this.onMotion.bind(this));
     geo.locations.subscribe(this.onLocation.bind(this));
     geo.getMoving().then((moving) => this.setStateFromMoving(moving));
@@ -111,6 +115,13 @@ export class MapPage {
       this.incidentMarker = null;
     }
     if (this.currentMarker) this.currentMarker.show();
+  }
+
+  showIncidentForm() {
+    let incidentModal = this.modalCtrl.create(
+      IncidentFormPage, this.incidentMarker.location);
+    incidentModal.onWillDismiss(() => this.stopReporting());
+    incidentModal.present();
   }
 
 }

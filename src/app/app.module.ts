@@ -7,6 +7,7 @@ import { Locations } from './locations';
 import { Remote } from './remote';
 import { Storage } from './storage';
 import { Trips } from './trips';
+import { IncidentFormPage } from '../pages/incident-form/incident-form';
 import { MapPage } from '../pages/map/map';
 import { SettingsPage } from '../pages/settings/settings';
 import { StatsPage } from '../pages/stats/stats';
@@ -20,6 +21,7 @@ import { Device } from '@ionic-native/device';
 @NgModule({
   declarations: [
     BikeMoves,
+    IncidentFormPage,
     MapPage,
     SettingsPage,
     StatsPage,
@@ -35,6 +37,7 @@ import { Device } from '@ionic-native/device';
   bootstrap: [IonicApp],
   entryComponents: [
     BikeMoves,
+    IncidentFormPage,
     MapPage,
     SettingsPage,
     StatsPage,

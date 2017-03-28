@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import { Device } from '@ionic-native/device';
+import { Incident } from './incident';
 import { Location } from './location';
 import { Trip } from './trip';
 import { Trips } from './trips';
@@ -38,6 +39,22 @@ export class Remote {
     return Promise.reject(errMsg);
   }
 
+  private locationToMessage(location: Location) {
+    let message = messages.Location.create();
+    message.longitude = location.longitude;
+    message.latitude = location.latitude;
+    message.accuracy = location.accuracy;
+    message.altitude = location.altitude;
+    message.heading = location.heading;
+    message.speed = location.speed;
+    message.time = (message.time) ? location.time.valueOf() : null;
+    message.moving = location.moving;
+    message.event = location.event;
+    message.activity = location.activity;
+    message.confidence = location.confidence;
+    return message;
+  }
+
   public postTrip(trip: Trip) {
     return this.tripManager.getLocations(trip).then((locations) => {
       let message = messages.Trip.create();
@@ -50,24 +67,19 @@ export class Remote {
       message.destination = trip.destination;
       message.debug = DEBUG;
       message.appVersion = trip.appVersion;
-
-      message.locations = locations.map((location: Location) => {
-        let locationMessage = messages.Location.create();
-        locationMessage.longitude = location.longitude;
-        locationMessage.latitude = location.latitude;
-        locationMessage.accuracy = location.accuracy;
-        locationMessage.altitude = location.altitude;
-        locationMessage.heading = location.heading;
-        locationMessage.speed = location.speed;
-        locationMessage.time = location.time.valueOf();
-        locationMessage.moving = location.moving;
-        locationMessage.event = location.event;
-        locationMessage.activity = location.activity;
-        locationMessage.confidence = location.confidence;
-        return locationMessage;
-      });
-
+      message.locations = locations.map(this.locationToMessage);
       return this.post('trip', messages.Trip.encode(message).finish().buffer);
     });
+  }
+
+  public postIncident(incident: Incident) {
+    let message = messages.Incident.create();
+    message.deviceUuid = this.device.uuid;
+    message.location = this.locationToMessage(incident.location);
+    message.time = incident.time.valueOf();
+    message.category = incident.category;
+    message.comment = incident.comment;
+    return this.post(
+      'incident', messages.Incident.encode(message).finish().buffer);
   }
 }
