@@ -9,9 +9,23 @@
       <button ion-button icon-left *ngIf="isReporting()" (click)="stopReporting()"><ion-icon name="close"></ion-icon>Cancel</button>
     </ion-buttons>
     <ion-buttons end>
-      <button ion-button icon-left *ngIf="isStopped()" (click)="startRecording()"><ion-icon name="bicycle"></ion-icon>Start</button>
-      <button ion-button icon-left *ngIf="isRecording()" (click)="stopRecording()"><ion-icon name="checkmark"></ion-icon>Stop</button>
-      <button ion-button icon-left *ngIf="isReporting()" (click)="showIncidentForm()" [disabled]="!incidentMarker"><ion-icon name="checkmark"></ion-icon>OK</button>
+      <button ion-button icon-left *ngIf="isStopped()"
+        (click)="startRecording()" [disabled]="stateChangePending">
+        <ion-icon name="bicycle"></ion-icon>
+        <span *ngIf="!stateChangePending">Start</span>
+        <span *ngIf="stateChangePending">Starting</span>
+      </button>
+      <button ion-button icon-left *ngIf="isRecording()"
+        (click)="stopRecording()" [disabled]="stateChangePending">
+        <ion-icon name="checkmark"></ion-icon>
+        <span *ngIf="!stateChangePending">Stop</span>
+        <span *ngIf="stateChangePending">Stopping</span>
+      </button>
+      <button ion-button icon-left *ngIf="isReporting()"
+        (click)="showIncidentForm()" [disabled]="!incidentMarker">
+        <ion-icon name="checkmark"></ion-icon>
+        OK
+      </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -19,6 +33,9 @@
 <ion-content>
   <div id="map"></div>
   <ion-fab bottom right>
-    <button ion-fab color="primary" *ngIf="isStopped()" (click)='startReporting()'><ion-icon name="add"></ion-icon></button>
+    <button ion-fab color="primary" *ngIf="isStopped()"
+      (click)='startReporting()'>
+      <ion-icon name="add"></ion-icon>
+    </button>
   </ion-fab>
 </ion-content>

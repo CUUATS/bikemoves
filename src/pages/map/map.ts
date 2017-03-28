@@ -18,6 +18,7 @@ export class MapPage {
   private state = MapPage.STATE_STOPPED;
   private currentMarker: Marker;
   private incidentMarker: Marker;
+  private stateChangePending = false;
 
   constructor(public navCtrl: NavController,
     private cdr: ChangeDetectorRef,
@@ -89,6 +90,7 @@ export class MapPage {
   }
 
   private onMotion(moving) {
+    this.stateChangePending = false;
     this.setStateFromMoving(moving);
     if (!moving) this.map.path = [];
   }
@@ -109,10 +111,12 @@ export class MapPage {
   }
 
   startRecording() {
+    this.stateChangePending = true;
     this.geo.startRecording();
   }
 
   stopRecording() {
+    this.stateChangePending = true;
     this.geo.stopRecording();
   }
 
