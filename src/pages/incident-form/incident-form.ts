@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { App, NavParams, ViewController, ToastController } from 'ionic-angular';
+import { NavParams, ViewController, ToastController } from 'ionic-angular';
 import { Remote } from '../../app/remote';
 import { Incident } from '../../app/incident';
 import { notify } from '../../app/utils';
@@ -18,7 +18,6 @@ export class IncidentFormPage {
   private incident: Incident;
 
   constructor(
-      private appCtrl: App,
       private navParams: NavParams,
       private viewCtrl: ViewController,
       private toastCtrl: ToastController,

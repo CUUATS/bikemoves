@@ -5,7 +5,6 @@ import { SettingsPage } from '../settings/settings';
 import { StatsPage } from '../stats/stats';
 import { TripsPage } from '../trips/trips';
 import { Trips } from '../../app/trips';
-import { Geo } from '../../app/geo';
 
 @Component({
   templateUrl: 'tabs.html'
@@ -19,26 +18,21 @@ export class TabsPage {
   canLeaveMap = true;
 
   constructor(
-      private geo: Geo,
       private trips: Trips,
       private events: Events) {
-    geo.motion.subscribe(this.onMotion.bind(this));
     this.events.subscribe('map:state', this.onMapState.bind(this));
+    this.events.subscribe('trips:change', this.updateTripsBadge.bind(this));
   }
 
   ionViewWillEnter() {
     this.updateTripsBadge();
   }
 
-  onMotion(moving) {
-    if (!moving) this.updateTripsBadge();
-  }
-
-  onMapState(state: string) {
+  private onMapState(state: string) {
     this.canLeaveMap = (state === MapPage.STATE_STOPPED);
   }
 
-  public updateTripsBadge() {
+  private updateTripsBadge() {
     this.trips.count('submitted = ?', [0])
       .then((count) => this.unsubmittedTripsCount = (count > 0) ? count : null);
   }

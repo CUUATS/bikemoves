@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { App, NavParams, ViewController, ToastController } from 'ionic-angular';
+import { NavParams, ViewController, ToastController } from 'ionic-angular';
 import { Location } from '../../app/location';
 import { Locations } from '../../app/locations';
 import { Trip } from '../../app/trip';
@@ -19,7 +19,6 @@ export class TripFormPage {
   private locationTypeOptions = getOptions(Location.LOCATION_TYPES);
 
   constructor(
-      private appCtrl: App,
       private navParams: NavParams,
       private viewCtrl: ViewController,
       private toastCtrl: ToastController,
@@ -57,9 +56,7 @@ export class TripFormPage {
       .catch(() => {
         notify(this.toastCtrl, 'Trip upload failed. Please try again later.');
         this.setODTypes(this.odCache);
-      })
-      .then(() =>
-        this.appCtrl.getRootNav().first().instance.updateTripsBadge());
+      });
     this.closeModal();
   }
 

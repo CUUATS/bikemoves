@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Events } from 'ionic-angular';
 import { File, FileEntry } from '@ionic-native/file';
 import { Trip } from './trip';
 import { ObjectManager } from './object_manager';
@@ -23,7 +24,11 @@ export class Trips extends ObjectManager {
     'image_url'
   ];
 
-  constructor(protected locations: Locations, protected storage: Storage, protected file: File) {
+  constructor(
+      protected locations: Locations,
+      protected storage: Storage,
+      protected file: File,
+      protected events: Events) {
     super();
   }
 
@@ -65,7 +70,15 @@ export class Trips extends ObjectManager {
   public delete(trip: Trip) {
     let imageDelete = (trip.imageUrl) ?
         this.deleteImage(trip) : Promise.resolve();
-    return Promise.all([imageDelete, super.delete(trip)]);
+    return Promise.all([imageDelete, super.delete(trip)])
+      .then(() => this.events.publish('trips:change'));
+  }
+
+  public save(trip: Trip) {
+    return super.save(trip).then((trip) => {
+      this.events.publish('trips:change');
+      return trip;
+    });
   }
 
   public deleteImage(trip) {
