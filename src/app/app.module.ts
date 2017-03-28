@@ -4,6 +4,7 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { BikeMoves } from './app.component';
 import { Geo } from './geo';
 import { Locations } from './locations';
+import { Map } from './map';
 import { Remote } from './remote';
 import { Storage } from './storage';
 import { Trips } from './trips';
@@ -52,6 +53,7 @@ import { Device } from '@ionic-native/device';
     File,
     Geo,
     Locations,
+    Map,
     Remote,
     Storage,
     Trips

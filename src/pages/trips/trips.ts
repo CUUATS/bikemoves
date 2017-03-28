@@ -14,15 +14,14 @@ import { notify } from '../../app/utils';
 export class TripsPage {
   private trips: Trip[] = [];
   private hasTrips: boolean;
-  private map: Map;
-  private pendingImages = 0;
 
   constructor(
     private navCtrl: NavController,
     private actionSheetCtrl: ActionSheetController,
     private tripManager: Trips,
     private modalCtrl: ModalController,
-    private toastCtrl: ToastController) {}
+    private toastCtrl: ToastController,
+    private map: Map) {}
 
   ionViewWillEnter() {
     this.tripManager.all('start_time DESC').then((trips) => {
@@ -36,6 +35,10 @@ export class TripsPage {
     });
   }
 
+  ionViewWillLeave() {
+    this.map.unassign();
+  }
+
   private goToMap() {
     this.navCtrl.parent.select(0);
   }
@@ -47,19 +50,12 @@ export class TripsPage {
   }
 
   private createTripImage(trip) {
-    this.pendingImages++;
-    if (!this.map) this.map = new Map('trip-image-map', {
+    this.map.assign('trip-image-map', {
       interactive: false
     });
     this.tripManager.getLocations(trip)
       .then((locations) => this.map.createPathImage(locations))
-      .then((blob) => this.tripManager.saveImage(trip, blob))
-      .then(() => {
-        if (this.pendingImages-- === 0) {
-          this.map.remove();
-          this.map = null;
-        }
-      });
+      .then((blob) => this.tripManager.saveImage(trip, blob));
   }
 
   private goToTripDetail(trip: Trip) {

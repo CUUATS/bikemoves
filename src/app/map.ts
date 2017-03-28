@@ -1,5 +1,6 @@
 import * as mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
 import turf from 'turf';
+import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Location } from './location';
 import { Marker } from './marker';
@@ -21,6 +22,7 @@ interface PathImageRequest {
   resolve: any;
 }
 
+@Injectable()
 export class Map {
   static DEFAULT_OPTIONS: MapOptions = {
     center: new Location(-88.227203, 40.109403),
@@ -56,6 +58,7 @@ export class Map {
     'bikemoves_bike_repair_retail',
     'bikemoves_bike_path'
   ];
+  private el: HTMLDivElement = document.createElement('div');
   private map: any;
   private options: MapOptions;
   private loaded = false;
@@ -64,16 +67,19 @@ export class Map {
   private captureOnLoad = false;
   public click = new Subject();
 
-  constructor(public containerId: string, options: MapOptions = {}) {
-    this.options = extend(Map.DEFAULT_OPTIONS, options);
+  constructor() {
+    this.el.id = 'bikemoves-map';
+    document.body.appendChild(this.el);
+  }
+
+  private initMap() {
     // Create the map.
     this.map = new mapboxgl.Map({
-        container: this.containerId,
+        container: this.el,
         style: Map.MAP_STYLE,
         zoom: this.options.zoom,
         center: this.options.center.toLngLat()
     });
-
     // Set up event handlers.
     this.map.on('load', () => this.onLoad());
     this.map.on('click', (e) => this.onClick(e));
@@ -242,6 +248,7 @@ export class Map {
 
   private capturePathImage() {
     this.captureOnLoad = false;
+    if (!this.pathImageQueue.length) return;
     let jpg = this.map.getCanvas().toDataURL('image/jpeg', 0.75),
       request = this.pathImageQueue.shift();
     request.resolve(dataURItoBlob(jpg));
@@ -257,13 +264,11 @@ export class Map {
   }
 
   public show() {
-    this.map.getContainer().style.display = 'block';
-    return this;
+    this.el.style.display = 'block';
   }
 
   public hide() {
-    this.map.getContainer().style.display = 'none';
-    return this;
+    this.el.style.display = 'none';
   }
 
   public addMarker(location: Location, markerType?: string) {
@@ -276,5 +281,32 @@ export class Map {
   public removeMarker(marker: Marker) {
     marker.remove();
     this.markers.splice(this.markers.indexOf(marker), 1);
+  }
+
+  public reset() {
+    this.markers.forEach((marker) => this.removeMarker(marker));
+    this.pathImageQueue = [];
+    this.center = this.options.center;
+    this.interactive = this.options.interactive;
+    this.zoom = this.options.zoom;
+    if (this.loaded) this.path = this.options.path;
+  }
+
+  public assign(containerId: string, options: MapOptions) {
+    this.options = extend(Map.DEFAULT_OPTIONS, options);
+    document.getElementById(containerId).appendChild(this.el);
+    if (!this.map) {
+      this.show();
+      this.initMap();
+    } else {
+      this.reset();
+      this.show();
+      this.map.resize();
+    }
+  }
+
+  public unassign() {
+    this.hide();
+    document.body.appendChild(this.el);
   }
 }

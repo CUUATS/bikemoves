@@ -15,7 +15,6 @@ export class MapPage {
   static STATE_RECORDING = 'recording';
   static STATE_REPORTING = 'reporting';
 
-  private map: Map;
   private state = MapPage.STATE_STOPPED;
   private currentMarker: Marker;
   private incidentMarker: Marker;
@@ -23,30 +22,37 @@ export class MapPage {
   constructor(public navCtrl: NavController,
     private cdr: ChangeDetectorRef,
     private geo: Geo,
+    private map: Map,
     private modalCtrl: ModalController) {
+    map.click.subscribe(this.onClick.bind(this));
     geo.motion.subscribe(this.onMotion.bind(this));
     geo.locations.subscribe(this.onLocation.bind(this));
     geo.getMoving().then((moving) => this.setStateFromMoving(moving));
   }
 
-  ionViewDidLoad() {
-    let options: MapOptions = {};
-    options.interactive = true;
-    if (this.geo.currentLocation) {
-      options.center = this.geo.currentLocation;
-      options.marker = this.geo.currentLocation;
-    }
-    this.map = new Map('map', options);
-    this.map.click.subscribe(this.onClick.bind(this));
-  }
-
-  ionViewWillEnter() {
+  ionViewDidEnter() {
+    this.initMap();
     if (this.isStopped() && this.geo.currentLocation)
       this.onLocation(this.geo.currentLocation);
   }
 
+  ionViewWillLeave() {
+    this.map.unassign();
+  }
+
   ionViewCanLeave(): boolean {
     return this.isStopped();
+  }
+
+  private initMap() {
+    this.currentMarker = null;
+    this.incidentMarker = null;
+
+    let options: MapOptions = {};
+    options.interactive = true;
+    if (this.geo.currentLocation) options.center = this.geo.currentLocation;
+
+    this.map.assign('map', options);
   }
 
   private isStopped() {
@@ -61,14 +67,18 @@ export class MapPage {
     return this.state === MapPage.STATE_REPORTING;
   }
 
-  private onLocation(location) {
-    if (!this.map) return;
-    this.map.center = location;
+  private addOrMoveMarker(location: Location) {
     if (this.currentMarker) {
       this.currentMarker.location = location;
     } else {
       this.currentMarker = this.map.addMarker(location, Marker.CURRENT);
     }
+  }
+
+  private onLocation(location) {
+    if (!this.map) return;
+    this.map.center = location;
+    this.addOrMoveMarker(location);
     if (this.isRecording()) this.map.addLocation(location);
   }
 

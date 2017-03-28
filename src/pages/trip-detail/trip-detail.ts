@@ -11,14 +11,17 @@ import { TripFormPage } from '../trip-form/trip-form';
 })
 export class TripDetailPage {
   trip: Trip;
-  map: Map;
 
-  constructor(private navParams: NavParams, private modalCtrl: ModalController, private tripManager: Trips) {
+  constructor(
+    private navParams: NavParams,
+    private modalCtrl: ModalController,
+    private tripManager: Trips,
+    private map: Map) {
     this.trip = navParams.data;
   }
 
   ionViewDidEnter() {
-    this.map = new Map('trip-detail-map', {
+    this.map.assign('trip-detail-map', {
       interactive: false
     });
     this.tripManager.getLocations(this.trip).then((locations) => {
@@ -28,7 +31,7 @@ export class TripDetailPage {
   }
 
   ionViewWillLeave() {
-    this.map.remove();
+    this.map.unassign();
   }
 
   showTripForm() {
