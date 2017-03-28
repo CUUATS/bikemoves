@@ -84,7 +84,6 @@ export class MapPage {
   }
 
   private onClick(location: Location) {
-    console.log('Map click', location);
     if (!this.isReporting()) return;
     if (this.incidentMarker) {
       this.incidentMarker.location = location;
