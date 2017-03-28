@@ -6,7 +6,11 @@
       <span class="heading-reporting" *ngIf="isReporting()">Tap a Location</span>
     </ion-title>
     <ion-buttons start>
-      <button ion-button icon-left *ngIf="isReporting()" (click)="stopReporting()"><ion-icon name="close"></ion-icon>Cancel</button>
+      <button ion-button icon-left *ngIf="isReporting()"
+        (click)="stopReporting()">
+        <ion-icon name="close"></ion-icon>
+        Cancel
+      </button>
     </ion-buttons>
     <ion-buttons end>
       <button ion-button icon-left *ngIf="isStopped()"
