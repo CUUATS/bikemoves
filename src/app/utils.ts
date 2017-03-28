@@ -58,3 +58,10 @@ export function notify(toastCtrl: ToastController, msg: string, duration = 3000)
   toast.present();
   return toast;
 }
+
+// Source: http://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
+export function format(value: number, places = 0, sep = ','): string {
+  let parts = value.toFixed(places).split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, sep);
+  return parts.join('.');
+}

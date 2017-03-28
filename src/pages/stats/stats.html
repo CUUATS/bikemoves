@@ -1,11 +1,49 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar no-border-bottom>
     <ion-title>
       Stats
     </ion-title>
   </ion-navbar>
+  <ion-toolbar no-border-top>
+    <ion-segment [(ngModel)]="range" (ionChange)="updateStats()">
+      <ion-segment-button value="week">
+        Week
+      </ion-segment-button>
+      <ion-segment-button value="month">
+        Month
+      </ion-segment-button>
+      <ion-segment-button value="year">
+        Year
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-  [Stats placeholder]
+  <ion-list *ngIf="stats">
+    <ion-item>
+      <ion-icon name="bicycle" item-left></ion-icon>
+      {{tripsCount}} trips
+    </ion-item>
+    <ion-item>
+      <ion-icon name="timer" item-left></ion-icon>
+      {{stats.formatDuration()}}
+    </ion-item>
+    <ion-item>
+      <ion-icon name="pin" item-left></ion-icon>
+      {{stats.formatDistance()}} mi
+    </ion-item>
+    <ion-item>
+      <ion-icon name="speedometer" item-left></ion-icon>
+      {{stats.formatSpeed()}} MPH
+    </ion-item>
+    <ion-item>
+      <ion-icon name="pizza" item-left></ion-icon>
+      {{stats.formatCalories()}} cal
+    </ion-item>
+    <ion-item>
+      <ion-icon name="leaf" item-left></ion-icon>
+      {{stats.formatGHG()}} lb GHG
+    </ion-item>
+  </ion-list>
 </ion-content>
