@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import { Events } from 'ionic-angular';
 import { MapPage } from '../map/map';
 import { SettingsPage } from '../settings/settings';
 import { StatsPage } from '../stats/stats';
@@ -16,9 +16,14 @@ export class TabsPage {
   statsRoot: any = StatsPage;
   tripsRoot: any = TripsPage;
   unsubmittedTripsCount: number;
+  canLeaveMap = true;
 
-  constructor(private geo: Geo, private trips: Trips) {
+  constructor(
+      private geo: Geo,
+      private trips: Trips,
+      private events: Events) {
     geo.motion.subscribe(this.onMotion.bind(this));
+    this.events.subscribe('map:state', this.onMapState.bind(this));
   }
 
   ionViewWillEnter() {
@@ -27,6 +32,10 @@ export class TabsPage {
 
   onMotion(moving) {
     if (!moving) this.updateTripsBadge();
+  }
+
+  onMapState(state: string) {
+    this.canLeaveMap = (state === MapPage.STATE_STOPPED);
   }
 
   public updateTripsBadge() {

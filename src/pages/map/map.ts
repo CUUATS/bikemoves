@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { ModalController, NavController } from 'ionic-angular';
+import { Events, ModalController, NavController } from 'ionic-angular';
 import { Geo } from '../../app/geo';
 import { Location } from '../../app/location';
 import { Map, MapOptions } from '../../app/map';
@@ -23,7 +23,8 @@ export class MapPage {
     private cdr: ChangeDetectorRef,
     private geo: Geo,
     private map: Map,
-    private modalCtrl: ModalController) {
+    private modalCtrl: ModalController,
+    private events: Events) {
     map.click.subscribe(this.onClick.bind(this));
     geo.motion.subscribe(this.onMotion.bind(this));
     geo.locations.subscribe(this.onLocation.bind(this));
@@ -67,6 +68,11 @@ export class MapPage {
     return this.state === MapPage.STATE_REPORTING;
   }
 
+  private setState(state: string) {
+    this.state = state;
+    this.events.publish('map:state', this.state);
+  }
+
   private addOrMoveMarker(location: Location) {
     if (this.currentMarker) {
       this.currentMarker.location = location;
@@ -88,7 +94,7 @@ export class MapPage {
   }
 
   private setStateFromMoving(moving) {
-    this.state = (moving) ? MapPage.STATE_RECORDING : MapPage.STATE_STOPPED;
+    this.setState((moving) ? MapPage.STATE_RECORDING : MapPage.STATE_STOPPED);
     // Force the UI to update.
     this.cdr.detectChanges();
   }
@@ -111,13 +117,13 @@ export class MapPage {
   }
 
   startReporting() {
-    this.state = MapPage.STATE_REPORTING;
+    this.setState(MapPage.STATE_REPORTING);
     this.map.interactive = false;
     if (this.currentMarker) this.currentMarker.hide();
   }
 
   stopReporting() {
-    this.state = MapPage.STATE_STOPPED;
+    this.setState(MapPage.STATE_STOPPED);
     this.map.interactive = true;
     if (this.incidentMarker) {
       this.map.removeMarker(this.incidentMarker);
