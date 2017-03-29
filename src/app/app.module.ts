@@ -6,6 +6,7 @@ import { Geo } from './geo';
 import { Locations } from './locations';
 import { Map } from './map';
 import { Remote } from './remote';
+import { Settings } from './settings';
 import { Storage } from './storage';
 import { Trips } from './trips';
 import { IncidentFormPage } from '../pages/incident-form/incident-form';
@@ -55,6 +56,7 @@ import { Device } from '@ionic-native/device';
     Locations,
     Map,
     Remote,
+    Settings,
     Storage,
     Trips
   ]

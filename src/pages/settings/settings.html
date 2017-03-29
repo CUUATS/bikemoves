@@ -6,6 +6,20 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  [Settings placeholder]
+<ion-content>
+  <ion-list *ngIf="preferences">
+    <ion-item-divider color="light">Preferences</ion-item-divider>
+    <ion-item>
+      <ion-icon name="flash" item-left></ion-icon>
+      <ion-label>
+        Automatic Recording
+        <button ion-button icon-only clear small
+          (click)="explain('Starts and stops trips automatically when biking motion is detected.')">
+          <ion-icon name="help-circle"></ion-icon>
+        </button>
+      </ion-label>
+      <ion-toggle [(ngModel)]="preferences.autoRecord"
+        (ionChange)="savePreferences()"></ion-toggle>
+    </ion-item>
+  </ion-list>
 </ion-content>

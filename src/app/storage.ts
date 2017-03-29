@@ -5,11 +5,12 @@ import { Service } from './service';
 export interface Migration {
   version: number;
   sql: string;
+  values?: any[];
 }
 
 @Injectable()
 export class Storage extends Service {
-  private static DB_VERSION = 6;
+  private static DB_VERSION = 7;
   private static SQL_CREATE_TABLE = `
     CREATE TABLE IF NOT EXISTS db_version (
       id INTEGER PRIMARY KEY ASC NOT NULL,
@@ -20,13 +21,13 @@ export class Storage extends Service {
     SELECT ifnull(max(version), 0) AS current
     FROM db_version
   `;
-  private static SQL_INSERT_VERSION = 'INSERT INTO db_version (version) VALUES (?)';
   private static migrations: Migration[] = [];
 
-  public static addMigration(version, sql) {
+  public static addMigration(version: number, sql: string, values: any[] = []) {
     Storage.migrations.push({
       version: version,
-      sql: sql
+      sql: sql,
+      values: values
     });
   }
 
@@ -40,25 +41,30 @@ export class Storage extends Service {
       .then(() => this.setReady());
   }
 
+  private getDBVersionMigration() {
+    return {
+      version: Storage.DB_VERSION,
+      sql: 'INSERT INTO db_version (version) VALUES (?)',
+      values: [Storage.DB_VERSION]
+    };
+  }
+
+  private getMigrations(currentVersion: number) {
+    let migrations = Storage.migrations.filter((m) =>
+      m.version > currentVersion && m.version <= Storage.DB_VERSION);
+    migrations.sort((a, b) => a.version - b.version);
+    if (migrations.length) migrations.push(this.getDBVersionMigration());
+    return migrations;
+  }
+
   private migrate() {
     return this.db.executeSql(Storage.SQL_CREATE_TABLE, {}).then(
       () => this.db.executeSql(Storage.SQL_GET_VERSION, {})
     ).then((res) => {
-      let current = res.rows.item(0).current,
-        migrations = [];
+      let migrations = this.getMigrations(res.rows.item(0).current);
 
-      Storage.migrations.forEach((migration) => {
-        if (migration.version > current &&
-            migration.version <= Storage.DB_VERSION)
-          migrations.push(migration);
-      });
-
-      migrations.sort((a, b) => a.version - b.version);
-
-      if (migrations.length) {
-        migrations.push([Storage.SQL_INSERT_VERSION, [Storage.DB_VERSION]]);
-        return this.db.sqlBatch(migrations);
-      }
+      if (migrations.length) return this.db.sqlBatch(
+        migrations.map((migration) => [migration.sql, migration.values]));
     });
   }
 
