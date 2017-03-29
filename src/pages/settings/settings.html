@@ -13,13 +13,53 @@
       <ion-icon name="flash" item-left></ion-icon>
       <ion-label>
         Automatic Recording
-        <button ion-button icon-only clear small
+        <button class="explain-button" ion-button icon-only clear small
           (click)="explain('Starts and stops trips automatically when biking motion is detected.')">
           <ion-icon name="help-circle"></ion-icon>
         </button>
       </ion-label>
       <ion-toggle [(ngModel)]="preferences.autoRecord"
         (ionChange)="savePreferences()"></ion-toggle>
+    </ion-item>
+  </ion-list>
+  <ion-list *ngIf="profile">
+    <ion-item-divider color="light">
+      User Profile
+      <button class="explain-button" ion-button icon-only clear small
+        (click)="explain('Shared anonymously with local planners and officals for demographics purposes.')">
+        <ion-icon name="help-circle"></ion-icon>
+      </button>
+    </ion-item-divider>
+    <ion-item>
+      <ion-icon name="calendar" item-left></ion-icon>
+      <ion-label>
+        Age
+      </ion-label>
+      <ion-select [(ngModel)]="profile.age" (ionChange)="saveProfile()">
+        <ion-option *ngFor="let option of ageOptions"
+          value="{{option.value}}">{{option.label}}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="people" item-left></ion-icon>
+      <ion-label>
+        Gender
+      </ion-label>
+      <ion-select [(ngModel)]="profile.gender" (ionChange)="saveProfile()">
+        <ion-option *ngFor="let option of genderOptions"
+          value="{{option.value}}">{{option.label}}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="bicycle" item-left></ion-icon>
+      <ion-label>
+        Experience Level
+      </ion-label>
+      <ion-select [(ngModel)]="profile.cyclingExperience"
+          (ionChange)="saveProfile()">
+        <ion-option *ngFor="let option of experienceOptions"
+          value="{{option.value}}">{{option.label}}</ion-option>
+      </ion-select>
     </ion-item>
   </ion-list>
 </ion-content>

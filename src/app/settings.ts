@@ -2,15 +2,46 @@ import { Injectable } from '@angular/core';
 import { ObjectManager } from './object_manager';
 import { Storage } from './storage';
 import { SettingsGroup } from './settings_group';
+import { bikemoves as messages } from './messages';
 
 export interface Preferences {
   autoRecord: boolean;
 }
 
+export interface Profile {
+  age: messages.Age;
+  cyclingExperience: messages.ExperienceLevel;
+  gender: messages.Gender;
+}
+
 @Injectable()
 export class Settings extends ObjectManager {
   static PREFERENCES = 'preferences';
-  static USER = 'user';
+  static PROFILE = 'user';
+  static GENDERS = [
+    'Not Specified',
+    'Male',
+    'Female',
+    'Other'
+  ];
+  static AGES = [
+    'Not Specified',
+    'Under 15',
+    '15 to 19',
+    '20 to 24',
+    '25 to 34',
+    '35 to 44',
+    '45 to 54',
+    '55 to 64',
+    '65 to 74',
+    '75 and older'
+  ];
+  static EXPERIENCE_LEVELS = [
+    'Not Specified',
+    'Beginner',
+    'Intermediate',
+    'Advanced'
+  ];
 
   protected table = 'settings';
   protected columns = [
@@ -66,6 +97,18 @@ export class Settings extends ObjectManager {
 
   public savePreferences() {
     return this.saveSettings(Settings.PREFERENCES);
+  }
+
+  public getProfile(): Promise<Profile> {
+    return this.getSettings(Settings.PROFILE, {
+      age: 0,
+      cyclingExperience: 0,
+      gender: 0
+    });
+  }
+
+  public saveProfile() {
+    return this.saveSettings(Settings.PROFILE);
   }
 }
 
