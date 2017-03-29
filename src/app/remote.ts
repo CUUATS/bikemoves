@@ -4,6 +4,7 @@ import 'rxjs/add/operator/toPromise';
 import { Device } from '@ionic-native/device';
 import { Incident } from './incident';
 import { Location } from './location';
+import { Profile } from './settings';
 import { Trip } from './trip';
 import { Trips } from './trips';
 import { API_ENDPOINT, DEBUG } from './config';
@@ -81,5 +82,17 @@ export class Remote {
     message.comment = incident.comment;
     return this.post(
       'incident', messages.Incident.encode(message).finish().buffer);
+  }
+
+  postUser(profile: Profile) {
+    let message = messages.User.create();
+    message.deviceUuid = this.device.uuid;
+    message.platformName = this.device.platform;
+    message.platformVersion = parseFloat(this.device.version);
+    message.gender = profile.gender;
+    message.age = profile.age;
+    message.cyclingExperience = profile.cyclingExperience;
+    return this.post(
+      'user', messages.User.encode(message).finish().buffer);
   }
 }

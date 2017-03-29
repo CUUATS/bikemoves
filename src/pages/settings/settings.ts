@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, ToastController } from 'ionic-angular';
 import { Settings, Preferences, Profile } from '../../app/settings';
 import { getOptions, notify } from '../../app/utils';
+import { Remote } from '../../app/remote';
 
 @Component({
   selector: 'page-settings',
@@ -17,7 +18,8 @@ export class SettingsPage {
   constructor(
       private navCtrl: NavController,
       private toastCtrl: ToastController,
-      private settings: Settings) {
+      private settings: Settings,
+      private remote: Remote) {
   }
 
   ionViewWillEnter() {
@@ -37,6 +39,7 @@ export class SettingsPage {
 
   private saveProfile() {
     this.settings.saveProfile();
+    this.remote.postUser(this.profile);
   }
 
 }
