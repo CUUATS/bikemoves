@@ -5,9 +5,9 @@ import { Subject } from 'rxjs/Subject';
 import { Location } from './location';
 import { Marker } from './marker';
 import { extend, toLineString, dataURItoBlob } from './utils';
-import { MAP_STYLE } from './config';
+import { MAP_STYLE, MAPBOX_TOKEN } from './config';
 
-mapboxgl.accessToken = 'pk.eyJ1IjoiY3V1YXRzIiwiYSI6ImNpbm03NGFrdTB6ZTB1a2x5MHl6dTV6MXIifQ.Aq-CCCulBhKbmLGZUH6VDw';
+mapboxgl.accessToken = MAPBOX_TOKEN;
 
 export interface MapOptions {
   center?: Location;
