@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, ToastController } from 'ionic-angular';
 import { Settings, Preferences, Profile } from '../../app/settings';
 import { getOptions, notify } from '../../app/utils';
+import { Geo } from '../../app/geo';
 import { Remote } from '../../app/remote';
 
 @Component({
@@ -19,7 +20,8 @@ export class SettingsPage {
       private navCtrl: NavController,
       private toastCtrl: ToastController,
       private settings: Settings,
-      private remote: Remote) {
+      private remote: Remote,
+      private geo: Geo) {
   }
 
   ionViewWillEnter() {
@@ -35,6 +37,7 @@ export class SettingsPage {
 
   private savePreferences() {
     this.settings.savePreferences();
+    return this.geo.setGeolocationEnabled(this.preferences.autoRecord);
   }
 
   private saveProfile() {

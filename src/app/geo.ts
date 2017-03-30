@@ -9,21 +9,6 @@ import { bikemoves as messages } from './messages';
 
 @Injectable()
 export class Geo extends Service {
-  static BG_DEFAULT_SETTINGS = {
-		activityType: 'OtherNavigation', // iOS activity type
-		autoSync: false, // Do not automatically post to the server
-		debug: false, // Disable debug notifications
-		desiredAccuracy: 0, // Overridden by settings.
-		distanceFilter: 20, // Generate update events every 20 meters
-		disableElasticity: false, // Auto-adjust distanceFilter
-		fastestLocationUpdateInterval: 1000, // Prevent updates more than once per second (Android)
-		locationUpdateInterval: 5000, // Request updates every 5 seconds (Android)
-    maxRecordsToPersist: 0, // Disable persistence
-		startOnBoot: false, // Do not start tracking on device boot
-		stationaryRadius: 20, // Activate the GPS after 20 meters (iOS)
-		stopOnTerminate: true, // Stop geolocation tracking on app exit
-		stopTimeout: 3 // Keep tracking for 3 minutes while stationary
-	};
   static ACTIVITIES = {
     'still': messages.ActivityType.STILL,
     'on_foot': messages.ActivityType.FOOT,
@@ -40,14 +25,15 @@ export class Geo extends Service {
     'providerchange': messages.EventType.PROVIDER
   };
   private bgGeo: any;
-  private settings = Geo.BG_DEFAULT_SETTINGS;
 
   public activity = new Subject();
   public locations = new Subject();
   public motion = new Subject();
   public currentLocation: Location;
 
-  constructor(private locationManager: Locations, private tripManager: Trips) {
+  constructor(
+      private locationManager: Locations,
+      private tripManager: Trips) {
     super();
   }
 
@@ -104,10 +90,31 @@ export class Geo extends Service {
     }
   }
 
-  init() {
+  private getSettings() {
+    return {
+      activityRecognitionInterval: 10000,
+  		activityType: 'OtherNavigation',
+  		desiredAccuracy: 0,
+  		distanceFilter: 20,
+  		disableElasticity: true,
+  		fastestLocationUpdateInterval: 5000,
+      locationAuthorizationRequest: 'Always',
+      locationAuthorizationAlert: {
+        instructions: 'To record trips, you must enable ' +
+          '"Always" in the Location Services settings.'
+      },
+  		locationUpdateInterval: 5000,
+      maxRecordsToPersist: 0,
+  		stationaryRadius: 20,
+  		stopTimeout: 3,
+      triggerActivities: 'on_bicycle'
+  	};
+  }
+
+  public init() {
     this.bgGeo = (<any>window).BackgroundGeolocation;
     if (this.bgGeo) this.bgGeo.configure(
-      this.settings, () => {
+      this.getSettings(), () => {
         this.bgGeo.on('location', this.onLocation.bind(this));
         this.bgGeo.on('motionchange', this.onMotionChange.bind(this));
         this.bgGeo.on('activitychange', this.onActivityChange.bind(this));
@@ -116,17 +123,17 @@ export class Geo extends Service {
     this.getCurrentLocation();
   }
 
-  finish(taskId) {
+  public finish(taskId) {
     this.bgGeo.finish(taskId);
   }
 
-  getCurrentLocation(options?) {
+  public getCurrentLocation(options?) {
     return this.doGeoTask('getCurrentPosition', options).then((position) => {
       return Location.fromPosition(position);
     });
   }
 
-  setGeolocationEnabled(on) {
+  public setGeolocationEnabled(on) {
     return this.ready().then(() => this.getState()).then((state) => {
       return new Promise((resolve, reject) => {
         if ((<any>state).enabled === on) {
@@ -140,12 +147,12 @@ export class Geo extends Service {
     });
   }
 
-  getMoving() {
+  public getMoving() {
     return this.ready().then(() => this.getState())
       .then((state) => (<any>state).isMoving);
   }
 
-  setMoving(moving) {
+  public setMoving(moving) {
     return this.ready().then(() => this.getState()).then((state) => {
       return new Promise((resolve, reject) => {
         if ((<any>state).isMoving === moving) {
@@ -155,16 +162,6 @@ export class Geo extends Service {
         }
       });
     });
-  }
-
-  startRecording() {
-    return this.setGeolocationEnabled(true)
-      .then(() => this.setMoving(true));
-  }
-
-  stopRecording() {
-    return this.setMoving(false)
-      .then(() => this.setGeolocationEnabled(false));
   }
 
 }

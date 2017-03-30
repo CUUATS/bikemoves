@@ -4,6 +4,7 @@ import { Geo } from '../../app/geo';
 import { Location } from '../../app/location';
 import { Map, MapOptions } from '../../app/map';
 import { Marker } from '../../app/marker';
+import { Settings, Preferences } from '../../app/settings';
 import { IncidentFormPage } from '../incident-form/incident-form';
 
 @Component({
@@ -21,11 +22,12 @@ export class MapPage {
   private stateChangePending = false;
 
   constructor(public navCtrl: NavController,
-    private cdr: ChangeDetectorRef,
-    private geo: Geo,
-    private map: Map,
-    private modalCtrl: ModalController,
-    private events: Events) {
+      private cdr: ChangeDetectorRef,
+      private geo: Geo,
+      private map: Map,
+      private modalCtrl: ModalController,
+      private events: Events,
+      private settings: Settings) {
     map.click.subscribe(this.onClick.bind(this));
     geo.motion.subscribe(this.onMotion.bind(this));
     geo.locations.subscribe(this.onLocation.bind(this));
@@ -112,12 +114,19 @@ export class MapPage {
 
   startRecording() {
     this.stateChangePending = true;
-    this.geo.startRecording();
+    return this.geo.setGeolocationEnabled(true)
+      .then(() => this.geo.setMoving(true));
   }
 
   stopRecording() {
     this.stateChangePending = true;
-    this.geo.stopRecording();
+    let stopMoving = this.geo.setMoving(false),
+      getPrefs = this.settings.getPreferences();
+    return Promise.all([getPrefs, stopMoving])
+      .then((res) => {
+        if (!(res[0] as Preferences).autoRecord)
+          return this.geo.setGeolocationEnabled(false);
+      });
   }
 
   startReporting() {
