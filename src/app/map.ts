@@ -5,6 +5,7 @@ import { Subject } from 'rxjs/Subject';
 import { Location } from './location';
 import { Marker } from './marker';
 import { extend, toLineString, dataURItoBlob } from './utils';
+import { MAP_STYLE } from './config';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY3V1YXRzIiwiYSI6ImNpbm03NGFrdTB6ZTB1a2x5MHl6dTV6MXIifQ.Aq-CCCulBhKbmLGZUH6VDw';
 
@@ -29,7 +30,6 @@ export class Map {
     interactive: false,
     zoom: 16
   };
-  static MAP_STYLE = 'https://tileserver.bikemoves.me/styles/bikemoves-v1.json?cachekey=1';
   static TRIP_SOURCE = 'trip';
   static TRIP_LAYER = {
     id: 'bikemoves-trip',
@@ -76,7 +76,7 @@ export class Map {
     // Create the map.
     this.map = new mapboxgl.Map({
         container: this.el,
-        style: Map.MAP_STYLE,
+        style: MAP_STYLE,
         zoom: this.options.zoom,
         center: this.options.center.toLngLat()
     });
