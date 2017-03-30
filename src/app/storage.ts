@@ -38,7 +38,12 @@ export class Storage extends Service {
       name: 'bikemoves.db',
       location: 'default'
     }).then(() => this.migrate())
+      .then(() => this.enableForeignKeySupport())
       .then(() => this.setReady());
+  }
+
+  private enableForeignKeySupport() {
+    return this.db.executeSql('PRAGMA foreign_keys = ON', []);
   }
 
   private getDBVersionMigration() {
