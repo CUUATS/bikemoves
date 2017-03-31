@@ -2,6 +2,7 @@ import { Component, ChangeDetectorRef } from '@angular/core';
 import { Events, ModalController, NavController } from 'ionic-angular';
 import { Geo } from '../../app/geo';
 import { Location } from '../../app/location';
+import { Locations } from '../../app/locations';
 import { Map, MapOptions } from '../../app/map';
 import { Marker } from '../../app/marker';
 import { Settings, Preferences } from '../../app/settings';
@@ -16,6 +17,7 @@ export class MapPage {
   static STATE_RECORDING = 'recording';
   static STATE_REPORTING = 'reporting';
 
+  private visible = true;
   private state = MapPage.STATE_STOPPED;
   private currentMarker: Marker;
   private incidentMarker: Marker;
@@ -27,7 +29,9 @@ export class MapPage {
       private map: Map,
       private modalCtrl: ModalController,
       private events: Events,
+      private locationManager: Locations,
       private settings: Settings) {
+    this.events.subscribe('app:active', this.onActiveChange.bind(this));
     map.click.subscribe(this.onClick.bind(this));
     geo.motion.subscribe(this.onMotion.bind(this));
     geo.locations.subscribe(this.onLocation.bind(this));
@@ -84,8 +88,20 @@ export class MapPage {
     }
   }
 
+  private onActiveChange(active: boolean) {
+    this.visible = active;
+    if (this.visible) {
+      this.locationManager.filter('trip_id IS NULL', 'time ASC')
+        .then((locations) => this.map.path = locations);
+      if (this.geo.currentLocation) {
+        this.addOrMoveMarker(this.geo.currentLocation);
+        this.map.center = this.geo.currentLocation;
+      }
+    }
+  }
+
   private onLocation(location) {
-    if (!this.map) return;
+    if (!this.map || !this.visible) return;
     this.map.center = location;
     this.addOrMoveMarker(location);
     if (this.isRecording()) this.map.addLocation(location);
