@@ -3,6 +3,7 @@ import { ModalController, NavParams } from 'ionic-angular';
 import { Trip } from '../../app/trip';
 import { Trips } from '../../app/trips';
 import { Map } from '../../app/map';
+import { Path } from '../../app/path';
 import { TripFormPage } from '../trip-form/trip-form';
 
 @Component({
@@ -25,7 +26,7 @@ export class TripDetailPage {
       interactive: false
     });
     this.tripManager.getLocations(this.trip).then((locations) => {
-      this.map.path = locations;
+      this.map.path = new Path(locations);
       this.map.zoomToPath();
     });
   }

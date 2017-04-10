@@ -2,6 +2,7 @@ import { Location } from './location';
 import { Persistent } from './persistent';
 import { TripStatsProvider, TripStats } from './stats';
 import { APP_VERSION } from './config';
+import { Path } from './path';
 import * as moment from 'moment';
 
 const MILE = 0.000621371,
@@ -14,11 +15,11 @@ export class Trip extends Persistent implements TripStatsProvider {
   public stats: TripStats;
 
   static fromLocations(locations: Location[]) {
-    let trip = new Trip();
+    let trip = new Trip(),
+      path = new Path(locations);
     trip.startTime = locations[0].time;
     trip.endTime = locations[locations.length - 1].time;
-    for (let i = 1; i < locations.length; i++)
-      trip.distance += locations[i-1].distanceTo(locations[i]);
+    trip.distance = path.distance;
     return trip;
   }
 

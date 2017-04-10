@@ -5,6 +5,7 @@ import { Location } from '../../app/location';
 import { Locations } from '../../app/locations';
 import { Map, MapOptions } from '../../app/map';
 import { Marker } from '../../app/marker';
+import { Path } from '../../app/path';
 import { Settings, Preferences } from '../../app/settings';
 import { IncidentFormPage } from '../incident-form/incident-form';
 
@@ -92,7 +93,7 @@ export class MapPage {
     this.visible = active;
     if (this.visible) {
       this.locationManager.filter('trip_id IS NULL', 'time ASC')
-        .then((locations) => this.map.path = locations);
+        .then((locations) => this.map.path = new Path(locations));
       if (this.geo.currentLocation) {
         this.addOrMoveMarker(this.geo.currentLocation);
         this.map.center = this.geo.currentLocation;
@@ -110,7 +111,7 @@ export class MapPage {
   private onMotion(moving) {
     this.stateChangePending = false;
     this.setStateFromMoving(moving);
-    if (!moving) this.map.path = [];
+    if (!moving) this.map.path = null;
   }
 
   private setStateFromMoving(moving) {

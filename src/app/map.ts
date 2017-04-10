@@ -4,7 +4,8 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Location } from './location';
 import { Marker } from './marker';
-import { extend, toLineString, dataURItoBlob } from './utils';
+import { Path } from './path';
+import { extend, dataURItoBlob } from './utils';
 import { MAP_STYLE, MAPBOX_TOKEN } from './config';
 
 mapboxgl.accessToken = MAPBOX_TOKEN;
@@ -12,14 +13,14 @@ mapboxgl.accessToken = MAPBOX_TOKEN;
 export interface MapOptions {
   center?: Location;
   interactive?: boolean;
-  path?: Location[];
+  path?: Path;
   marker?: Location;
   markerType?: string;
   zoom?: number;
 }
 
 interface PathImageRequest {
-  path?: Location[];
+  path?: Path;
   resolve: any;
 }
 
@@ -28,6 +29,7 @@ export class Map {
   static DEFAULT_OPTIONS: MapOptions = {
     center: new Location(-88.227203, 40.109403),
     interactive: false,
+    path: new Path(),
     zoom: 16
   };
   static TRIP_SOURCE = 'trip';
@@ -165,7 +167,7 @@ export class Map {
   }
 
   private getTripData() {
-    let linestring = toLineString(this.options.path);
+    let linestring = this.path.toLineString();
     return {
       type: 'FeatureCollection',
       features: (linestring) ? [linestring] : []
@@ -199,8 +201,8 @@ export class Map {
     return this.options.path;
   }
 
-  set path(locations: Location[]) {
-    this.options.path = locations;
+  set path(path: Path | null) {
+    this.options.path = (path) ? path : new Path();
     if (this.loaded)
       this.map.getSource(Map.TRIP_SOURCE).setData(this.getTripData());
   }
@@ -214,7 +216,7 @@ export class Map {
   }
 
   public zoomToPath() {
-    let bbox = turf.bbox(toLineString(this.path) as any);
+    let bbox = turf.bbox(this.path.toLineString() as any);
     this.map.fitBounds([bbox.slice(0, 2), bbox.slice(2)], {
       duration: 0,
       linear: true,
@@ -223,15 +225,14 @@ export class Map {
   }
 
   public addLocation(location: Location) {
-    if (!this.options.path) this.options.path = [];
     this.options.path.push(location);
     this.path = this.options.path;
   }
 
-  public createPathImage(locations: Location[]) {
+  public createPathImage(path: Path) {
     return new Promise((resolve, reject) => {
       this.pathImageQueue.push({
-        path: locations,
+        path: path,
         resolve: resolve
       });
       if (this.pathImageQueue.length === 1) this.nextPathImage();

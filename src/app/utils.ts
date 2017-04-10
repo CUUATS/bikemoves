@@ -1,6 +1,4 @@
 import { ToastController } from 'ionic-angular';
-import { Location } from './location';
-import turf from 'turf';
 
 // Source: http://stackoverflow.com/questions/37042602/how-to-combine-object-properties-in-typescript
 export function extend(...args: any[]): any {
@@ -11,17 +9,6 @@ export function extend(...args: any[]): any {
     }
   }
   return newObj;
-}
-
-export function toLineString(locations: Location[], simplify: number = 0) {
-  if (!locations || locations.length < 2) return null;
-
-  let linestring = turf.lineString(
-    locations.map((location) => location.toLngLat()));
-
-  if (simplify > 0 && linestring.geometry.coordinates.length > 2)
-    return (turf.simplify(linestring, simplify, false));
-  return linestring;
 }
 
 // Based on: http://stackoverflow.com/questions/10073699/pad-a-number-with-leading-zeros-in-javascript

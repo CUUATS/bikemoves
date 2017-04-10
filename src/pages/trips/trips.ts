@@ -3,6 +3,7 @@ import { ActionSheetController, ModalController, NavController, ToastController 
 import { Trip } from '../../app/trip';
 import { Trips } from '../../app/trips';
 import { Map } from '../../app/map';
+import { Path } from '../../app/path';
 import { TripDetailPage } from '../trip-detail/trip-detail';
 import { TripFormPage } from '../trip-form/trip-form';
 import { notify } from '../../app/utils';
@@ -54,7 +55,7 @@ export class TripsPage {
       interactive: false
     });
     this.tripManager.getLocations(trip)
-      .then((locations) => this.map.createPathImage(locations))
+      .then((locations) => this.map.createPathImage(new Path(locations)))
       .then((blob) => this.tripManager.saveImage(trip, blob));
   }
 

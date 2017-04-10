@@ -4,6 +4,7 @@ import { File, FileEntry } from '@ionic-native/file';
 import { Trip } from './trip';
 import { ObjectManager } from './object_manager';
 import { Storage } from './storage';
+import { Location } from './location';
 import { Locations } from './locations';
 import * as moment from 'moment';
 import { bikemoves as messages } from './messages';
@@ -99,11 +100,11 @@ export class Trips extends ObjectManager {
       });
   }
 
-  public getLocations(trip: Trip) {
+  public getLocations(trip: Trip): Promise<Location[]> {
     return this.locations.filter(`trip_id = ?`,  'time ASC', [trip.id]);
   }
 
-  public getODLocations(trip: Trip) {
+  public getODLocations(trip: Trip) : Promise<Location[]> {
     return this.locations.filter(`trip_id = ? AND event = ?`,
         'moving DESC', [trip.id, messages.EventType.MOTION]);
   }
