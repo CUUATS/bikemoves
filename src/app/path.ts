@@ -8,7 +8,7 @@ export class Path {
     locations.forEach((location) => this.push(location));
   }
 
-  push(location: Location) {
+  public push(location: Location) {
     if (this.locations.length) this.distance +=
       this.locations[this.locations.length-1].distanceTo(location);
     this.locations.push(location);

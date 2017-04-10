@@ -1,5 +1,6 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { Events, ModalController, NavController } from 'ionic-angular';
+import { Observable, Subscription } from 'rxjs/Rx';
 import { Geo } from '../../app/geo';
 import { Location } from '../../app/location';
 import { Locations } from '../../app/locations';
@@ -8,12 +9,15 @@ import { Marker } from '../../app/marker';
 import { Path } from '../../app/path';
 import { Settings, Preferences } from '../../app/settings';
 import { IncidentFormPage } from '../incident-form/incident-form';
+import { bikemoves as messages } from '../../app/messages';
+import { TripStats, TripStatsProvider } from '../../app/stats';
+import * as moment from 'moment';
 
 @Component({
   selector: 'page-map',
   templateUrl: 'map.html'
 })
-export class MapPage {
+export class MapPage implements TripStatsProvider {
   static STATE_STOPPED = 'stopped';
   static STATE_RECORDING = 'recording';
   static STATE_REPORTING = 'reporting';
@@ -23,6 +27,13 @@ export class MapPage {
   private currentMarker: Marker;
   private incidentMarker: Marker;
   private stateChangePending = false;
+  private activity: messages.ActivityType;
+  private startTime: moment.Moment;
+  private duration = moment.duration(0);
+  private distance = 0;
+  private stats: TripStats;
+  private timer = Observable.timer(1000, 1000);
+  private tick: Subscription;
 
   constructor(public navCtrl: NavController,
       private cdr: ChangeDetectorRef,
@@ -32,6 +43,7 @@ export class MapPage {
       private events: Events,
       private locationManager: Locations,
       private settings: Settings) {
+    this.stats = new TripStats(this);
     this.events.subscribe('app:active', this.onActiveChange.bind(this));
     map.click.subscribe(this.onClick.bind(this));
     geo.motion.subscribe(this.onMotion.bind(this));
@@ -47,10 +59,6 @@ export class MapPage {
 
   ionViewWillLeave() {
     this.map.unassign();
-  }
-
-  ionViewCanLeave(): boolean {
-    return this.isStopped();
   }
 
   private initMap() {
@@ -76,6 +84,28 @@ export class MapPage {
     return this.state === MapPage.STATE_REPORTING;
   }
 
+  private isStill() {
+    return this.activity === messages.ActivityType.STILL;
+  }
+
+  private isOnFoot() {
+    return this.activity === messages.ActivityType.FOOT ||
+      this.activity === messages.ActivityType.WALK ||
+      this.activity === messages.ActivityType.RUN;
+  }
+
+  private isOnBicycle() {
+    return this.activity === messages.ActivityType.BICYCLE;
+  }
+
+  private isInVehicle() {
+    return this.activity === messages.ActivityType.VEHICLE;
+  }
+
+  private isUnknownActivity() {
+    return this.activity === messages.ActivityType.UNKNOWN;
+  }
+
   private setState(state: string) {
     this.state = state;
     this.events.publish('map:state', this.state);
@@ -93,12 +123,16 @@ export class MapPage {
     this.visible = active;
     if (this.visible) {
       this.locationManager.filter('trip_id IS NULL', 'time ASC')
-        .then((locations) => this.map.path = new Path(locations));
+        .then((locations) => {
+          this.map.path = new Path(locations);
+          this.updateDistanceActivity();
+        });
       if (this.geo.currentLocation) {
         this.addOrMoveMarker(this.geo.currentLocation);
         this.map.center = this.geo.currentLocation;
       }
     }
+    this.updateTimerSubscription();
   }
 
   private onLocation(location) {
@@ -106,12 +140,17 @@ export class MapPage {
     this.map.center = location;
     this.addOrMoveMarker(location);
     if (this.isRecording()) this.map.addLocation(location);
+    this.updateDistanceActivity();
   }
 
   private onMotion(moving) {
     this.stateChangePending = false;
     this.setStateFromMoving(moving);
     if (!moving) this.map.path = null;
+    this.startTime = (moving) ? moment() : null;
+    this.duration = moment.duration(0);
+    this.updateDistanceActivity();
+    this.updateTimerSubscription();
   }
 
   private setStateFromMoving(moving) {
@@ -127,6 +166,27 @@ export class MapPage {
     } else {
       this.incidentMarker = this.map.addMarker(location, Marker.INCIDENT);
     }
+  }
+
+  private updateTimerSubscription() {
+    if (this.visible && this.isRecording() && !this.tick) {
+      this.tick = this.timer.subscribe(() => this.updateDuration());
+    } else if (this.tick) {
+      this.tick.unsubscribe();
+      this.tick = null;
+    }
+  }
+
+  private updateDuration() {
+    this.duration = (this.startTime) ?
+      moment.duration(moment().diff(this.startTime)) : moment.duration(0);
+    this.cdr.detectChanges();
+  }
+
+  private updateDistanceActivity() {
+    this.distance = this.map.path.distance;
+    this.activity = (this.geo.currentLocation) ?
+      this.geo.currentLocation.activity : messages.ActivityType.STILL;
   }
 
   startRecording() {
@@ -167,6 +227,22 @@ export class MapPage {
       IncidentFormPage, this.incidentMarker.location);
     incidentModal.onWillDismiss(() => this.stopReporting());
     incidentModal.present();
+  }
+
+  getDuration() {
+    return this.duration;
+  }
+
+  getDistance() {
+    return this.distance;
+  }
+
+  getSpeed() {
+    return 0;
+  }
+
+  getCalories() {
+    return 0;
   }
 
 }
