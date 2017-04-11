@@ -193,10 +193,7 @@ export class MapPage implements TripStatsProvider {
   }
 
   private navigateToTripDetail(saveInfo) {
-    if (saveInfo.insert && this.visible) {
-      this.navCtrl.parent.select(1);
-      this.navCtrl.push(TripDetailPage, saveInfo.trip);
-    }
+    if (saveInfo.insert && this.visible) this.navCtrl.parent.select(1);
   }
 
   startRecording() {
