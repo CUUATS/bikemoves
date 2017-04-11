@@ -1,5 +1,9 @@
 import { ToastController } from 'ionic-angular';
 
+export const MILE = 0.000621371,
+  K1 = 3.509,
+  K2 = 0.2581;
+
 // Source: http://stackoverflow.com/questions/37042602/how-to-combine-object-properties-in-typescript
 export function extend(...args: any[]): any {
   const newObj = {};

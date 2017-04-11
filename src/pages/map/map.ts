@@ -12,6 +12,7 @@ import { IncidentFormPage } from '../incident-form/incident-form';
 import { bikemoves as messages } from '../../app/messages';
 import { TripStats, TripStatsProvider } from '../../app/stats';
 import { TripDetailPage } from '../trip-detail/trip-detail';
+import { MILE } from '../../app/utils';
 import * as moment from 'moment';
 
 @Component({
@@ -243,7 +244,7 @@ export class MapPage implements TripStatsProvider {
   }
 
   getDistance() {
-    return this.distance;
+    return this.distance * MILE;
   }
 
   getSpeed() {

@@ -3,11 +3,8 @@ import { Persistent } from './persistent';
 import { TripStatsProvider, TripStats } from './stats';
 import { APP_VERSION } from './config';
 import { Path } from './path';
+import { MILE, K1, K2 } from './utils';
 import * as moment from 'moment';
-
-const MILE = 0.000621371,
-  K1 = 3.509,
-  K2 = 0.2581;
 
 export class Trip extends Persistent implements TripStatsProvider {
   static NEAR_THESHOLD = 500; // Maximum distance for location guesses, in meters
