@@ -3,6 +3,18 @@
     <ion-title>
       Upload Trip
     </ion-title>
+    <ion-buttons start>
+      <button ion-button icon-left (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+        Cancel
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
+      <button ion-button icon-left (click)="uploadTrip()">
+        <ion-icon name="cloud-upload"></ion-icon>
+        Upload
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -32,18 +44,4 @@
       </ion-item>
     </ion-item-group>
   </ion-list>
-  <div padding class="no-top-padding">
-    <p>
-      <button ion-button block icon-left color="primary" (click)="uploadTrip()">
-        <ion-icon name="cloud-upload"></ion-icon>
-        Upload
-      </button>
-    </p>
-    <p>
-      <button ion-button block icon-left color="light" (click)="closeModal()">
-        <ion-icon name="close"></ion-icon>
-        Cancel
-      </button>
-    </p>
-  </div>
 </ion-content>
