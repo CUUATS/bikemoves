@@ -72,12 +72,17 @@ export class Trips extends ObjectManager {
     let imageDelete = (trip.imageUrl) ?
         this.deleteImage(trip) : Promise.resolve();
     return Promise.all([imageDelete, super.delete(trip)])
-      .then(() => this.events.publish('trips:change'));
+      .then(() => this.events.publish('trip:delete'));
   }
 
   public save(trip: Trip) {
+    let insert = trip.id === null;
     return super.save(trip).then((trip) => {
-      this.events.publish('trips:change');
+      this.events.publish('trip:save', {
+        insert: insert,
+        update: !insert,
+        trip: trip
+      });
       return trip;
     });
   }

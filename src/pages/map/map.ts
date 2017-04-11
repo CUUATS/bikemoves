@@ -11,6 +11,7 @@ import { Settings, Preferences } from '../../app/settings';
 import { IncidentFormPage } from '../incident-form/incident-form';
 import { bikemoves as messages } from '../../app/messages';
 import { TripStats, TripStatsProvider } from '../../app/stats';
+import { TripDetailPage } from '../trip-detail/trip-detail';
 import * as moment from 'moment';
 
 @Component({
@@ -35,7 +36,7 @@ export class MapPage implements TripStatsProvider {
   private timer = Observable.timer(1000, 1000);
   private tick: Subscription;
 
-  constructor(public navCtrl: NavController,
+  constructor(private navCtrl: NavController,
       private cdr: ChangeDetectorRef,
       private geo: Geo,
       private map: Map,
@@ -44,6 +45,7 @@ export class MapPage implements TripStatsProvider {
       private locationManager: Locations,
       private settings: Settings) {
     this.stats = new TripStats(this);
+    this.events.subscribe('trip:save', this.navigateToTripDetail.bind(this));
     this.events.subscribe('app:active', this.onActiveChange.bind(this));
     map.click.subscribe(this.onClick.bind(this));
     geo.motion.subscribe(this.onMotion.bind(this));
@@ -187,6 +189,13 @@ export class MapPage implements TripStatsProvider {
     this.distance = this.map.path.distance;
     this.activity = (this.geo.currentLocation) ?
       this.geo.currentLocation.activity : messages.ActivityType.STILL;
+  }
+
+  private navigateToTripDetail(saveInfo) {
+    if (saveInfo.insert && this.visible) {
+      this.navCtrl.parent.select(1);
+      this.navCtrl.push(TripDetailPage, saveInfo.trip);
+    }
   }
 
   startRecording() {

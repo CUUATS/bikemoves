@@ -21,7 +21,8 @@ export class TabsPage {
       private trips: Trips,
       private events: Events) {
     this.events.subscribe('map:state', this.onMapState.bind(this));
-    this.events.subscribe('trips:change', this.updateTripsBadge.bind(this));
+    this.events.subscribe('trip:save', this.updateTripsBadge.bind(this));
+    this.events.subscribe('trip:delete', this.updateTripsBadge.bind(this));
   }
 
   ionViewWillEnter() {
