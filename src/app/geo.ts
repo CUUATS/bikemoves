@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
 import { Service } from './service';
 import { Location } from './location';
 import { Locations } from './locations';
 import { Trip } from './trip';
 import { Trips } from './trips';
+import { DEBUG } from './config';
 import { bikemoves as messages } from './messages';
 
 @Injectable()
@@ -167,6 +169,44 @@ export class Geo extends Service {
         }
       });
     });
+  }
+
+  public debugMotion() {
+    if (!DEBUG) return;
+    let coords = [
+      [-88.186468, 40.105718],
+      [-88.187242, 40.105729],
+      [-88.188610, 40.105704],
+      [-88.188728, 40.106352],
+      [-88.188728, 40.107164],
+      [-88.188744, 40.107939]
+    ];
+    Observable.timer(1000, 1000).take(coords.length)
+      .subscribe((i) => {
+        let first = i === 0,
+          last = i === coords.length - 1,
+          position = {
+            coords: {
+              longitude: coords[i][0],
+              latitude: coords[i][1],
+              accuracy: 10,
+              altitude: 700,
+              heading: -1,
+              speed: 10
+            },
+            timestamp: new Date(),
+            is_moving: !last,
+            event: (first || last) ? 'motionchange' : null,
+            activity: {
+              type: 'on_bicycle',
+              confidence: 100
+            }
+          };
+        if (!first) this.onLocation(position, null);
+        if (first || last)
+          this.onMotionChange(position.is_moving, position, null);
+        if (first) this.onLocation(position, null);
+      }, (err) => console.log(err));
   }
 
 }

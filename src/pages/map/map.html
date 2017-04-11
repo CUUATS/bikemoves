@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      <span class="heading-stopped" *ngIf="isStopped()">Stopped</span>
+      <span class="heading-stopped" *ngIf="isStopped()" (press)="geo.debugMotion()">Stopped</span>
       <span class="heading-recording" *ngIf="isRecording()">Recording</span>
       <span class="heading-reporting" *ngIf="isReporting()">Tap a Location</span>
     </ion-title>
