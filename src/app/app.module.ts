@@ -3,6 +3,7 @@ import { HttpModule } from '@angular/http';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { BikeMoves } from './app.component';
 import { Geo } from './geo';
+import { Legacy } from './legacy';
 import { Locations } from './locations';
 import { Map } from './map';
 import { Remote } from './remote';
@@ -53,6 +54,7 @@ import { Device } from '@ionic-native/device';
     Device,
     File,
     Geo,
+    Legacy,
     Locations,
     Map,
     Remote,
