@@ -10,4 +10,9 @@ copyConfig.copyMapboxGLImages = {
   dest: '{{BUILD}}/mapbox-gl/svg'
 };
 
+copyConfig.copyChartist = {
+  src: ['{{ROOT}}/node_modules/chartist/dist/chartist.min.css'],
+  dest: '{{BUILD}}/chartist'
+};
+
 module.exports = copyConfig;

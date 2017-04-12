@@ -22,12 +22,14 @@
     "@ionic-native/core": "^3.1.1",
     "@ionic-native/device": "^3.2.2",
     "@ionic-native/file": "^3.1.1",
+    "chartist": "^0.11.0",
     "install": "^0.8.7",
     "ionic-angular": "2.2.0",
     "ionic-native": "2.4.1",
     "ionicons": "3.0.0",
     "mapbox-gl": "^0.34.0",
     "moment": "^2.18.0",
+    "ng-chartist": "^1.1.0",
     "npm": "^4.4.1",
     "protobufjs": "^6.6.5",
     "rxjs": "5.0.1",
@@ -37,6 +39,7 @@
   },
   "devDependencies": {
     "@ionic/app-scripts": "1.1.4",
+    "@types/chartist": "^0.9.34",
     "typescript": "2.0.9"
   },
   "cordovaPlugins": [

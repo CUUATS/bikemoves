@@ -20,6 +20,7 @@ import { TripFormPage } from '../pages/trip-form/trip-form';
 import { TripsPage } from '../pages/trips/trips';
 import { File } from '@ionic-native/file';
 import { Device } from '@ionic-native/device';
+import { ChartistModule } from 'ng-chartist';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { Device } from '@ionic-native/device';
   ],
   imports: [
     IonicModule.forRoot(BikeMoves),
+    ChartistModule,
     HttpModule
   ],
   bootstrap: [IonicApp],
