@@ -1,8 +1,23 @@
 page-stats {
+  ion-card-header {
+    background-color: color($colors, light);
+    ion-icon {
+      margin-right: 0.25em;
+    }
+    button {
+      color: black !important;
+      float: right;
+      height: 1.25em !important;
+      margin-bottom: 0 !important;
+      margin-top: 0 !important;
+    }
+  }
+  .card-title {
+    font-weight: bold;
+  }
   .chart-wrapper {
     height: 300px;
-    margin: 15px;
-    padding: 0 0 0.9em 0.9em;
+    padding: 15px 0 0.9em 0.9em;
     position: relative;
   }
   x-chartist {
@@ -31,5 +46,11 @@ page-stats {
     transform: rotate(270deg);
     transform-origin: 100% 0;
     width: 300px;
+  }
+  .ct-series-a .ct-bar,
+  .ct-series-a .ct-line,
+  .ct-series-a .ct-point,
+  .ct-series-a .ct-slice-donut {
+    stroke: #FBB03B;
   }
 }

@@ -1,19 +1,24 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { Content, NavController } from 'ionic-angular';
 import { Trip } from '../../app/trip';
 import { Trips } from '../../app/trips';
 import { TripStatsProvider, TripStats } from '../../app/stats';
 import { format } from '../../app/utils';
-import { ChartEvent, ChartType } from 'ng-chartist';
+import { ChartEvent } from 'ng-chartist';
 import * as moment from 'moment';
 import * as Chartist from 'chartist';
 
 interface Chart {
-  type: ChartType;
+  id: string;
+  type: string;
   data: Chartist.IChartistData;
   options?: any;
   responsiveOptions?: any;
   events?: ChartEvent;
+  title: string;
+  xAxisLabel: string;
+  yAxisLabel: string;
+  icon: string;
 }
 
 class RangeProvider implements TripStatsProvider {
@@ -79,13 +84,12 @@ class RangeProvider implements TripStatsProvider {
   templateUrl: 'stats.html'
 })
 export class StatsPage {
+  @ViewChild(Content) content: Content;
   private range: 'week' | 'month' | 'year' = 'week';
   private provider = new RangeProvider();
-  private chartView: 'trips' | 'duration' | 'distance' | 'speed' | 'calories' |
-    'ghg' = 'trips';
   private stats: TripStats;
   private tripsCount = '0';
-  private chart: Chart;
+  private charts: Chart[] = [];
 
   constructor(private navCtrl: NavController,
     private tripManager: Trips) {
@@ -101,8 +105,63 @@ export class StatsPage {
     return moment().endOf(this.range);
   }
 
-  private isCumulative() {
-    return ['trips', 'speed'].indexOf(this.chartView) === -1;
+  private isCumulative(stat: string) {
+    return ['trips', 'speed'].indexOf(stat) === -1;
+  }
+
+  private formatRange() {
+    return {
+      week: 'Week',
+      month: 'Month',
+      year: 'Year'
+    }[this.range];
+  }
+
+  private getChartIcon(stat: string) {
+    return {
+      trips: 'bicycle',
+      duration: 'stopwatch',
+      distance: 'pin',
+      speed: 'speedometer',
+      calories: 'pizza',
+      ghg: 'leaf'
+    }[stat];
+  }
+
+  private getChartTitle(stat: string) {
+    let title = (this.isCumulative(stat)) ? 'Total ' : {
+      week: 'Daily ',
+      month: 'Daily ',
+      year: 'Monthly '
+    }[this.range];
+    title += {
+      trips: 'Trips',
+      duration: 'Time',
+      distance: 'Distance',
+      speed: 'Average Speed',
+      calories: 'Calories',
+      ghg: 'GHG Reduced'
+    }[stat];
+    return title;
+  }
+
+  private getXAxisLabel(stat: string) {
+    return {
+      week: 'Day',
+      month: 'Day',
+      year: 'Month'
+    }[this.range];
+  }
+
+  private getYAxisLabel(stat: string) {
+    return {
+      trips: 'Trips',
+      duration: 'Minutes',
+      distance: 'Miles',
+      speed: 'MPH',
+      calories: 'Calories',
+      ghg: 'Lb GHG'
+    }[stat];
   }
 
   private getChartRanges() {
@@ -125,7 +184,7 @@ export class StatsPage {
     return ranges;
   }
 
-  private getChartLabels(ranges) {
+  private getChartLabels(stat: string, ranges) {
     let dateFormat = {
         week: 'dd',
         month: 'D',
@@ -140,13 +199,13 @@ export class StatsPage {
       range[0].format(dateFormat) : null);
   }
 
-  private getChartSeries(ranges) {
+  private getChartSeries(stat: string, ranges) {
     let now = moment(),
       rangeStart = this.getStart(),
       values = ranges.map((range) => {
-        let start = (this.isCumulative()) ? rangeStart : range[0];
+        let start = (this.isCumulative(stat)) ? rangeStart : range[0];
         return (range[0].isBefore(now)) ?
-          this.provider.get(this.chartView, start, range[1]) : null;
+          this.provider.get(stat, start, range[1]) : null;
       });
     return [values];
   }
@@ -157,25 +216,47 @@ export class StatsPage {
       .then((trips) => {
         this.provider.setTrips(trips);
         this.tripsCount = format(trips.length);
-        this.updateChart();
+        this.updateCharts();
       });
   }
 
-  private updateChart() {
-    let ranges = this.getChartRanges();
-    this.chart = {
-      type: (this.isCumulative()) ? 'Line' : 'Bar',
-      data: {
-        labels: this.getChartLabels(ranges),
-        series: this.getChartSeries(ranges)
-      },
-      options: {
-        chartPadding: {
-          right: 20
+  private updateCharts() {
+    if (!this.provider.hasTrips()) {
+      this.charts = [];
+      return;
+    }
+
+    let ranges = this.getChartRanges(),
+      stats = ['trips', 'duration', 'distance', 'speed', 'calories', 'ghg'];
+    this.charts = stats.map((stat) => {
+      return {
+        id: stat,
+        type: (this.isCumulative(stat)) ? 'Line' : 'Bar',
+        data: {
+          labels: this.getChartLabels(stat, ranges),
+          series: this.getChartSeries(stat, ranges)
         },
-        fullWidth: true
-      }
-    };
+        options: {
+          chartPadding: {
+            right: 20
+          },
+          fullWidth: true
+        },
+        title: this.getChartTitle(stat),
+        xAxisLabel: this.getXAxisLabel(stat),
+        yAxisLabel: this.getYAxisLabel(stat),
+        icon: this.getChartIcon(stat)
+      };
+    });
+  }
+
+  private scrollTo(stat: string) {
+    let card = document.getElementById('chart-' + stat);
+    this.content.scrollTo(0, card.offsetTop);
+  }
+
+  private scrollToTop() {
+    this.content.scrollToTop();
   }
 
 }

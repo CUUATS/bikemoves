@@ -14,72 +14,61 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding-top>
-  <ion-segment *ngIf="provider.hasTrips()" [(ngModel)]="chartView" (ionChange)="updateChart()">
-    <ion-segment-button value="trips">
-      <ion-icon name="bicycle" item-left></ion-icon>
-    </ion-segment-button>
-    <ion-segment-button value="duration">
-      <ion-icon name="stopwatch" item-left></ion-icon>
-    </ion-segment-button>
-    <ion-segment-button value="distance">
-      <ion-icon name="pin" item-left></ion-icon>
-    </ion-segment-button>
-    <ion-segment-button value="speed">
-      <ion-icon name="speedometer" item-left></ion-icon>
-    </ion-segment-button>
-    <ion-segment-button value="calories">
-      <ion-icon name="pizza" item-left></ion-icon>
-    </ion-segment-button>
-    <ion-segment-button value="ghg">
-      <ion-icon name="leaf" item-left></ion-icon>
-    </ion-segment-button>
-  </ion-segment>
-  <div class="chart-wrapper" *ngIf="provider.hasTrips()">
-    <x-chartist
-      class="chart"
-      [data]="chart.data"
-      [type]="chart.type"
-      [options]="chart.options"
-      [responsiveOptions]="chart.responsiveOptions"
-      [events]="chart.events">
-    </x-chartist>
-    <div class="chart-xaxis-label" *ngIf="range != 'year'">Day</div>
-    <div class="chart-xaxis-label" *ngIf="range == 'year'">Month</div>
-    <div class="chart-yaxis-label" *ngIf="chartView == 'trips'">Trips</div>
-    <div class="chart-yaxis-label" *ngIf="chartView == 'duration'">Minutes</div>
-    <div class="chart-yaxis-label" *ngIf="chartView == 'distance'">Miles</div>
-    <div class="chart-yaxis-label" *ngIf="chartView == 'speed'">MPH</div>
-    <div class="chart-yaxis-label" *ngIf="chartView == 'calories'">Calories</div>
-    <div class="chart-yaxis-label" *ngIf="chartView == 'ghg'">Lb GHG</div>
-  </div>
-  <ion-list *ngIf="provider.hasTrips()">
-    <ion-item-divider color="light">
-      This {{ range }}
-    </ion-item-divider>
-    <ion-item>
-      <ion-icon name="bicycle" item-left></ion-icon>
-      {{tripsCount}} trips
-    </ion-item>
-    <ion-item>
-      <ion-icon name="stopwatch" item-left></ion-icon>
-      {{stats.formatDuration()}}
-    </ion-item>
-    <ion-item>
-      <ion-icon name="pin" item-left></ion-icon>
-      {{stats.formatDistance()}} mi
-    </ion-item>
-    <ion-item>
-      <ion-icon name="speedometer" item-left></ion-icon>
-      {{stats.formatSpeed()}} MPH
-    </ion-item>
-    <ion-item>
-      <ion-icon name="pizza" item-left></ion-icon>
-      {{stats.formatCalories()}} cal
-    </ion-item>
-    <ion-item>
-      <ion-icon name="leaf" item-left></ion-icon>
-      {{stats.formatGHG()}} lb GHG
-    </ion-item>
-  </ion-list>
+<ion-content class="cards-background">
+  <ion-card>
+    <ion-card-header>
+      <span class="card-title">Summary: This {{ formatRange() }}</span>
+    </ion-card-header>
+    <ion-list>
+      <button ion-item (click)="scrollTo('trips')">
+        <ion-icon name="bicycle" item-left></ion-icon>
+        {{tripsCount}} trips
+      </button>
+      <button ion-item (click)="scrollTo('duration')">
+        <ion-icon name="stopwatch" item-left></ion-icon>
+        {{stats.formatDuration()}}
+      </button>
+      <button ion-item (click)="scrollTo('distance')">
+        <ion-icon name="pin" item-left></ion-icon>
+        {{stats.formatDistance()}} mi
+      </button>
+      <button ion-item (click)="scrollTo('speed')">
+        <ion-icon name="speedometer" item-left></ion-icon>
+        {{stats.formatSpeed()}} MPH
+      </button>
+      <button ion-item (click)="scrollTo('calories')">
+        <ion-icon name="pizza" item-left></ion-icon>
+        {{stats.formatCalories()}} cal
+      </button>
+      <button ion-item (click)="scrollTo('ghg')">
+        <ion-icon name="leaf" item-left></ion-icon>
+        {{stats.formatGHG()}} lb GHG
+      </button>
+    </ion-list>
+  </ion-card>
+
+  <ion-card *ngFor="let chart of charts" id="chart-{{ chart.id }}">
+    <ion-card-header>
+      <ion-icon name="{{ chart.icon }}" item-left></ion-icon>
+      <span class="card-title">{{ chart.title }}</span>
+      <button ion-button icon-only clear small (click)="scrollToTop()"
+          class="top-button">
+        <ion-icon name="arrow-up"></ion-icon>
+      </button>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="chart-wrapper">
+        <x-chartist
+          class="chart"
+          [data]="chart.data"
+          [type]="chart.type"
+          [options]="chart.options"
+          [responsiveOptions]="chart.responsiveOptions"
+          [events]="chart.events">
+        </x-chartist>
+        <div class="chart-xaxis-label">{{ chart.xAxisLabel }}</div>
+        <div class="chart-yaxis-label">{{ chart.yAxisLabel }}</div>
+      </div>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
