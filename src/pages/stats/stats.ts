@@ -53,6 +53,25 @@ class RangeProvider implements TripStatsProvider {
     return this.getTrips(start, end).map((trip) => trip.getCalories())
       .reduce((total, cal) => total + cal, 0);
   }
+
+  public getGHG(start?: moment.Moment, end?: moment.Moment) {
+    return this.getDistance(start, end) * 0.8115
+  }
+
+  public getTripsCount(start?: moment.Moment, end?: moment.Moment) {
+    return this.getTrips(start, end).length;
+  }
+
+  public get(variable: string, start?: moment.Moment, end?: moment.Moment) {
+    switch (variable) {
+      case 'duration': return this.getDuration(start, end).asMinutes();
+      case 'distance': return this.getDistance(start, end);
+      case 'speed': return this.getSpeed(start, end);
+      case 'calories': return this.getCalories(start, end);
+      case 'ghg': return this.getGHG(start, end);
+      default: return this.getTripsCount(start, end);
+    }
+  }
 }
 
 @Component({
@@ -82,6 +101,10 @@ export class StatsPage {
     return moment().endOf(this.range);
   }
 
+  private isCumulative() {
+    return ['trips', 'speed'].indexOf(this.chartView) === -1;
+  }
+
   private getChartRanges() {
     let deltaUnit = {
         week: 'day',
@@ -104,20 +127,26 @@ export class StatsPage {
 
   private getChartLabels(ranges) {
     let dateFormat = {
-      week: 'dd',
-      month: 'D',
-      year: 'MMM'
-    }[this.range];
-    return ranges.map((range) => range[0].format(dateFormat));
+        week: 'dd',
+        month: 'D',
+        year: 'MMM'
+      }[this.range],
+      interval = {
+        week: 1,
+        month: 4,
+        year: 3
+      }[this.range];
+    return ranges.map((range, i) => (i % interval === 0) ?
+      range[0].format(dateFormat) : null);
   }
 
   private getChartSeries(ranges) {
     let now = moment(),
+      rangeStart = this.getStart(),
       values = ranges.map((range) => {
-        let start = range[0],
-          end = range[1];
-        return (start.isBefore(now)) ?
-          this.provider.getDistance(start, end) : null;
+        let start = (this.isCumulative()) ? rangeStart : range[0];
+        return (range[0].isBefore(now)) ?
+          this.provider.get(this.chartView, start, range[1]) : null;
       });
     return [values];
   }
@@ -135,7 +164,7 @@ export class StatsPage {
   private updateChart() {
     let ranges = this.getChartRanges();
     this.chart = {
-      type: 'Line',
+      type: (this.isCumulative()) ? 'Line' : 'Bar',
       data: {
         labels: this.getChartLabels(ranges),
         series: this.getChartSeries(ranges)
