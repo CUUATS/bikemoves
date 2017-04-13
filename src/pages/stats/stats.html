@@ -44,6 +44,14 @@
       [responsiveOptions]="chart.responsiveOptions"
       [events]="chart.events">
     </x-chartist>
+    <div class="chart-xaxis-label" *ngIf="range != 'year'">Day</div>
+    <div class="chart-xaxis-label" *ngIf="range == 'year'">Month</div>
+    <div class="chart-yaxis-label" *ngIf="chartView == 'trips'">Trips</div>
+    <div class="chart-yaxis-label" *ngIf="chartView == 'duration'">Minutes</div>
+    <div class="chart-yaxis-label" *ngIf="chartView == 'distance'">Miles</div>
+    <div class="chart-yaxis-label" *ngIf="chartView == 'speed'">MPH</div>
+    <div class="chart-yaxis-label" *ngIf="chartView == 'calories'">Calories</div>
+    <div class="chart-yaxis-label" *ngIf="chartView == 'ghg'">Lb GHG</div>
   </div>
   <ion-list *ngIf="provider.hasTrips()">
     <ion-item-divider color="light">
