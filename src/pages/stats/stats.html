@@ -1,10 +1,5 @@
 <ion-header>
-  <ion-navbar no-border-bottom>
-    <ion-title>
-      Stats
-    </ion-title>
-  </ion-navbar>
-  <ion-toolbar no-border-top>
+  <ion-toolbar>
     <ion-segment [(ngModel)]="range" (ionChange)="updateRange()">
       <ion-segment-button value="week">
         Week
@@ -19,25 +14,25 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding-top>
   <ion-segment *ngIf="provider.hasTrips()" [(ngModel)]="chartView" (ionChange)="updateChart()">
     <ion-segment-button value="trips">
-      Trips
+      <ion-icon name="bicycle" item-left></ion-icon>
     </ion-segment-button>
     <ion-segment-button value="duration">
-      Time
+      <ion-icon name="stopwatch" item-left></ion-icon>
     </ion-segment-button>
     <ion-segment-button value="distance">
-      Distance
+      <ion-icon name="pin" item-left></ion-icon>
     </ion-segment-button>
     <ion-segment-button value="speed">
-      Speed
+      <ion-icon name="speedometer" item-left></ion-icon>
     </ion-segment-button>
     <ion-segment-button value="calories">
-      Calories
+      <ion-icon name="pizza" item-left></ion-icon>
     </ion-segment-button>
     <ion-segment-button value="ghg">
-      GHG
+      <ion-icon name="leaf" item-left></ion-icon>
     </ion-segment-button>
   </ion-segment>
   <div class="chart-wrapper" *ngIf="provider.hasTrips()">
@@ -51,6 +46,9 @@
     </x-chartist>
   </div>
   <ion-list *ngIf="provider.hasTrips()">
+    <ion-item-divider color="light">
+      This {{ range }}
+    </ion-item-divider>
     <ion-item>
       <ion-icon name="bicycle" item-left></ion-icon>
       {{tripsCount}} trips

@@ -82,7 +82,7 @@ export class StatsPage {
   private range: 'week' | 'month' | 'year' = 'week';
   private provider = new RangeProvider();
   private chartView: 'trips' | 'duration' | 'distance' | 'speed' | 'calories' |
-    'ghg' = 'distance';
+    'ghg' = 'trips';
   private stats: TripStats;
   private tripsCount = '0';
   private chart: Chart;

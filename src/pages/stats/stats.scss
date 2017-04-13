@@ -1,8 +1,12 @@
 page-stats {
+  .chart-wrapper {
+    height: 40%;
+    margin-top: 15px;
+    position: relative;
+  }
   x-chartist {
     display: block;
-    height: 300px;
-    margin-top: 15px;
+    height: 100%;
   }
   .ct-label {
     font-size: 1.5rem;
