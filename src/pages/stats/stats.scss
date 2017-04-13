@@ -53,4 +53,13 @@ page-stats {
   .ct-series-a .ct-slice-donut {
     stroke: #FBB03B;
   }
+  .chart-week .ct-bar {
+    stroke-width: 5%;
+  }
+  .chart-month .ct-bar {
+    stroke-width: 1.5%;
+  }
+  .chart-year .ct-bar {
+    stroke-width: 3%;
+  }
 }
