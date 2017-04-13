@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="{{ (isReporting()) ? 'primary' : 'light' }}">
     <ion-title>
       <span class="heading-stopped" *ngIf="isStopped()" (press)="geo.debugMotion()">Stopped</span>
       <span class="heading-recording" *ngIf="isRecording()">Recording</span>
