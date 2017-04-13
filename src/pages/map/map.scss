@@ -1,7 +1,6 @@
 page-map {
-  .scroll-content {
-    height: 100%;
-    position: relative;
+  ion-header {
+    z-index: 1000;
   }
   #map {
     position: relative;
@@ -10,7 +9,6 @@ page-map {
   }
   #trip-stats {
     left: 0;
-    position: absolute;
     top: 0;
     width: 100%;
     & > span {

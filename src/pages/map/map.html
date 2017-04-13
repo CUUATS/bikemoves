@@ -35,8 +35,8 @@
 </ion-header>
 
 <ion-content>
-  <div id="map"></div>
-  <div id="trip-stats" *ngIf="isRecording()">
+  <div id="map" ion-fixed></div>
+  <div id="trip-stats" ion-fixed *ngIf="isRecording()">
     <span class="activity">
       <ion-icon name="remove" *ngIf="isStill()"></ion-icon>
       <ion-icon name="walk" *ngIf="isOnFoot()"></ion-icon>
@@ -47,7 +47,7 @@
     <span class="duration"><ion-icon name="stopwatch"></ion-icon> {{ stats.formatDuration() }}</span>
     <span class="distance"><ion-icon name="pin"></ion-icon> {{ stats.formatDistance() }} mi</span>
   </div>
-  <ion-fab bottom right>
+  <ion-fab top right>
     <button ion-fab color="primary" *ngIf="isStopped()"
       (click)='startReporting()'>
       <ion-icon name="add"></ion-icon>
