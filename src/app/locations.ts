@@ -3,6 +3,7 @@ import { ObjectManager } from './object_manager';
 import { Location } from './location';
 import { Storage } from './storage';
 import * as moment from 'moment';
+import { bikemoves as messages } from './messages';
 import { LOCATION_NEAR_THRESHOLD } from './config';
 
 @Injectable()
@@ -84,6 +85,35 @@ export class Locations extends ObjectManager {
           return locationType;
         });
     }));
+  }
+
+  public filterNewLocations() {
+    return this.filter('trip_id IS NULL', 'time DESC')
+      .then((locations: Location[]) => {
+        // If there are fewer than two locations, delete them.
+        if (locations.length < 2)
+          return this.batchDelete('trip_id IS NULL')
+            .then(() => []);
+
+        // Delete locations from the end of the trip with activities other than
+        // bicycle.
+        let bikeIdx = locations.map((location) => location.activity)
+          .indexOf(messages.ActivityType.BICYCLE);
+
+        // Don't delete any locations if:
+        // - No bike locations were found.
+        // - The last location was on bike.
+        // - Removing non-bike locations would result in an invalid trip.
+        if (bikeIdx === -1 || bikeIdx === 0 || bikeIdx > locations.length - 2) {
+          locations.reverse();
+          return locations;
+        }
+
+        let minTime = locations[bikeIdx].time.valueOf();
+        locations.reverse();
+        return this.batchDelete('trip_id IS NULL AND time > ?', [minTime])
+          .then(() => locations.slice(0, locations.length - bikeIdx));
+      });
   }
 
 }

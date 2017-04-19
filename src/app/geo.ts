@@ -80,15 +80,12 @@ export class Geo extends Service {
       this.motion.next(moving);
       this.finish(taskId);
     } else {
-      this.locationManager.filter('trip_id IS NULL')
+      return this.locationManager.filterNewLocations()
         .then((locations) => {
-          if (locations.length > 2) {
-            return this.tripManager.save(Trip.fromLocations(locations))
-              .then((trip) => this.locationManager.batchUpdate(
-                ['trip_id'], [trip.id], 'trip_id IS NULL'))
-          } else {
-            return this.locationManager.batchDelete('trip_id IS NULL');
-          }
+          if (locations.length === 0) return;
+          return this.tripManager.save(Trip.fromLocations(locations))
+            .then((trip) => this.locationManager.batchUpdate(
+              ['trip_id'], [trip.id], 'trip_id IS NULL'));
         })
         .then(() => {
           this.motion.next(moving);
