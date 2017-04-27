@@ -170,15 +170,16 @@ export class StatsPage {
         month: 'day',
         year: 'month'
       }[this.range],
-      delta = moment.duration(1, deltaUnit),
+      delta = moment.duration(1,
+        (deltaUnit as moment.unitOfTime.DurationConstructor)),
       start = this.getStart(),
       rangeEnd = this.getEnd(),
       ranges = [];
 
     while (start.isBefore(rangeEnd)) {
-      let end = start.clone().endOf(deltaUnit);
+      let end = start.clone().endOf((deltaUnit as moment.unitOfTime.Base));
       ranges.push([start.clone(), (end.isBefore(rangeEnd) ? end : rangeEnd)])
-      start.add(delta).startOf(deltaUnit);
+      start.add(delta).startOf((deltaUnit as moment.unitOfTime.Base));
     }
 
     return ranges;
@@ -251,7 +252,7 @@ export class StatsPage {
   }
 
   private scrollTo(stat: string) {
-    let card = document.getElementById('chart-' + stat);
+    let card = (document as any).getElementById('chart-' + stat);
     this.content.scrollTo(0, card.offsetTop);
   }
 

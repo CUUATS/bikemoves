@@ -66,7 +66,7 @@ export class Locations extends ObjectManager {
     ];
   }
 
-  public guessLocationTypes(locations: Location[]) {
+  public guessLocationTypes(locations: Location[]) : Promise<number[]> {
     return Promise.all(locations.map((location) => {
       let bbox = location.getBufferBbox(LOCATION_NEAR_THRESHOLD);
       return this.filter(`location_type > 0

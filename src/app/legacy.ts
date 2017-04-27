@@ -73,11 +73,11 @@ export class Legacy {
           location.tripId = trip.id;
           return this.locationManager.save(location);
         });
-        return Promise.all(saveLocations);
+        return Promise.all(saveLocations).then(() => {});
       });
     });
 
-    return Promise.all(saveTrips);
+    return Promise.all(saveTrips).then(() => {});
   }
 
   public upgrade() {

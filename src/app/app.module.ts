@@ -1,4 +1,5 @@
 import { NgModule, ErrorHandler } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { BikeMoves } from './app.component';
@@ -36,6 +37,7 @@ import { ChartistModule } from 'ng-chartist';
   ],
   imports: [
     IonicModule.forRoot(BikeMoves),
+    BrowserModule,
     ChartistModule,
     HttpModule
   ],
