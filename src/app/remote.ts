@@ -13,18 +13,28 @@ import { bikemoves as messages } from './messages';
 @Injectable()
 export class Remote {
 
-  constructor(private tripManager: Trips, private device: Device, private http: Http) {}
+  constructor(
+    private tripManager: Trips,
+    private device: Device,
+    private http: Http) {}
 
-  private post(url: string, body: ArrayBuffer) {
+  private post(url: string, messageType, message) {
     let options = new RequestOptions({
-      headers: new Headers({
-        'Content-Type': 'application/octet-stream'
-      })
-    });
+        headers: new Headers({
+          'Content-Type': 'application/octet-stream'
+        })
+      }),
+      body = this.toArrayBuffer(messageType, message);
 
     return this.http.post(API_ENDPOINT + url, body, options)
       .toPromise()
       .catch(this.handleError);
+  }
+
+  private toArrayBuffer(messageType, message) {
+    let array = messageType.encode(message).finish();
+    return array.buffer.slice(array.byteOffset,
+      array.byteLength + array.byteOffset);
   }
 
   private handleError (error: Response | any) {
@@ -48,7 +58,7 @@ export class Remote {
     message.altitude = location.altitude;
     message.heading = location.heading;
     message.speed = location.speed;
-    message.time = (message.time) ? location.time.valueOf() : null;
+    message.time = (location.time) ? location.time.valueOf() : null;
     message.moving = location.moving;
     message.event = location.event;
     message.activity = location.activity;
@@ -69,7 +79,12 @@ export class Remote {
       message.debug = DEBUG;
       message.appVersion = trip.appVersion;
       message.locations = locations.map(this.locationToMessage);
-      return this.post('trip', messages.Trip.encode(message).finish().buffer);
+
+      (window as any).message = message;
+      (window as any).Trip = messages.Trip;
+      (window as any).Location = messages.Location;
+
+      return this.post('trip', messages.Trip, message);
     });
   }
 
@@ -80,8 +95,7 @@ export class Remote {
     message.time = incident.time.valueOf();
     message.category = incident.category;
     message.comment = incident.comment;
-    return this.post(
-      'incident', messages.Incident.encode(message).finish().buffer);
+    return this.post('incident', messages.Incident, message);
   }
 
   postUser(profile: Profile) {
@@ -92,7 +106,7 @@ export class Remote {
     message.gender = profile.gender;
     message.age = profile.age;
     message.cyclingExperience = profile.cyclingExperience;
-    return this.post(
-      'user', messages.User.encode(message).finish().buffer);
+
+    return this.post('user', messages.User, message);
   }
 }
