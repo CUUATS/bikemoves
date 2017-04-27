@@ -29,13 +29,13 @@
       <ion-item>
         <ion-label>I biked from</ion-label>
         <ion-select [(ngModel)]="trip.origin">
-          <ion-option *ngFor="let option of locationTypeOptions" value="{{option.value}}">{{option.label}}</ion-option>
+          <ion-option *ngFor="let option of locationTypeOptions" [value]="option.value">{{option.label}}</ion-option>
         </ion-select>
       </ion-item>
       <ion-item>
         <ion-label>I biked to</ion-label>
         <ion-select [(ngModel)]="trip.destination">
-          <ion-option *ngFor="let option of locationTypeOptions" value="{{option.value}}">{{option.label}}</ion-option>
+          <ion-option *ngFor="let option of locationTypeOptions" [value]="option.value">{{option.label}}</ion-option>
         </ion-select>
       </ion-item>
       <ion-item>
