@@ -110,10 +110,13 @@ export class Trips extends ObjectManager {
   }
 
   public getODLocations(trip: Trip) : Promise<Location[]> {
-    return this.locations.filter(`trip_id = ? AND event = ?`,
-        'moving DESC', [trip.id, messages.EventType.MOTION]);
+    let start = trip.startTime.valueOf(),
+      end = trip.endTime.valueOf();
+    return Promise.all([start, end].map((time) => {
+      return this.locations.filter('trip_id = ? AND time = ?',
+        null, [trip.id, time], 1).then((locations) => locations[0]);
+    }));
   }
-
 }
 
 Storage.addMigration(1, `
