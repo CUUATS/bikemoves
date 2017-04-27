@@ -79,11 +79,6 @@ export class Remote {
       message.debug = DEBUG;
       message.appVersion = trip.appVersion;
       message.locations = locations.map(this.locationToMessage);
-
-      (window as any).message = message;
-      (window as any).Trip = messages.Trip;
-      (window as any).Location = messages.Location;
-
       return this.post('trip', messages.Trip, message);
     });
   }
@@ -106,7 +101,6 @@ export class Remote {
     message.gender = profile.gender;
     message.age = profile.age;
     message.cyclingExperience = profile.cyclingExperience;
-
     return this.post('user', messages.User, message);
   }
 }
