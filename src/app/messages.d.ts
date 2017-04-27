@@ -135,11 +135,25 @@ export namespace bikemoves {
         ADVANCED = 3
     }
 
+    type Location$Properties = {
+        longitude?: number;
+        latitude?: number;
+        time?: (number|Long);
+        accuracy?: number;
+        altitude?: number;
+        heading?: number;
+        speed?: number;
+        moving?: boolean;
+        event?: bikemoves.EventType;
+        activity?: bikemoves.ActivityType;
+        confidence?: number;
+    };
+
     /**
      * Constructs a new Location.
      * @exports bikemoves.Location
      * @constructor
-     * @param {Object} [properties] Properties to set
+     * @param {bikemoves.Location$Properties=} [properties] Properties to set
      */
     class Location {
 
@@ -147,127 +161,131 @@ export namespace bikemoves {
          * Constructs a new Location.
          * @exports bikemoves.Location
          * @constructor
-         * @param {Object} [properties] Properties to set
+         * @param {bikemoves.Location$Properties=} [properties] Properties to set
          */
-        constructor(properties?: Object);
+        constructor(properties?: bikemoves.Location$Properties);
 
         /**
          * Location longitude.
-         * @type {number|undefined}
+         * @type {number}
          */
-        longitude?: number;
+        public longitude: number;
 
         /**
          * Location latitude.
-         * @type {number|undefined}
+         * @type {number}
          */
-        latitude?: number;
+        public latitude: number;
 
         /**
          * Location time.
-         * @type {number|$protobuf.Long|undefined}
+         * @type {number|Long}
          */
-        time?: (number|$protobuf.Long);
+        public time: (number|Long);
 
         /**
          * Location accuracy.
-         * @type {number|undefined}
+         * @type {number}
          */
-        accuracy?: number;
+        public accuracy: number;
 
         /**
          * Location altitude.
-         * @type {number|undefined}
+         * @type {number}
          */
-        altitude?: number;
+        public altitude: number;
 
         /**
          * Location heading.
-         * @type {number|undefined}
+         * @type {number}
          */
-        heading?: number;
+        public heading: number;
 
         /**
          * Location speed.
-         * @type {number|undefined}
+         * @type {number}
          */
-        speed?: number;
+        public speed: number;
 
         /**
          * Location moving.
-         * @type {boolean|undefined}
+         * @type {boolean}
          */
-        moving?: boolean;
+        public moving: boolean;
 
         /**
          * Location event.
-         * @type {number|undefined}
+         * @type {bikemoves.EventType}
          */
-        event?: number;
+        public event: bikemoves.EventType;
 
         /**
          * Location activity.
-         * @type {number|undefined}
+         * @type {bikemoves.ActivityType}
          */
-        activity?: number;
+        public activity: bikemoves.ActivityType;
 
         /**
          * Location confidence.
-         * @type {number|undefined}
+         * @type {number}
          */
-        confidence?: number;
+        public confidence: number;
 
         /**
          * Creates a new Location instance using the specified properties.
-         * @param {Object} [properties] Properties to set
+         * @param {bikemoves.Location$Properties=} [properties] Properties to set
          * @returns {bikemoves.Location} Location instance
          */
-        static create(properties?: Object): bikemoves.Location;
+        public static create(properties?: bikemoves.Location$Properties): bikemoves.Location;
 
         /**
-         * Encodes the specified Location message.
-         * @param {bikemoves.Location|Object} message Location message or plain object to encode
+         * Encodes the specified Location message. Does not implicitly {@link bikemoves.Location.verify|verify} messages.
+         * @param {bikemoves.Location$Properties} message Location message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        static encode(message: (bikemoves.Location|Object), writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: bikemoves.Location$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified Location message, length delimited.
-         * @param {bikemoves.Location|Object} message Location message or plain object to encode
+         * Encodes the specified Location message, length delimited. Does not implicitly {@link bikemoves.Location.verify|verify} messages.
+         * @param {bikemoves.Location$Properties} message Location message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        static encodeDelimited(message: (bikemoves.Location|Object), writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: bikemoves.Location$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
          * Decodes a Location message from the specified reader or buffer.
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
          * @returns {bikemoves.Location} Location
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): bikemoves.Location;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): bikemoves.Location;
 
         /**
          * Decodes a Location message from the specified reader or buffer, length delimited.
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @returns {bikemoves.Location} Location
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): bikemoves.Location;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): bikemoves.Location;
 
         /**
          * Verifies a Location message.
-         * @param {bikemoves.Location|Object} message Location message or plain object to verify
+         * @param {Object.<string,*>} message Plain object to verify
          * @returns {?string} `null` if valid, otherwise the reason why it is not
          */
-        static verify(message: (bikemoves.Location|Object)): string;
+        public static verify(message: { [k: string]: any }): string;
 
         /**
          * Creates a Location message from a plain object. Also converts values to their respective internal types.
          * @param {Object.<string,*>} object Plain object
          * @returns {bikemoves.Location} Location
          */
-        static fromObject(object: { [k: string]: any }): bikemoves.Location;
+        public static fromObject(object: { [k: string]: any }): bikemoves.Location;
 
         /**
          * Creates a Location message from a plain object. Also converts values to their respective internal types.
@@ -276,7 +294,7 @@ export namespace bikemoves {
          * @param {Object.<string,*>} object Plain object
          * @returns {bikemoves.Location} Location
          */
-        static from(object: { [k: string]: any }): bikemoves.Location;
+        public static from(object: { [k: string]: any }): bikemoves.Location;
 
         /**
          * Creates a plain object from a Location message. Also converts values to other types if specified.
@@ -284,27 +302,40 @@ export namespace bikemoves {
          * @param {$protobuf.ConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        static toObject(message: bikemoves.Location, options?: $protobuf.ConversionOptions): { [k: string]: any };
+        public static toObject(message: bikemoves.Location, options?: $protobuf.ConversionOptions): { [k: string]: any };
 
         /**
          * Creates a plain object from this Location message. Also converts values to other types if specified.
          * @param {$protobuf.ConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        toObject(options?: $protobuf.ConversionOptions): { [k: string]: any };
+        public toObject(options?: $protobuf.ConversionOptions): { [k: string]: any };
 
         /**
          * Converts this Location to JSON.
          * @returns {Object.<string,*>} JSON object
          */
-        toJSON(): { [k: string]: any };
+        public toJSON(): { [k: string]: any };
     }
+
+    type Trip$Properties = {
+        deviceUuid?: string;
+        locations?: bikemoves.Location$Properties[];
+        startTime?: (number|Long);
+        endTime?: (number|Long);
+        desiredAccuracy?: number;
+        transit?: boolean;
+        origin?: bikemoves.LocationType;
+        destination?: bikemoves.LocationType;
+        debug?: boolean;
+        appVersion?: string;
+    };
 
     /**
      * Constructs a new Trip.
      * @exports bikemoves.Trip
      * @constructor
-     * @param {Object} [properties] Properties to set
+     * @param {bikemoves.Trip$Properties=} [properties] Properties to set
      */
     class Trip {
 
@@ -312,121 +343,125 @@ export namespace bikemoves {
          * Constructs a new Trip.
          * @exports bikemoves.Trip
          * @constructor
-         * @param {Object} [properties] Properties to set
+         * @param {bikemoves.Trip$Properties=} [properties] Properties to set
          */
-        constructor(properties?: Object);
+        constructor(properties?: bikemoves.Trip$Properties);
 
         /**
          * Trip deviceUuid.
-         * @type {string|undefined}
+         * @type {string}
          */
-        deviceUuid?: string;
+        public deviceUuid: string;
 
         /**
          * Trip locations.
-         * @type {Array.<bikemoves.Location>|undefined}
+         * @type {Array.<bikemoves.Location$Properties>}
          */
-        locations?: bikemoves.Location[];
+        public locations: bikemoves.Location$Properties[];
 
         /**
          * Trip startTime.
-         * @type {number|$protobuf.Long|undefined}
+         * @type {number|Long}
          */
-        startTime?: (number|$protobuf.Long);
+        public startTime: (number|Long);
 
         /**
          * Trip endTime.
-         * @type {number|$protobuf.Long|undefined}
+         * @type {number|Long}
          */
-        endTime?: (number|$protobuf.Long);
+        public endTime: (number|Long);
 
         /**
          * Trip desiredAccuracy.
-         * @type {number|undefined}
+         * @type {number}
          */
-        desiredAccuracy?: number;
+        public desiredAccuracy: number;
 
         /**
          * Trip transit.
-         * @type {boolean|undefined}
+         * @type {boolean}
          */
-        transit?: boolean;
+        public transit: boolean;
 
         /**
          * Trip origin.
-         * @type {number|undefined}
+         * @type {bikemoves.LocationType}
          */
-        origin?: number;
+        public origin: bikemoves.LocationType;
 
         /**
          * Trip destination.
-         * @type {number|undefined}
+         * @type {bikemoves.LocationType}
          */
-        destination?: number;
+        public destination: bikemoves.LocationType;
 
         /**
          * Trip debug.
-         * @type {boolean|undefined}
+         * @type {boolean}
          */
-        debug?: boolean;
+        public debug: boolean;
 
         /**
          * Trip appVersion.
-         * @type {string|undefined}
+         * @type {string}
          */
-        appVersion?: string;
+        public appVersion: string;
 
         /**
          * Creates a new Trip instance using the specified properties.
-         * @param {Object} [properties] Properties to set
+         * @param {bikemoves.Trip$Properties=} [properties] Properties to set
          * @returns {bikemoves.Trip} Trip instance
          */
-        static create(properties?: Object): bikemoves.Trip;
+        public static create(properties?: bikemoves.Trip$Properties): bikemoves.Trip;
 
         /**
-         * Encodes the specified Trip message.
-         * @param {bikemoves.Trip|Object} message Trip message or plain object to encode
+         * Encodes the specified Trip message. Does not implicitly {@link bikemoves.Trip.verify|verify} messages.
+         * @param {bikemoves.Trip$Properties} message Trip message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        static encode(message: (bikemoves.Trip|Object), writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: bikemoves.Trip$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified Trip message, length delimited.
-         * @param {bikemoves.Trip|Object} message Trip message or plain object to encode
+         * Encodes the specified Trip message, length delimited. Does not implicitly {@link bikemoves.Trip.verify|verify} messages.
+         * @param {bikemoves.Trip$Properties} message Trip message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        static encodeDelimited(message: (bikemoves.Trip|Object), writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: bikemoves.Trip$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
          * Decodes a Trip message from the specified reader or buffer.
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
          * @returns {bikemoves.Trip} Trip
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): bikemoves.Trip;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): bikemoves.Trip;
 
         /**
          * Decodes a Trip message from the specified reader or buffer, length delimited.
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @returns {bikemoves.Trip} Trip
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): bikemoves.Trip;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): bikemoves.Trip;
 
         /**
          * Verifies a Trip message.
-         * @param {bikemoves.Trip|Object} message Trip message or plain object to verify
+         * @param {Object.<string,*>} message Plain object to verify
          * @returns {?string} `null` if valid, otherwise the reason why it is not
          */
-        static verify(message: (bikemoves.Trip|Object)): string;
+        public static verify(message: { [k: string]: any }): string;
 
         /**
          * Creates a Trip message from a plain object. Also converts values to their respective internal types.
          * @param {Object.<string,*>} object Plain object
          * @returns {bikemoves.Trip} Trip
          */
-        static fromObject(object: { [k: string]: any }): bikemoves.Trip;
+        public static fromObject(object: { [k: string]: any }): bikemoves.Trip;
 
         /**
          * Creates a Trip message from a plain object. Also converts values to their respective internal types.
@@ -435,7 +470,7 @@ export namespace bikemoves {
          * @param {Object.<string,*>} object Plain object
          * @returns {bikemoves.Trip} Trip
          */
-        static from(object: { [k: string]: any }): bikemoves.Trip;
+        public static from(object: { [k: string]: any }): bikemoves.Trip;
 
         /**
          * Creates a plain object from a Trip message. Also converts values to other types if specified.
@@ -443,27 +478,35 @@ export namespace bikemoves {
          * @param {$protobuf.ConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        static toObject(message: bikemoves.Trip, options?: $protobuf.ConversionOptions): { [k: string]: any };
+        public static toObject(message: bikemoves.Trip, options?: $protobuf.ConversionOptions): { [k: string]: any };
 
         /**
          * Creates a plain object from this Trip message. Also converts values to other types if specified.
          * @param {$protobuf.ConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        toObject(options?: $protobuf.ConversionOptions): { [k: string]: any };
+        public toObject(options?: $protobuf.ConversionOptions): { [k: string]: any };
 
         /**
          * Converts this Trip to JSON.
          * @returns {Object.<string,*>} JSON object
          */
-        toJSON(): { [k: string]: any };
+        public toJSON(): { [k: string]: any };
     }
+
+    type Incident$Properties = {
+        deviceUuid?: string;
+        comment?: string;
+        time?: (number|Long);
+        location?: bikemoves.Location$Properties;
+        category?: string;
+    };
 
     /**
      * Constructs a new Incident.
      * @exports bikemoves.Incident
      * @constructor
-     * @param {Object} [properties] Properties to set
+     * @param {bikemoves.Incident$Properties=} [properties] Properties to set
      */
     class Incident {
 
@@ -471,91 +514,95 @@ export namespace bikemoves {
          * Constructs a new Incident.
          * @exports bikemoves.Incident
          * @constructor
-         * @param {Object} [properties] Properties to set
+         * @param {bikemoves.Incident$Properties=} [properties] Properties to set
          */
-        constructor(properties?: Object);
+        constructor(properties?: bikemoves.Incident$Properties);
 
         /**
          * Incident deviceUuid.
-         * @type {string|undefined}
+         * @type {string}
          */
-        deviceUuid?: string;
+        public deviceUuid: string;
 
         /**
          * Incident comment.
-         * @type {string|undefined}
+         * @type {string}
          */
-        comment?: string;
+        public comment: string;
 
         /**
          * Incident time.
-         * @type {number|$protobuf.Long|undefined}
+         * @type {number|Long}
          */
-        time?: (number|$protobuf.Long);
+        public time: (number|Long);
 
         /**
          * Incident location.
-         * @type {bikemoves.Location|undefined}
+         * @type {(bikemoves.Location$Properties|null)}
          */
-        location?: bikemoves.Location;
+        public location: (bikemoves.Location$Properties|null);
 
         /**
          * Incident category.
-         * @type {string|undefined}
+         * @type {string}
          */
-        category?: string;
+        public category: string;
 
         /**
          * Creates a new Incident instance using the specified properties.
-         * @param {Object} [properties] Properties to set
+         * @param {bikemoves.Incident$Properties=} [properties] Properties to set
          * @returns {bikemoves.Incident} Incident instance
          */
-        static create(properties?: Object): bikemoves.Incident;
+        public static create(properties?: bikemoves.Incident$Properties): bikemoves.Incident;
 
         /**
-         * Encodes the specified Incident message.
-         * @param {bikemoves.Incident|Object} message Incident message or plain object to encode
+         * Encodes the specified Incident message. Does not implicitly {@link bikemoves.Incident.verify|verify} messages.
+         * @param {bikemoves.Incident$Properties} message Incident message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        static encode(message: (bikemoves.Incident|Object), writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: bikemoves.Incident$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified Incident message, length delimited.
-         * @param {bikemoves.Incident|Object} message Incident message or plain object to encode
+         * Encodes the specified Incident message, length delimited. Does not implicitly {@link bikemoves.Incident.verify|verify} messages.
+         * @param {bikemoves.Incident$Properties} message Incident message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        static encodeDelimited(message: (bikemoves.Incident|Object), writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: bikemoves.Incident$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
          * Decodes an Incident message from the specified reader or buffer.
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
          * @returns {bikemoves.Incident} Incident
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): bikemoves.Incident;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): bikemoves.Incident;
 
         /**
          * Decodes an Incident message from the specified reader or buffer, length delimited.
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @returns {bikemoves.Incident} Incident
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): bikemoves.Incident;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): bikemoves.Incident;
 
         /**
          * Verifies an Incident message.
-         * @param {bikemoves.Incident|Object} message Incident message or plain object to verify
+         * @param {Object.<string,*>} message Plain object to verify
          * @returns {?string} `null` if valid, otherwise the reason why it is not
          */
-        static verify(message: (bikemoves.Incident|Object)): string;
+        public static verify(message: { [k: string]: any }): string;
 
         /**
          * Creates an Incident message from a plain object. Also converts values to their respective internal types.
          * @param {Object.<string,*>} object Plain object
          * @returns {bikemoves.Incident} Incident
          */
-        static fromObject(object: { [k: string]: any }): bikemoves.Incident;
+        public static fromObject(object: { [k: string]: any }): bikemoves.Incident;
 
         /**
          * Creates an Incident message from a plain object. Also converts values to their respective internal types.
@@ -564,7 +611,7 @@ export namespace bikemoves {
          * @param {Object.<string,*>} object Plain object
          * @returns {bikemoves.Incident} Incident
          */
-        static from(object: { [k: string]: any }): bikemoves.Incident;
+        public static from(object: { [k: string]: any }): bikemoves.Incident;
 
         /**
          * Creates a plain object from an Incident message. Also converts values to other types if specified.
@@ -572,27 +619,36 @@ export namespace bikemoves {
          * @param {$protobuf.ConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        static toObject(message: bikemoves.Incident, options?: $protobuf.ConversionOptions): { [k: string]: any };
+        public static toObject(message: bikemoves.Incident, options?: $protobuf.ConversionOptions): { [k: string]: any };
 
         /**
          * Creates a plain object from this Incident message. Also converts values to other types if specified.
          * @param {$protobuf.ConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        toObject(options?: $protobuf.ConversionOptions): { [k: string]: any };
+        public toObject(options?: $protobuf.ConversionOptions): { [k: string]: any };
 
         /**
          * Converts this Incident to JSON.
          * @returns {Object.<string,*>} JSON object
          */
-        toJSON(): { [k: string]: any };
+        public toJSON(): { [k: string]: any };
     }
+
+    type User$Properties = {
+        deviceUuid?: string;
+        platformName?: string;
+        platformVersion?: number;
+        gender?: bikemoves.Gender;
+        age?: bikemoves.Age;
+        cyclingExperience?: bikemoves.ExperienceLevel;
+    };
 
     /**
      * Constructs a new User.
      * @exports bikemoves.User
      * @constructor
-     * @param {Object} [properties] Properties to set
+     * @param {bikemoves.User$Properties=} [properties] Properties to set
      */
     class User {
 
@@ -600,97 +656,101 @@ export namespace bikemoves {
          * Constructs a new User.
          * @exports bikemoves.User
          * @constructor
-         * @param {Object} [properties] Properties to set
+         * @param {bikemoves.User$Properties=} [properties] Properties to set
          */
-        constructor(properties?: Object);
+        constructor(properties?: bikemoves.User$Properties);
 
         /**
          * User deviceUuid.
-         * @type {string|undefined}
+         * @type {string}
          */
-        deviceUuid?: string;
+        public deviceUuid: string;
 
         /**
          * User platformName.
-         * @type {string|undefined}
+         * @type {string}
          */
-        platformName?: string;
+        public platformName: string;
 
         /**
          * User platformVersion.
-         * @type {number|undefined}
+         * @type {number}
          */
-        platformVersion?: number;
+        public platformVersion: number;
 
         /**
          * User gender.
-         * @type {number|undefined}
+         * @type {bikemoves.Gender}
          */
-        gender?: number;
+        public gender: bikemoves.Gender;
 
         /**
          * User age.
-         * @type {number|undefined}
+         * @type {bikemoves.Age}
          */
-        age?: number;
+        public age: bikemoves.Age;
 
         /**
          * User cyclingExperience.
-         * @type {number|undefined}
+         * @type {bikemoves.ExperienceLevel}
          */
-        cyclingExperience?: number;
+        public cyclingExperience: bikemoves.ExperienceLevel;
 
         /**
          * Creates a new User instance using the specified properties.
-         * @param {Object} [properties] Properties to set
+         * @param {bikemoves.User$Properties=} [properties] Properties to set
          * @returns {bikemoves.User} User instance
          */
-        static create(properties?: Object): bikemoves.User;
+        public static create(properties?: bikemoves.User$Properties): bikemoves.User;
 
         /**
-         * Encodes the specified User message.
-         * @param {bikemoves.User|Object} message User message or plain object to encode
+         * Encodes the specified User message. Does not implicitly {@link bikemoves.User.verify|verify} messages.
+         * @param {bikemoves.User$Properties} message User message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        static encode(message: (bikemoves.User|Object), writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: bikemoves.User$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified User message, length delimited.
-         * @param {bikemoves.User|Object} message User message or plain object to encode
+         * Encodes the specified User message, length delimited. Does not implicitly {@link bikemoves.User.verify|verify} messages.
+         * @param {bikemoves.User$Properties} message User message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        static encodeDelimited(message: (bikemoves.User|Object), writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: bikemoves.User$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
          * Decodes a User message from the specified reader or buffer.
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
          * @returns {bikemoves.User} User
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): bikemoves.User;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): bikemoves.User;
 
         /**
          * Decodes a User message from the specified reader or buffer, length delimited.
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @returns {bikemoves.User} User
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): bikemoves.User;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): bikemoves.User;
 
         /**
          * Verifies a User message.
-         * @param {bikemoves.User|Object} message User message or plain object to verify
+         * @param {Object.<string,*>} message Plain object to verify
          * @returns {?string} `null` if valid, otherwise the reason why it is not
          */
-        static verify(message: (bikemoves.User|Object)): string;
+        public static verify(message: { [k: string]: any }): string;
 
         /**
          * Creates a User message from a plain object. Also converts values to their respective internal types.
          * @param {Object.<string,*>} object Plain object
          * @returns {bikemoves.User} User
          */
-        static fromObject(object: { [k: string]: any }): bikemoves.User;
+        public static fromObject(object: { [k: string]: any }): bikemoves.User;
 
         /**
          * Creates a User message from a plain object. Also converts values to their respective internal types.
@@ -699,7 +759,7 @@ export namespace bikemoves {
          * @param {Object.<string,*>} object Plain object
          * @returns {bikemoves.User} User
          */
-        static from(object: { [k: string]: any }): bikemoves.User;
+        public static from(object: { [k: string]: any }): bikemoves.User;
 
         /**
          * Creates a plain object from a User message. Also converts values to other types if specified.
@@ -707,19 +767,19 @@ export namespace bikemoves {
          * @param {$protobuf.ConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        static toObject(message: bikemoves.User, options?: $protobuf.ConversionOptions): { [k: string]: any };
+        public static toObject(message: bikemoves.User, options?: $protobuf.ConversionOptions): { [k: string]: any };
 
         /**
          * Creates a plain object from this User message. Also converts values to other types if specified.
          * @param {$protobuf.ConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        toObject(options?: $protobuf.ConversionOptions): { [k: string]: any };
+        public toObject(options?: $protobuf.ConversionOptions): { [k: string]: any };
 
         /**
          * Converts this User to JSON.
          * @returns {Object.<string,*>} JSON object
          */
-        toJSON(): { [k: string]: any };
+        public toJSON(): { [k: string]: any };
     }
 }

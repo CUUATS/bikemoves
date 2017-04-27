@@ -6,9 +6,6 @@ var $protobuf = require("protobufjs/minimal");
 // Common aliases
 var $Reader = $protobuf.Reader, $Writer = $protobuf.Writer, $util = $protobuf.util;
 
-// Lazily resolved type references
-var $lazyTypes = [];
-
 // Exported root namespace
 var $root = $protobuf.roots["default"] || ($protobuf.roots["default"] = {});
 
@@ -36,13 +33,13 @@ $root.bikemoves = (function() {
      */
     bikemoves.LocationType = (function() {
         var valuesById = {}, values = Object.create(valuesById);
-        values["NOT_SPECIFIED"] = 0;
-        values["HOME"] = 1;
-        values["WORK"] = 2;
-        values["K12_SCHOOL"] = 3;
-        values["UNIVERSITY"] = 4;
-        values["SHOPPING"] = 5;
-        values["OTHER"] = 6;
+        values[valuesById[0] = "NOT_SPECIFIED"] = 0;
+        values[valuesById[1] = "HOME"] = 1;
+        values[valuesById[2] = "WORK"] = 2;
+        values[valuesById[3] = "K12_SCHOOL"] = 3;
+        values[valuesById[4] = "UNIVERSITY"] = 4;
+        values[valuesById[5] = "SHOPPING"] = 5;
+        values[valuesById[6] = "OTHER"] = 6;
         return values;
     })();
 
@@ -61,13 +58,13 @@ $root.bikemoves = (function() {
      */
     bikemoves.ActivityType = (function() {
         var valuesById = {}, values = Object.create(valuesById);
-        values["UNKNOWN"] = 0;
-        values["STILL"] = 1;
-        values["FOOT"] = 2;
-        values["WALK"] = 3;
-        values["RUN"] = 4;
-        values["VEHICLE"] = 5;
-        values["BICYCLE"] = 6;
+        values[valuesById[0] = "UNKNOWN"] = 0;
+        values[valuesById[1] = "STILL"] = 1;
+        values[valuesById[2] = "FOOT"] = 2;
+        values[valuesById[3] = "WALK"] = 3;
+        values[valuesById[4] = "RUN"] = 4;
+        values[valuesById[5] = "VEHICLE"] = 5;
+        values[valuesById[6] = "BICYCLE"] = 6;
         return values;
     })();
 
@@ -84,11 +81,11 @@ $root.bikemoves = (function() {
      */
     bikemoves.EventType = (function() {
         var valuesById = {}, values = Object.create(valuesById);
-        values["LOCATION"] = 0;
-        values["MOTION"] = 1;
-        values["GEOFENCE"] = 2;
-        values["HEARTBEAT"] = 3;
-        values["PROVIDER"] = 4;
+        values[valuesById[0] = "LOCATION"] = 0;
+        values[valuesById[1] = "MOTION"] = 1;
+        values[valuesById[2] = "GEOFENCE"] = 2;
+        values[valuesById[3] = "HEARTBEAT"] = 3;
+        values[valuesById[4] = "PROVIDER"] = 4;
         return values;
     })();
 
@@ -104,10 +101,10 @@ $root.bikemoves = (function() {
      */
     bikemoves.Gender = (function() {
         var valuesById = {}, values = Object.create(valuesById);
-        values["NOT_SPECIFIED"] = 0;
-        values["MALE"] = 1;
-        values["FEMALE"] = 2;
-        values["OTHER"] = 3;
+        values[valuesById[0] = "NOT_SPECIFIED"] = 0;
+        values[valuesById[1] = "MALE"] = 1;
+        values[valuesById[2] = "FEMALE"] = 2;
+        values[valuesById[3] = "OTHER"] = 3;
         return values;
     })();
 
@@ -129,16 +126,16 @@ $root.bikemoves = (function() {
      */
     bikemoves.Age = (function() {
         var valuesById = {}, values = Object.create(valuesById);
-        values["NOT_SPECIFIED"] = 0;
-        values["AGE_UNDER_15"] = 1;
-        values["AGE_15_TO_19"] = 2;
-        values["AGE_20_TO_24"] = 3;
-        values["AGE_25_TO_34"] = 4;
-        values["AGE_35_TO_44"] = 5;
-        values["AGE_45_TO_54"] = 6;
-        values["AGE_55_TO_64"] = 7;
-        values["AGE_65_TO_74"] = 8;
-        values["AGE_75_AND_OLDER"] = 9;
+        values[valuesById[0] = "NOT_SPECIFIED"] = 0;
+        values[valuesById[1] = "AGE_UNDER_15"] = 1;
+        values[valuesById[2] = "AGE_15_TO_19"] = 2;
+        values[valuesById[3] = "AGE_20_TO_24"] = 3;
+        values[valuesById[4] = "AGE_25_TO_34"] = 4;
+        values[valuesById[5] = "AGE_35_TO_44"] = 5;
+        values[valuesById[6] = "AGE_45_TO_54"] = 6;
+        values[valuesById[7] = "AGE_55_TO_64"] = 7;
+        values[valuesById[8] = "AGE_65_TO_74"] = 8;
+        values[valuesById[9] = "AGE_75_AND_OLDER"] = 9;
         return values;
     })();
 
@@ -154,102 +151,114 @@ $root.bikemoves = (function() {
      */
     bikemoves.ExperienceLevel = (function() {
         var valuesById = {}, values = Object.create(valuesById);
-        values["NOT_SPECIFIED"] = 0;
-        values["BEGINNER"] = 1;
-        values["INTERMEDIATE"] = 2;
-        values["ADVANCED"] = 3;
+        values[valuesById[0] = "NOT_SPECIFIED"] = 0;
+        values[valuesById[1] = "BEGINNER"] = 1;
+        values[valuesById[2] = "INTERMEDIATE"] = 2;
+        values[valuesById[3] = "ADVANCED"] = 3;
         return values;
     })();
 
     bikemoves.Location = (function() {
 
         /**
+         * Properties of a Location.
+         * @typedef bikemoves.Location$Properties
+         * @type {Object}
+         * @property {number} [longitude] Location longitude.
+         * @property {number} [latitude] Location latitude.
+         * @property {number|Long} [time] Location time.
+         * @property {number} [accuracy] Location accuracy.
+         * @property {number} [altitude] Location altitude.
+         * @property {number} [heading] Location heading.
+         * @property {number} [speed] Location speed.
+         * @property {boolean} [moving] Location moving.
+         * @property {bikemoves.EventType} [event] Location event.
+         * @property {bikemoves.ActivityType} [activity] Location activity.
+         * @property {number} [confidence] Location confidence.
+         */
+
+        /**
          * Constructs a new Location.
          * @exports bikemoves.Location
          * @constructor
-         * @param {Object} [properties] Properties to set
+         * @param {bikemoves.Location$Properties=} [properties] Properties to set
          */
         function Location(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    this[keys[i]] = properties[keys[i]];
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
         }
 
         /**
          * Location longitude.
-         * @type {number|undefined}
+         * @type {number}
          */
         Location.prototype.longitude = 0;
 
         /**
          * Location latitude.
-         * @type {number|undefined}
+         * @type {number}
          */
         Location.prototype.latitude = 0;
 
         /**
          * Location time.
-         * @type {number|$protobuf.Long|undefined}
+         * @type {number|Long}
          */
         Location.prototype.time = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
         /**
          * Location accuracy.
-         * @type {number|undefined}
+         * @type {number}
          */
         Location.prototype.accuracy = 0;
 
         /**
          * Location altitude.
-         * @type {number|undefined}
+         * @type {number}
          */
         Location.prototype.altitude = 0;
 
         /**
          * Location heading.
-         * @type {number|undefined}
+         * @type {number}
          */
         Location.prototype.heading = 0;
 
         /**
          * Location speed.
-         * @type {number|undefined}
+         * @type {number}
          */
         Location.prototype.speed = 0;
 
         /**
          * Location moving.
-         * @type {boolean|undefined}
+         * @type {boolean}
          */
         Location.prototype.moving = false;
 
         /**
          * Location event.
-         * @type {number|undefined}
+         * @type {bikemoves.EventType}
          */
         Location.prototype.event = 0;
 
         /**
          * Location activity.
-         * @type {number|undefined}
+         * @type {bikemoves.ActivityType}
          */
         Location.prototype.activity = 0;
 
         /**
          * Location confidence.
-         * @type {number|undefined}
+         * @type {number}
          */
         Location.prototype.confidence = 0;
 
-        // Lazily resolved type references
-        var $types = {
-            8: "bikemoves.EventType",
-            9: "bikemoves.ActivityType"
-        }; $lazyTypes.push($types);
-
         /**
          * Creates a new Location instance using the specified properties.
-         * @param {Object} [properties] Properties to set
+         * @param {bikemoves.Location$Properties=} [properties] Properties to set
          * @returns {bikemoves.Location} Location instance
          */
         Location.create = function create(properties) {
@@ -257,42 +266,42 @@ $root.bikemoves = (function() {
         };
 
         /**
-         * Encodes the specified Location message.
-         * @param {bikemoves.Location|Object} message Location message or plain object to encode
+         * Encodes the specified Location message. Does not implicitly {@link bikemoves.Location.verify|verify} messages.
+         * @param {bikemoves.Location$Properties} message Location message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
         Location.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.longitude !== undefined && message.hasOwnProperty("longitude"))
+            if (message.longitude != null && message.hasOwnProperty("longitude"))
                 writer.uint32(/* id 1, wireType 1 =*/9).double(message.longitude);
-            if (message.latitude !== undefined && message.hasOwnProperty("latitude"))
+            if (message.latitude != null && message.hasOwnProperty("latitude"))
                 writer.uint32(/* id 2, wireType 1 =*/17).double(message.latitude);
-            if (message.time !== undefined && message.time !== null && message.hasOwnProperty("time"))
+            if (message.time != null && message.hasOwnProperty("time"))
                 writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.time);
-            if (message.accuracy !== undefined && message.hasOwnProperty("accuracy"))
+            if (message.accuracy != null && message.hasOwnProperty("accuracy"))
                 writer.uint32(/* id 4, wireType 1 =*/33).double(message.accuracy);
-            if (message.altitude !== undefined && message.hasOwnProperty("altitude"))
+            if (message.altitude != null && message.hasOwnProperty("altitude"))
                 writer.uint32(/* id 5, wireType 1 =*/41).double(message.altitude);
-            if (message.heading !== undefined && message.hasOwnProperty("heading"))
+            if (message.heading != null && message.hasOwnProperty("heading"))
                 writer.uint32(/* id 6, wireType 1 =*/49).double(message.heading);
-            if (message.speed !== undefined && message.hasOwnProperty("speed"))
+            if (message.speed != null && message.hasOwnProperty("speed"))
                 writer.uint32(/* id 7, wireType 1 =*/57).double(message.speed);
-            if (message.moving !== undefined && message.hasOwnProperty("moving"))
+            if (message.moving != null && message.hasOwnProperty("moving"))
                 writer.uint32(/* id 8, wireType 0 =*/64).bool(message.moving);
-            if (message.event !== undefined && message.hasOwnProperty("event"))
+            if (message.event != null && message.hasOwnProperty("event"))
                 writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.event);
-            if (message.activity !== undefined && message.hasOwnProperty("activity"))
+            if (message.activity != null && message.hasOwnProperty("activity"))
                 writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.activity);
-            if (message.confidence !== undefined && message.hasOwnProperty("confidence"))
+            if (message.confidence != null && message.hasOwnProperty("confidence"))
                 writer.uint32(/* id 11, wireType 0 =*/88).uint32(message.confidence);
             return writer;
         };
 
         /**
-         * Encodes the specified Location message, length delimited.
-         * @param {bikemoves.Location|Object} message Location message or plain object to encode
+         * Encodes the specified Location message, length delimited. Does not implicitly {@link bikemoves.Location.verify|verify} messages.
+         * @param {bikemoves.Location$Properties} message Location message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
@@ -305,6 +314,8 @@ $root.bikemoves = (function() {
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
          * @returns {bikemoves.Location} Location
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
         Location.decode = function decode(reader, length) {
             if (!(reader instanceof $Reader))
@@ -358,6 +369,8 @@ $root.bikemoves = (function() {
          * Decodes a Location message from the specified reader or buffer, length delimited.
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @returns {bikemoves.Location} Location
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
         Location.decodeDelimited = function decodeDelimited(reader) {
             if (!(reader instanceof $Reader))
@@ -367,37 +380,37 @@ $root.bikemoves = (function() {
 
         /**
          * Verifies a Location message.
-         * @param {bikemoves.Location|Object} message Location message or plain object to verify
+         * @param {Object.<string,*>} message Plain object to verify
          * @returns {?string} `null` if valid, otherwise the reason why it is not
          */
         Location.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (message.longitude !== undefined)
+            if (message.longitude != null && message.hasOwnProperty("longitude"))
                 if (typeof message.longitude !== "number")
                     return "longitude: number expected";
-            if (message.latitude !== undefined)
+            if (message.latitude != null && message.hasOwnProperty("latitude"))
                 if (typeof message.latitude !== "number")
                     return "latitude: number expected";
-            if (message.time !== undefined)
+            if (message.time != null && message.hasOwnProperty("time"))
                 if (!$util.isInteger(message.time) && !(message.time && $util.isInteger(message.time.low) && $util.isInteger(message.time.high)))
                     return "time: integer|Long expected";
-            if (message.accuracy !== undefined)
+            if (message.accuracy != null && message.hasOwnProperty("accuracy"))
                 if (typeof message.accuracy !== "number")
                     return "accuracy: number expected";
-            if (message.altitude !== undefined)
+            if (message.altitude != null && message.hasOwnProperty("altitude"))
                 if (typeof message.altitude !== "number")
                     return "altitude: number expected";
-            if (message.heading !== undefined)
+            if (message.heading != null && message.hasOwnProperty("heading"))
                 if (typeof message.heading !== "number")
                     return "heading: number expected";
-            if (message.speed !== undefined)
+            if (message.speed != null && message.hasOwnProperty("speed"))
                 if (typeof message.speed !== "number")
                     return "speed: number expected";
-            if (message.moving !== undefined)
+            if (message.moving != null && message.hasOwnProperty("moving"))
                 if (typeof message.moving !== "boolean")
                     return "moving: boolean expected";
-            if (message.event !== undefined)
+            if (message.event != null && message.hasOwnProperty("event"))
                 switch (message.event) {
                 default:
                     return "event: enum value expected";
@@ -408,7 +421,7 @@ $root.bikemoves = (function() {
                 case 4:
                     break;
                 }
-            if (message.activity !== undefined)
+            if (message.activity != null && message.hasOwnProperty("activity"))
                 switch (message.activity) {
                 default:
                     return "activity: enum value expected";
@@ -421,7 +434,7 @@ $root.bikemoves = (function() {
                 case 6:
                     break;
                 }
-            if (message.confidence !== undefined)
+            if (message.confidence != null && message.hasOwnProperty("confidence"))
                 if (!$util.isInteger(message.confidence))
                     return "confidence: integer expected";
             return null;
@@ -436,11 +449,11 @@ $root.bikemoves = (function() {
             if (object instanceof $root.bikemoves.Location)
                 return object;
             var message = new $root.bikemoves.Location();
-            if (object.longitude !== undefined && object.longitude !== null)
+            if (object.longitude != null)
                 message.longitude = Number(object.longitude);
-            if (object.latitude !== undefined && object.latitude !== null)
+            if (object.latitude != null)
                 message.latitude = Number(object.latitude);
-            if (object.time !== undefined && object.time !== null)
+            if (object.time != null)
                 if ($util.Long)
                     (message.time = $util.Long.fromValue(object.time)).unsigned = true;
                 else if (typeof object.time === "string")
@@ -449,15 +462,15 @@ $root.bikemoves = (function() {
                     message.time = object.time;
                 else if (typeof object.time === "object")
                     message.time = new $util.LongBits(object.time.low >>> 0, object.time.high >>> 0).toNumber(true);
-            if (object.accuracy !== undefined && object.accuracy !== null)
+            if (object.accuracy != null)
                 message.accuracy = Number(object.accuracy);
-            if (object.altitude !== undefined && object.altitude !== null)
+            if (object.altitude != null)
                 message.altitude = Number(object.altitude);
-            if (object.heading !== undefined && object.heading !== null)
+            if (object.heading != null)
                 message.heading = Number(object.heading);
-            if (object.speed !== undefined && object.speed !== null)
+            if (object.speed != null)
                 message.speed = Number(object.speed);
-            if (object.moving !== undefined && object.moving !== null)
+            if (object.moving != null)
                 message.moving = Boolean(object.moving);
             switch (object.event) {
             case "LOCATION":
@@ -511,7 +524,7 @@ $root.bikemoves = (function() {
                 message.activity = 6;
                 break;
             }
-            if (object.confidence !== undefined && object.confidence !== null)
+            if (object.confidence != null)
                 message.confidence = object.confidence >>> 0;
             return message;
         };
@@ -552,30 +565,30 @@ $root.bikemoves = (function() {
                 object.activity = options.enums === String ? "UNKNOWN" : 0;
                 object.confidence = 0;
             }
-            if (message.longitude !== undefined && message.longitude !== null && message.hasOwnProperty("longitude"))
+            if (message.longitude != null && message.hasOwnProperty("longitude"))
                 object.longitude = message.longitude;
-            if (message.latitude !== undefined && message.latitude !== null && message.hasOwnProperty("latitude"))
+            if (message.latitude != null && message.hasOwnProperty("latitude"))
                 object.latitude = message.latitude;
-            if (message.time !== undefined && message.time !== null && message.hasOwnProperty("time"))
+            if (message.time != null && message.hasOwnProperty("time"))
                 if (typeof message.time === "number")
                     object.time = options.longs === String ? String(message.time) : message.time;
                 else
                     object.time = options.longs === String ? $util.Long.prototype.toString.call(message.time) : options.longs === Number ? new $util.LongBits(message.time.low >>> 0, message.time.high >>> 0).toNumber(true) : message.time;
-            if (message.accuracy !== undefined && message.accuracy !== null && message.hasOwnProperty("accuracy"))
+            if (message.accuracy != null && message.hasOwnProperty("accuracy"))
                 object.accuracy = message.accuracy;
-            if (message.altitude !== undefined && message.altitude !== null && message.hasOwnProperty("altitude"))
+            if (message.altitude != null && message.hasOwnProperty("altitude"))
                 object.altitude = message.altitude;
-            if (message.heading !== undefined && message.heading !== null && message.hasOwnProperty("heading"))
+            if (message.heading != null && message.hasOwnProperty("heading"))
                 object.heading = message.heading;
-            if (message.speed !== undefined && message.speed !== null && message.hasOwnProperty("speed"))
+            if (message.speed != null && message.hasOwnProperty("speed"))
                 object.speed = message.speed;
-            if (message.moving !== undefined && message.moving !== null && message.hasOwnProperty("moving"))
+            if (message.moving != null && message.hasOwnProperty("moving"))
                 object.moving = message.moving;
-            if (message.event !== undefined && message.event !== null && message.hasOwnProperty("event"))
-                object.event = options.enums === String ? $types[8][message.event] : message.event;
-            if (message.activity !== undefined && message.activity !== null && message.hasOwnProperty("activity"))
-                object.activity = options.enums === String ? $types[9][message.activity] : message.activity;
-            if (message.confidence !== undefined && message.confidence !== null && message.hasOwnProperty("confidence"))
+            if (message.event != null && message.hasOwnProperty("event"))
+                object.event = options.enums === String ? $root.bikemoves.EventType[message.event] : message.event;
+            if (message.activity != null && message.hasOwnProperty("activity"))
+                object.activity = options.enums === String ? $root.bikemoves.ActivityType[message.activity] : message.activity;
+            if (message.confidence != null && message.hasOwnProperty("confidence"))
                 object.confidence = message.confidence;
             return object;
         };
@@ -603,87 +616,98 @@ $root.bikemoves = (function() {
     bikemoves.Trip = (function() {
 
         /**
+         * Properties of a Trip.
+         * @typedef bikemoves.Trip$Properties
+         * @type {Object}
+         * @property {string} [deviceUuid] Trip deviceUuid.
+         * @property {Array.<bikemoves.Location$Properties>} [locations] Trip locations.
+         * @property {number|Long} [startTime] Trip startTime.
+         * @property {number|Long} [endTime] Trip endTime.
+         * @property {number} [desiredAccuracy] Trip desiredAccuracy.
+         * @property {boolean} [transit] Trip transit.
+         * @property {bikemoves.LocationType} [origin] Trip origin.
+         * @property {bikemoves.LocationType} [destination] Trip destination.
+         * @property {boolean} [debug] Trip debug.
+         * @property {string} [appVersion] Trip appVersion.
+         */
+
+        /**
          * Constructs a new Trip.
          * @exports bikemoves.Trip
          * @constructor
-         * @param {Object} [properties] Properties to set
+         * @param {bikemoves.Trip$Properties=} [properties] Properties to set
          */
         function Trip(properties) {
+            this.locations = [];
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    this[keys[i]] = properties[keys[i]];
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
         }
 
         /**
          * Trip deviceUuid.
-         * @type {string|undefined}
+         * @type {string}
          */
         Trip.prototype.deviceUuid = "";
 
         /**
          * Trip locations.
-         * @type {Array.<bikemoves.Location>|undefined}
+         * @type {Array.<bikemoves.Location$Properties>}
          */
         Trip.prototype.locations = $util.emptyArray;
 
         /**
          * Trip startTime.
-         * @type {number|$protobuf.Long|undefined}
+         * @type {number|Long}
          */
         Trip.prototype.startTime = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
         /**
          * Trip endTime.
-         * @type {number|$protobuf.Long|undefined}
+         * @type {number|Long}
          */
         Trip.prototype.endTime = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
         /**
          * Trip desiredAccuracy.
-         * @type {number|undefined}
+         * @type {number}
          */
         Trip.prototype.desiredAccuracy = 0;
 
         /**
          * Trip transit.
-         * @type {boolean|undefined}
+         * @type {boolean}
          */
         Trip.prototype.transit = false;
 
         /**
          * Trip origin.
-         * @type {number|undefined}
+         * @type {bikemoves.LocationType}
          */
         Trip.prototype.origin = 0;
 
         /**
          * Trip destination.
-         * @type {number|undefined}
+         * @type {bikemoves.LocationType}
          */
         Trip.prototype.destination = 0;
 
         /**
          * Trip debug.
-         * @type {boolean|undefined}
+         * @type {boolean}
          */
         Trip.prototype.debug = false;
 
         /**
          * Trip appVersion.
-         * @type {string|undefined}
+         * @type {string}
          */
         Trip.prototype.appVersion = "";
 
-        // Lazily resolved type references
-        var $types = {
-            1: "bikemoves.Location",
-            6: "bikemoves.LocationType",
-            7: "bikemoves.LocationType"
-        }; $lazyTypes.push($types);
-
         /**
          * Creates a new Trip instance using the specified properties.
-         * @param {Object} [properties] Properties to set
+         * @param {bikemoves.Trip$Properties=} [properties] Properties to set
          * @returns {bikemoves.Trip} Trip instance
          */
         Trip.create = function create(properties) {
@@ -691,41 +715,41 @@ $root.bikemoves = (function() {
         };
 
         /**
-         * Encodes the specified Trip message.
-         * @param {bikemoves.Trip|Object} message Trip message or plain object to encode
+         * Encodes the specified Trip message. Does not implicitly {@link bikemoves.Trip.verify|verify} messages.
+         * @param {bikemoves.Trip$Properties} message Trip message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
         Trip.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.deviceUuid !== undefined && message.hasOwnProperty("deviceUuid"))
+            if (message.deviceUuid != null && message.hasOwnProperty("deviceUuid"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.deviceUuid);
-            if (message.locations !== undefined && message.hasOwnProperty("locations"))
+            if (message.locations != null && message.locations.length)
                 for (var i = 0; i < message.locations.length; ++i)
-                    $types[1].encode(message.locations[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-            if (message.startTime !== undefined && message.startTime !== null && message.hasOwnProperty("startTime"))
+                    $root.bikemoves.Location.encode(message.locations[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            if (message.startTime != null && message.hasOwnProperty("startTime"))
                 writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.startTime);
-            if (message.endTime !== undefined && message.endTime !== null && message.hasOwnProperty("endTime"))
+            if (message.endTime != null && message.hasOwnProperty("endTime"))
                 writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.endTime);
-            if (message.desiredAccuracy !== undefined && message.hasOwnProperty("desiredAccuracy"))
+            if (message.desiredAccuracy != null && message.hasOwnProperty("desiredAccuracy"))
                 writer.uint32(/* id 5, wireType 1 =*/41).double(message.desiredAccuracy);
-            if (message.transit !== undefined && message.hasOwnProperty("transit"))
+            if (message.transit != null && message.hasOwnProperty("transit"))
                 writer.uint32(/* id 6, wireType 0 =*/48).bool(message.transit);
-            if (message.origin !== undefined && message.hasOwnProperty("origin"))
+            if (message.origin != null && message.hasOwnProperty("origin"))
                 writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.origin);
-            if (message.destination !== undefined && message.hasOwnProperty("destination"))
+            if (message.destination != null && message.hasOwnProperty("destination"))
                 writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.destination);
-            if (message.debug !== undefined && message.hasOwnProperty("debug"))
+            if (message.debug != null && message.hasOwnProperty("debug"))
                 writer.uint32(/* id 9, wireType 0 =*/72).bool(message.debug);
-            if (message.appVersion !== undefined && message.hasOwnProperty("appVersion"))
+            if (message.appVersion != null && message.hasOwnProperty("appVersion"))
                 writer.uint32(/* id 10, wireType 2 =*/82).string(message.appVersion);
             return writer;
         };
 
         /**
-         * Encodes the specified Trip message, length delimited.
-         * @param {bikemoves.Trip|Object} message Trip message or plain object to encode
+         * Encodes the specified Trip message, length delimited. Does not implicitly {@link bikemoves.Trip.verify|verify} messages.
+         * @param {bikemoves.Trip$Properties} message Trip message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
@@ -738,6 +762,8 @@ $root.bikemoves = (function() {
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
          * @returns {bikemoves.Trip} Trip
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
         Trip.decode = function decode(reader, length) {
             if (!(reader instanceof $Reader))
@@ -752,7 +778,7 @@ $root.bikemoves = (function() {
                 case 2:
                     if (!(message.locations && message.locations.length))
                         message.locations = [];
-                    message.locations.push($types[1].decode(reader, reader.uint32()));
+                    message.locations.push($root.bikemoves.Location.decode(reader, reader.uint32()));
                     break;
                 case 3:
                     message.startTime = reader.uint64();
@@ -790,6 +816,8 @@ $root.bikemoves = (function() {
          * Decodes a Trip message from the specified reader or buffer, length delimited.
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @returns {bikemoves.Trip} Trip
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
         Trip.decodeDelimited = function decodeDelimited(reader) {
             if (!(reader instanceof $Reader))
@@ -799,37 +827,37 @@ $root.bikemoves = (function() {
 
         /**
          * Verifies a Trip message.
-         * @param {bikemoves.Trip|Object} message Trip message or plain object to verify
+         * @param {Object.<string,*>} message Plain object to verify
          * @returns {?string} `null` if valid, otherwise the reason why it is not
          */
         Trip.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (message.deviceUuid !== undefined)
+            if (message.deviceUuid != null && message.hasOwnProperty("deviceUuid"))
                 if (!$util.isString(message.deviceUuid))
                     return "deviceUuid: string expected";
-            if (message.locations !== undefined) {
+            if (message.locations != null && message.hasOwnProperty("locations")) {
                 if (!Array.isArray(message.locations))
                     return "locations: array expected";
                 for (var i = 0; i < message.locations.length; ++i) {
-                    var error = $types[1].verify(message.locations[i]);
+                    var error = $root.bikemoves.Location.verify(message.locations[i]);
                     if (error)
                         return "locations." + error;
                 }
             }
-            if (message.startTime !== undefined)
+            if (message.startTime != null && message.hasOwnProperty("startTime"))
                 if (!$util.isInteger(message.startTime) && !(message.startTime && $util.isInteger(message.startTime.low) && $util.isInteger(message.startTime.high)))
                     return "startTime: integer|Long expected";
-            if (message.endTime !== undefined)
+            if (message.endTime != null && message.hasOwnProperty("endTime"))
                 if (!$util.isInteger(message.endTime) && !(message.endTime && $util.isInteger(message.endTime.low) && $util.isInteger(message.endTime.high)))
                     return "endTime: integer|Long expected";
-            if (message.desiredAccuracy !== undefined)
+            if (message.desiredAccuracy != null && message.hasOwnProperty("desiredAccuracy"))
                 if (typeof message.desiredAccuracy !== "number")
                     return "desiredAccuracy: number expected";
-            if (message.transit !== undefined)
+            if (message.transit != null && message.hasOwnProperty("transit"))
                 if (typeof message.transit !== "boolean")
                     return "transit: boolean expected";
-            if (message.origin !== undefined)
+            if (message.origin != null && message.hasOwnProperty("origin"))
                 switch (message.origin) {
                 default:
                     return "origin: enum value expected";
@@ -842,7 +870,7 @@ $root.bikemoves = (function() {
                 case 6:
                     break;
                 }
-            if (message.destination !== undefined)
+            if (message.destination != null && message.hasOwnProperty("destination"))
                 switch (message.destination) {
                 default:
                     return "destination: enum value expected";
@@ -855,10 +883,10 @@ $root.bikemoves = (function() {
                 case 6:
                     break;
                 }
-            if (message.debug !== undefined)
+            if (message.debug != null && message.hasOwnProperty("debug"))
                 if (typeof message.debug !== "boolean")
                     return "debug: boolean expected";
-            if (message.appVersion !== undefined)
+            if (message.appVersion != null && message.hasOwnProperty("appVersion"))
                 if (!$util.isString(message.appVersion))
                     return "appVersion: string expected";
             return null;
@@ -873,7 +901,7 @@ $root.bikemoves = (function() {
             if (object instanceof $root.bikemoves.Trip)
                 return object;
             var message = new $root.bikemoves.Trip();
-            if (object.deviceUuid !== undefined && object.deviceUuid !== null)
+            if (object.deviceUuid != null)
                 message.deviceUuid = String(object.deviceUuid);
             if (object.locations) {
                 if (!Array.isArray(object.locations))
@@ -882,10 +910,10 @@ $root.bikemoves = (function() {
                 for (var i = 0; i < object.locations.length; ++i) {
                     if (typeof object.locations[i] !== "object")
                         throw TypeError(".bikemoves.Trip.locations: object expected");
-                    message.locations[i] = $types[1].fromObject(object.locations[i]);
+                    message.locations[i] = $root.bikemoves.Location.fromObject(object.locations[i]);
                 }
             }
-            if (object.startTime !== undefined && object.startTime !== null)
+            if (object.startTime != null)
                 if ($util.Long)
                     (message.startTime = $util.Long.fromValue(object.startTime)).unsigned = true;
                 else if (typeof object.startTime === "string")
@@ -894,7 +922,7 @@ $root.bikemoves = (function() {
                     message.startTime = object.startTime;
                 else if (typeof object.startTime === "object")
                     message.startTime = new $util.LongBits(object.startTime.low >>> 0, object.startTime.high >>> 0).toNumber(true);
-            if (object.endTime !== undefined && object.endTime !== null)
+            if (object.endTime != null)
                 if ($util.Long)
                     (message.endTime = $util.Long.fromValue(object.endTime)).unsigned = true;
                 else if (typeof object.endTime === "string")
@@ -903,9 +931,9 @@ $root.bikemoves = (function() {
                     message.endTime = object.endTime;
                 else if (typeof object.endTime === "object")
                     message.endTime = new $util.LongBits(object.endTime.low >>> 0, object.endTime.high >>> 0).toNumber(true);
-            if (object.desiredAccuracy !== undefined && object.desiredAccuracy !== null)
+            if (object.desiredAccuracy != null)
                 message.desiredAccuracy = Number(object.desiredAccuracy);
-            if (object.transit !== undefined && object.transit !== null)
+            if (object.transit != null)
                 message.transit = Boolean(object.transit);
             switch (object.origin) {
             case "NOT_SPECIFIED":
@@ -967,9 +995,9 @@ $root.bikemoves = (function() {
                 message.destination = 6;
                 break;
             }
-            if (object.debug !== undefined && object.debug !== null)
+            if (object.debug != null)
                 message.debug = Boolean(object.debug);
-            if (object.appVersion !== undefined && object.appVersion !== null)
+            if (object.appVersion != null)
                 message.appVersion = String(object.appVersion);
             return message;
         };
@@ -1014,34 +1042,34 @@ $root.bikemoves = (function() {
                 object.debug = false;
                 object.appVersion = "";
             }
-            if (message.deviceUuid !== undefined && message.deviceUuid !== null && message.hasOwnProperty("deviceUuid"))
+            if (message.deviceUuid != null && message.hasOwnProperty("deviceUuid"))
                 object.deviceUuid = message.deviceUuid;
-            if (message.locations !== undefined && message.locations !== null && message.hasOwnProperty("locations")) {
+            if (message.locations && message.locations.length) {
                 object.locations = [];
                 for (var j = 0; j < message.locations.length; ++j)
-                    object.locations[j] = $types[1].toObject(message.locations[j], options);
+                    object.locations[j] = $root.bikemoves.Location.toObject(message.locations[j], options);
             }
-            if (message.startTime !== undefined && message.startTime !== null && message.hasOwnProperty("startTime"))
+            if (message.startTime != null && message.hasOwnProperty("startTime"))
                 if (typeof message.startTime === "number")
                     object.startTime = options.longs === String ? String(message.startTime) : message.startTime;
                 else
                     object.startTime = options.longs === String ? $util.Long.prototype.toString.call(message.startTime) : options.longs === Number ? new $util.LongBits(message.startTime.low >>> 0, message.startTime.high >>> 0).toNumber(true) : message.startTime;
-            if (message.endTime !== undefined && message.endTime !== null && message.hasOwnProperty("endTime"))
+            if (message.endTime != null && message.hasOwnProperty("endTime"))
                 if (typeof message.endTime === "number")
                     object.endTime = options.longs === String ? String(message.endTime) : message.endTime;
                 else
                     object.endTime = options.longs === String ? $util.Long.prototype.toString.call(message.endTime) : options.longs === Number ? new $util.LongBits(message.endTime.low >>> 0, message.endTime.high >>> 0).toNumber(true) : message.endTime;
-            if (message.desiredAccuracy !== undefined && message.desiredAccuracy !== null && message.hasOwnProperty("desiredAccuracy"))
+            if (message.desiredAccuracy != null && message.hasOwnProperty("desiredAccuracy"))
                 object.desiredAccuracy = message.desiredAccuracy;
-            if (message.transit !== undefined && message.transit !== null && message.hasOwnProperty("transit"))
+            if (message.transit != null && message.hasOwnProperty("transit"))
                 object.transit = message.transit;
-            if (message.origin !== undefined && message.origin !== null && message.hasOwnProperty("origin"))
-                object.origin = options.enums === String ? $types[6][message.origin] : message.origin;
-            if (message.destination !== undefined && message.destination !== null && message.hasOwnProperty("destination"))
-                object.destination = options.enums === String ? $types[7][message.destination] : message.destination;
-            if (message.debug !== undefined && message.debug !== null && message.hasOwnProperty("debug"))
+            if (message.origin != null && message.hasOwnProperty("origin"))
+                object.origin = options.enums === String ? $root.bikemoves.LocationType[message.origin] : message.origin;
+            if (message.destination != null && message.hasOwnProperty("destination"))
+                object.destination = options.enums === String ? $root.bikemoves.LocationType[message.destination] : message.destination;
+            if (message.debug != null && message.hasOwnProperty("debug"))
                 object.debug = message.debug;
-            if (message.appVersion !== undefined && message.appVersion !== null && message.hasOwnProperty("appVersion"))
+            if (message.appVersion != null && message.hasOwnProperty("appVersion"))
                 object.appVersion = message.appVersion;
             return object;
         };
@@ -1069,55 +1097,62 @@ $root.bikemoves = (function() {
     bikemoves.Incident = (function() {
 
         /**
+         * Properties of an Incident.
+         * @typedef bikemoves.Incident$Properties
+         * @type {Object}
+         * @property {string} [deviceUuid] Incident deviceUuid.
+         * @property {string} [comment] Incident comment.
+         * @property {number|Long} [time] Incident time.
+         * @property {bikemoves.Location$Properties} [location] Incident location.
+         * @property {string} [category] Incident category.
+         */
+
+        /**
          * Constructs a new Incident.
          * @exports bikemoves.Incident
          * @constructor
-         * @param {Object} [properties] Properties to set
+         * @param {bikemoves.Incident$Properties=} [properties] Properties to set
          */
         function Incident(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    this[keys[i]] = properties[keys[i]];
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
         }
 
         /**
          * Incident deviceUuid.
-         * @type {string|undefined}
+         * @type {string}
          */
         Incident.prototype.deviceUuid = "";
 
         /**
          * Incident comment.
-         * @type {string|undefined}
+         * @type {string}
          */
         Incident.prototype.comment = "";
 
         /**
          * Incident time.
-         * @type {number|$protobuf.Long|undefined}
+         * @type {number|Long}
          */
         Incident.prototype.time = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
         /**
          * Incident location.
-         * @type {bikemoves.Location|undefined}
+         * @type {(bikemoves.Location$Properties|null)}
          */
         Incident.prototype.location = null;
 
         /**
          * Incident category.
-         * @type {string|undefined}
+         * @type {string}
          */
         Incident.prototype.category = "";
 
-        // Lazily resolved type references
-        var $types = {
-            3: "bikemoves.Location"
-        }; $lazyTypes.push($types);
-
         /**
          * Creates a new Incident instance using the specified properties.
-         * @param {Object} [properties] Properties to set
+         * @param {bikemoves.Incident$Properties=} [properties] Properties to set
          * @returns {bikemoves.Incident} Incident instance
          */
         Incident.create = function create(properties) {
@@ -1125,30 +1160,30 @@ $root.bikemoves = (function() {
         };
 
         /**
-         * Encodes the specified Incident message.
-         * @param {bikemoves.Incident|Object} message Incident message or plain object to encode
+         * Encodes the specified Incident message. Does not implicitly {@link bikemoves.Incident.verify|verify} messages.
+         * @param {bikemoves.Incident$Properties} message Incident message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
         Incident.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.deviceUuid !== undefined && message.hasOwnProperty("deviceUuid"))
+            if (message.deviceUuid != null && message.hasOwnProperty("deviceUuid"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.deviceUuid);
-            if (message.comment !== undefined && message.hasOwnProperty("comment"))
+            if (message.comment != null && message.hasOwnProperty("comment"))
                 writer.uint32(/* id 2, wireType 2 =*/18).string(message.comment);
-            if (message.time !== undefined && message.time !== null && message.hasOwnProperty("time"))
+            if (message.time != null && message.hasOwnProperty("time"))
                 writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.time);
-            if (message.location && message.hasOwnProperty("location"))
-                $types[3].encode(message.location, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-            if (message.category !== undefined && message.hasOwnProperty("category"))
+            if (message.location != null && message.hasOwnProperty("location"))
+                $root.bikemoves.Location.encode(message.location, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+            if (message.category != null && message.hasOwnProperty("category"))
                 writer.uint32(/* id 5, wireType 2 =*/42).string(message.category);
             return writer;
         };
 
         /**
-         * Encodes the specified Incident message, length delimited.
-         * @param {bikemoves.Incident|Object} message Incident message or plain object to encode
+         * Encodes the specified Incident message, length delimited. Does not implicitly {@link bikemoves.Incident.verify|verify} messages.
+         * @param {bikemoves.Incident$Properties} message Incident message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
@@ -1161,6 +1196,8 @@ $root.bikemoves = (function() {
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
          * @returns {bikemoves.Incident} Incident
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
         Incident.decode = function decode(reader, length) {
             if (!(reader instanceof $Reader))
@@ -1179,7 +1216,7 @@ $root.bikemoves = (function() {
                     message.time = reader.uint64();
                     break;
                 case 4:
-                    message.location = $types[3].decode(reader, reader.uint32());
+                    message.location = $root.bikemoves.Location.decode(reader, reader.uint32());
                     break;
                 case 5:
                     message.category = reader.string();
@@ -1196,6 +1233,8 @@ $root.bikemoves = (function() {
          * Decodes an Incident message from the specified reader or buffer, length delimited.
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @returns {bikemoves.Incident} Incident
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
         Incident.decodeDelimited = function decodeDelimited(reader) {
             if (!(reader instanceof $Reader))
@@ -1205,27 +1244,27 @@ $root.bikemoves = (function() {
 
         /**
          * Verifies an Incident message.
-         * @param {bikemoves.Incident|Object} message Incident message or plain object to verify
+         * @param {Object.<string,*>} message Plain object to verify
          * @returns {?string} `null` if valid, otherwise the reason why it is not
          */
         Incident.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (message.deviceUuid !== undefined)
+            if (message.deviceUuid != null && message.hasOwnProperty("deviceUuid"))
                 if (!$util.isString(message.deviceUuid))
                     return "deviceUuid: string expected";
-            if (message.comment !== undefined)
+            if (message.comment != null && message.hasOwnProperty("comment"))
                 if (!$util.isString(message.comment))
                     return "comment: string expected";
-            if (message.time !== undefined)
+            if (message.time != null && message.hasOwnProperty("time"))
                 if (!$util.isInteger(message.time) && !(message.time && $util.isInteger(message.time.low) && $util.isInteger(message.time.high)))
                     return "time: integer|Long expected";
-            if (message.location !== undefined && message.location !== null) {
-                var error = $types[3].verify(message.location);
+            if (message.location != null && message.hasOwnProperty("location")) {
+                var error = $root.bikemoves.Location.verify(message.location);
                 if (error)
                     return "location." + error;
             }
-            if (message.category !== undefined)
+            if (message.category != null && message.hasOwnProperty("category"))
                 if (!$util.isString(message.category))
                     return "category: string expected";
             return null;
@@ -1240,11 +1279,11 @@ $root.bikemoves = (function() {
             if (object instanceof $root.bikemoves.Incident)
                 return object;
             var message = new $root.bikemoves.Incident();
-            if (object.deviceUuid !== undefined && object.deviceUuid !== null)
+            if (object.deviceUuid != null)
                 message.deviceUuid = String(object.deviceUuid);
-            if (object.comment !== undefined && object.comment !== null)
+            if (object.comment != null)
                 message.comment = String(object.comment);
-            if (object.time !== undefined && object.time !== null)
+            if (object.time != null)
                 if ($util.Long)
                     (message.time = $util.Long.fromValue(object.time)).unsigned = true;
                 else if (typeof object.time === "string")
@@ -1253,12 +1292,12 @@ $root.bikemoves = (function() {
                     message.time = object.time;
                 else if (typeof object.time === "object")
                     message.time = new $util.LongBits(object.time.low >>> 0, object.time.high >>> 0).toNumber(true);
-            if (object.location !== undefined && object.location !== null) {
+            if (object.location != null) {
                 if (typeof object.location !== "object")
                     throw TypeError(".bikemoves.Incident.location: object expected");
-                message.location = $types[3].fromObject(object.location);
+                message.location = $root.bikemoves.Location.fromObject(object.location);
             }
-            if (object.category !== undefined && object.category !== null)
+            if (object.category != null)
                 message.category = String(object.category);
             return message;
         };
@@ -1293,18 +1332,18 @@ $root.bikemoves = (function() {
                 object.location = null;
                 object.category = "";
             }
-            if (message.deviceUuid !== undefined && message.deviceUuid !== null && message.hasOwnProperty("deviceUuid"))
+            if (message.deviceUuid != null && message.hasOwnProperty("deviceUuid"))
                 object.deviceUuid = message.deviceUuid;
-            if (message.comment !== undefined && message.comment !== null && message.hasOwnProperty("comment"))
+            if (message.comment != null && message.hasOwnProperty("comment"))
                 object.comment = message.comment;
-            if (message.time !== undefined && message.time !== null && message.hasOwnProperty("time"))
+            if (message.time != null && message.hasOwnProperty("time"))
                 if (typeof message.time === "number")
                     object.time = options.longs === String ? String(message.time) : message.time;
                 else
                     object.time = options.longs === String ? $util.Long.prototype.toString.call(message.time) : options.longs === Number ? new $util.LongBits(message.time.low >>> 0, message.time.high >>> 0).toNumber(true) : message.time;
-            if (message.location !== undefined && message.location !== null && message.hasOwnProperty("location"))
-                object.location = $types[3].toObject(message.location, options);
-            if (message.category !== undefined && message.category !== null && message.hasOwnProperty("category"))
+            if (message.location != null && message.hasOwnProperty("location"))
+                object.location = $root.bikemoves.Location.toObject(message.location, options);
+            if (message.category != null && message.hasOwnProperty("category"))
                 object.category = message.category;
             return object;
         };
@@ -1332,63 +1371,69 @@ $root.bikemoves = (function() {
     bikemoves.User = (function() {
 
         /**
+         * Properties of a User.
+         * @typedef bikemoves.User$Properties
+         * @type {Object}
+         * @property {string} [deviceUuid] User deviceUuid.
+         * @property {string} [platformName] User platformName.
+         * @property {number} [platformVersion] User platformVersion.
+         * @property {bikemoves.Gender} [gender] User gender.
+         * @property {bikemoves.Age} [age] User age.
+         * @property {bikemoves.ExperienceLevel} [cyclingExperience] User cyclingExperience.
+         */
+
+        /**
          * Constructs a new User.
          * @exports bikemoves.User
          * @constructor
-         * @param {Object} [properties] Properties to set
+         * @param {bikemoves.User$Properties=} [properties] Properties to set
          */
         function User(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    this[keys[i]] = properties[keys[i]];
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
         }
 
         /**
          * User deviceUuid.
-         * @type {string|undefined}
+         * @type {string}
          */
         User.prototype.deviceUuid = "";
 
         /**
          * User platformName.
-         * @type {string|undefined}
+         * @type {string}
          */
         User.prototype.platformName = "";
 
         /**
          * User platformVersion.
-         * @type {number|undefined}
+         * @type {number}
          */
         User.prototype.platformVersion = 0;
 
         /**
          * User gender.
-         * @type {number|undefined}
+         * @type {bikemoves.Gender}
          */
         User.prototype.gender = 0;
 
         /**
          * User age.
-         * @type {number|undefined}
+         * @type {bikemoves.Age}
          */
         User.prototype.age = 0;
 
         /**
          * User cyclingExperience.
-         * @type {number|undefined}
+         * @type {bikemoves.ExperienceLevel}
          */
         User.prototype.cyclingExperience = 0;
 
-        // Lazily resolved type references
-        var $types = {
-            3: "bikemoves.Gender",
-            4: "bikemoves.Age",
-            5: "bikemoves.ExperienceLevel"
-        }; $lazyTypes.push($types);
-
         /**
          * Creates a new User instance using the specified properties.
-         * @param {Object} [properties] Properties to set
+         * @param {bikemoves.User$Properties=} [properties] Properties to set
          * @returns {bikemoves.User} User instance
          */
         User.create = function create(properties) {
@@ -1396,32 +1441,32 @@ $root.bikemoves = (function() {
         };
 
         /**
-         * Encodes the specified User message.
-         * @param {bikemoves.User|Object} message User message or plain object to encode
+         * Encodes the specified User message. Does not implicitly {@link bikemoves.User.verify|verify} messages.
+         * @param {bikemoves.User$Properties} message User message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
         User.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.deviceUuid !== undefined && message.hasOwnProperty("deviceUuid"))
+            if (message.deviceUuid != null && message.hasOwnProperty("deviceUuid"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.deviceUuid);
-            if (message.platformName !== undefined && message.hasOwnProperty("platformName"))
+            if (message.platformName != null && message.hasOwnProperty("platformName"))
                 writer.uint32(/* id 2, wireType 2 =*/18).string(message.platformName);
-            if (message.platformVersion !== undefined && message.hasOwnProperty("platformVersion"))
+            if (message.platformVersion != null && message.hasOwnProperty("platformVersion"))
                 writer.uint32(/* id 3, wireType 5 =*/29).float(message.platformVersion);
-            if (message.gender !== undefined && message.hasOwnProperty("gender"))
+            if (message.gender != null && message.hasOwnProperty("gender"))
                 writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.gender);
-            if (message.age !== undefined && message.hasOwnProperty("age"))
+            if (message.age != null && message.hasOwnProperty("age"))
                 writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.age);
-            if (message.cyclingExperience !== undefined && message.hasOwnProperty("cyclingExperience"))
+            if (message.cyclingExperience != null && message.hasOwnProperty("cyclingExperience"))
                 writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.cyclingExperience);
             return writer;
         };
 
         /**
-         * Encodes the specified User message, length delimited.
-         * @param {bikemoves.User|Object} message User message or plain object to encode
+         * Encodes the specified User message, length delimited. Does not implicitly {@link bikemoves.User.verify|verify} messages.
+         * @param {bikemoves.User$Properties} message User message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
@@ -1434,6 +1479,8 @@ $root.bikemoves = (function() {
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
          * @returns {bikemoves.User} User
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
         User.decode = function decode(reader, length) {
             if (!(reader instanceof $Reader))
@@ -1472,6 +1519,8 @@ $root.bikemoves = (function() {
          * Decodes a User message from the specified reader or buffer, length delimited.
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @returns {bikemoves.User} User
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
         User.decodeDelimited = function decodeDelimited(reader) {
             if (!(reader instanceof $Reader))
@@ -1481,22 +1530,22 @@ $root.bikemoves = (function() {
 
         /**
          * Verifies a User message.
-         * @param {bikemoves.User|Object} message User message or plain object to verify
+         * @param {Object.<string,*>} message Plain object to verify
          * @returns {?string} `null` if valid, otherwise the reason why it is not
          */
         User.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (message.deviceUuid !== undefined)
+            if (message.deviceUuid != null && message.hasOwnProperty("deviceUuid"))
                 if (!$util.isString(message.deviceUuid))
                     return "deviceUuid: string expected";
-            if (message.platformName !== undefined)
+            if (message.platformName != null && message.hasOwnProperty("platformName"))
                 if (!$util.isString(message.platformName))
                     return "platformName: string expected";
-            if (message.platformVersion !== undefined)
+            if (message.platformVersion != null && message.hasOwnProperty("platformVersion"))
                 if (typeof message.platformVersion !== "number")
                     return "platformVersion: number expected";
-            if (message.gender !== undefined)
+            if (message.gender != null && message.hasOwnProperty("gender"))
                 switch (message.gender) {
                 default:
                     return "gender: enum value expected";
@@ -1506,7 +1555,7 @@ $root.bikemoves = (function() {
                 case 3:
                     break;
                 }
-            if (message.age !== undefined)
+            if (message.age != null && message.hasOwnProperty("age"))
                 switch (message.age) {
                 default:
                     return "age: enum value expected";
@@ -1522,7 +1571,7 @@ $root.bikemoves = (function() {
                 case 9:
                     break;
                 }
-            if (message.cyclingExperience !== undefined)
+            if (message.cyclingExperience != null && message.hasOwnProperty("cyclingExperience"))
                 switch (message.cyclingExperience) {
                 default:
                     return "cyclingExperience: enum value expected";
@@ -1544,11 +1593,11 @@ $root.bikemoves = (function() {
             if (object instanceof $root.bikemoves.User)
                 return object;
             var message = new $root.bikemoves.User();
-            if (object.deviceUuid !== undefined && object.deviceUuid !== null)
+            if (object.deviceUuid != null)
                 message.deviceUuid = String(object.deviceUuid);
-            if (object.platformName !== undefined && object.platformName !== null)
+            if (object.platformName != null)
                 message.platformName = String(object.platformName);
-            if (object.platformVersion !== undefined && object.platformVersion !== null)
+            if (object.platformVersion != null)
                 message.platformVersion = Number(object.platformVersion);
             switch (object.gender) {
             case "NOT_SPECIFIED":
@@ -1658,18 +1707,18 @@ $root.bikemoves = (function() {
                 object.age = options.enums === String ? "NOT_SPECIFIED" : 0;
                 object.cyclingExperience = options.enums === String ? "NOT_SPECIFIED" : 0;
             }
-            if (message.deviceUuid !== undefined && message.deviceUuid !== null && message.hasOwnProperty("deviceUuid"))
+            if (message.deviceUuid != null && message.hasOwnProperty("deviceUuid"))
                 object.deviceUuid = message.deviceUuid;
-            if (message.platformName !== undefined && message.platformName !== null && message.hasOwnProperty("platformName"))
+            if (message.platformName != null && message.hasOwnProperty("platformName"))
                 object.platformName = message.platformName;
-            if (message.platformVersion !== undefined && message.platformVersion !== null && message.hasOwnProperty("platformVersion"))
+            if (message.platformVersion != null && message.hasOwnProperty("platformVersion"))
                 object.platformVersion = message.platformVersion;
-            if (message.gender !== undefined && message.gender !== null && message.hasOwnProperty("gender"))
-                object.gender = options.enums === String ? $types[3][message.gender] : message.gender;
-            if (message.age !== undefined && message.age !== null && message.hasOwnProperty("age"))
-                object.age = options.enums === String ? $types[4][message.age] : message.age;
-            if (message.cyclingExperience !== undefined && message.cyclingExperience !== null && message.hasOwnProperty("cyclingExperience"))
-                object.cyclingExperience = options.enums === String ? $types[5][message.cyclingExperience] : message.cyclingExperience;
+            if (message.gender != null && message.hasOwnProperty("gender"))
+                object.gender = options.enums === String ? $root.bikemoves.Gender[message.gender] : message.gender;
+            if (message.age != null && message.hasOwnProperty("age"))
+                object.age = options.enums === String ? $root.bikemoves.Age[message.age] : message.age;
+            if (message.cyclingExperience != null && message.hasOwnProperty("cyclingExperience"))
+                object.cyclingExperience = options.enums === String ? $root.bikemoves.ExperienceLevel[message.cyclingExperience] : message.cyclingExperience;
             return object;
         };
 
@@ -1695,8 +1744,5 @@ $root.bikemoves = (function() {
 
     return bikemoves;
 })();
-
-// Resolve lazy type references to actual types
-$util.lazyResolve($root, $lazyTypes);
 
 module.exports = $root;
