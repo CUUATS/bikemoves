@@ -9,6 +9,7 @@ import { Locations } from './locations';
 import { Map } from './map';
 import { Remote } from './remote';
 import { Settings } from './settings';
+import { State } from './state';
 import { Storage } from './storage';
 import { Trips } from './trips';
 import { IncidentFormPage } from '../pages/incident-form/incident-form';
@@ -63,6 +64,7 @@ import { ChartistModule } from 'ng-chartist';
     Map,
     Remote,
     Settings,
+    State,
     Storage,
     Trips
   ]

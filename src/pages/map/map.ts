@@ -8,6 +8,7 @@ import { Map, MapOptions } from '../../app/map';
 import { Marker } from '../../app/marker';
 import { Path } from '../../app/path';
 import { Settings, Preferences } from '../../app/settings';
+import { State } from '../../app/state';
 import { IncidentFormPage } from '../incident-form/incident-form';
 import { bikemoves as messages } from '../../app/messages';
 import { TripStats, TripStatsProvider } from '../../app/stats';
@@ -24,7 +25,6 @@ export class MapPage implements TripStatsProvider {
   static STATE_RECORDING = 'recording';
   static STATE_REPORTING = 'reporting';
 
-  private visible = true;
   private state = MapPage.STATE_STOPPED;
   private currentMarker: Marker;
   private incidentMarker: Marker;
@@ -44,10 +44,11 @@ export class MapPage implements TripStatsProvider {
       private modalCtrl: ModalController,
       private events: Events,
       private locationManager: Locations,
-      private settings: Settings) {
+      private settings: Settings,
+      private appState: State) {
     this.stats = new TripStats(this);
     this.events.subscribe('trip:save', this.navigateToTripDetail.bind(this));
-    this.events.subscribe('app:active', this.onActiveChange.bind(this));
+    this.events.subscribe('state:active', this.onActiveChange.bind(this));
     map.click.subscribe(this.onClick.bind(this));
     geo.motion.subscribe(this.onMotion.bind(this));
     geo.locations.subscribe(this.onLocation.bind(this));
@@ -123,8 +124,8 @@ export class MapPage implements TripStatsProvider {
   }
 
   private onActiveChange(active: boolean) {
-    this.visible = active;
-    if (this.visible) {
+    this.appState.active = active;
+    if (this.appState.active) {
       this.locationManager.filter('trip_id IS NULL', 'time ASC')
         .then((locations) => {
           this.map.path = new Path(locations);
@@ -139,7 +140,7 @@ export class MapPage implements TripStatsProvider {
   }
 
   private onLocation(location) {
-    if (!this.map || !this.visible) return;
+    if (!this.map || !this.appState.active) return;
     this.map.center = location;
     this.addOrMoveMarker(location);
     if (this.isRecording()) this.map.addLocation(location);
@@ -172,7 +173,7 @@ export class MapPage implements TripStatsProvider {
   }
 
   private updateTimerSubscription() {
-    if (this.visible && this.isRecording() && !this.tick) {
+    if (this.appState.active && this.isRecording() && !this.tick) {
       this.tick = this.timer.subscribe(() => this.updateDuration());
     } else if (this.tick) {
       this.tick.unsubscribe();
@@ -193,7 +194,7 @@ export class MapPage implements TripStatsProvider {
   }
 
   private navigateToTripDetail(saveInfo) {
-    if (saveInfo.insert && this.visible) this.navCtrl.parent.select(1);
+    if (saveInfo.insert && this.appState.active) this.navCtrl.parent.select(1);
   }
 
   startRecording() {
