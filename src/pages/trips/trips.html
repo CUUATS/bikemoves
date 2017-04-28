@@ -19,12 +19,16 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-  <ion-card *ngFor="let trip of trips" (press)="showTripOptions(trip)">
+  <ion-card *ngFor="let trip of trips">
     <div class="trip-wrapper trip-{{(trip.submitted) ? 'submitted' : 'not-submitted'}}">
       <img id="trip-{{trip.id}}-image" class="trip-image"
         src="{{(trip.imageUrl) ? trip.imageUrl : 'assets/img/map-image-placeholder.svg'}}"
-        (click)="goToTripDetail(trip)" (press)="pressFix">
+        (click)="goToTripDetail(trip)">
       <ion-item>
+        <button ion-button icon-only clear color="dark"
+            (click)="confirmDelete(trip)" class="delete-trip-button">
+          <ion-icon name="trash"></ion-icon>
+        </button>
         <h2>{{trip.startTime.calendar(null, {sameElse: 'MMMM D, YYYY [at] h:mm A'})}}</h2>
       </ion-item>
       <ion-item class="trip-summary">

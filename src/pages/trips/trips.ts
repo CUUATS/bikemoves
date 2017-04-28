@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActionSheetController, ModalController, NavController, ToastController } from 'ionic-angular';
+import { AlertController, ModalController, NavController, ToastController } from 'ionic-angular';
 import { Trip } from '../../app/trip';
 import { Trips } from '../../app/trips';
 import { Map } from '../../app/map';
@@ -18,7 +18,7 @@ export class TripsPage {
 
   constructor(
     private navCtrl: NavController,
-    private actionSheetCtrl: ActionSheetController,
+    private alertCtrl: AlertController,
     private tripManager: Trips,
     private modalCtrl: ModalController,
     private toastCtrl: ToastController,
@@ -68,44 +68,28 @@ export class TripsPage {
     modal.present();
   }
 
-  private pressFix() {
-    // Do not remove. This allows the press action to work correctly
-    // on Android.
-  }
-
-  private showTripOptions(trip: Trip) {
-    let buttons = [
-      {
-        text: 'Delete',
-        role: 'destructive',
-        icon: 'trash',
-        handler: () => this.deleteTrip(trip)
-      },
-      {
-        text: 'Cancel',
-        role: 'cancel',
-        icon: 'close'
-      }
-    ];
-
-    if (!trip.submitted) buttons.unshift({
-      text: 'Upload',
-      role: 'upload',
-      icon: 'cloud-upload',
-      handler: () => this.showTripForm(trip)
+  private confirmDelete(trip: Trip) {
+    let confirm = this.alertCtrl.create({
+      title: 'Delete this trip?',
+      message: 'Deleting a trip cannot be undone.',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Delete',
+          role: 'destructive',
+          handler: () => this.deleteTrip(trip)
+        }
+      ]
     });
-
-    let actionSheet = this.actionSheetCtrl.create({
-      title: 'Trip Options',
-      buttons: buttons
-    });
-    actionSheet.present();
+    confirm.present();
   }
 
   private deleteTrip(trip) {
     this.tripManager.delete(trip)
       .then(() => {
-        // TODO: Update the trips badge.
         this.trips.splice(this.trips.indexOf(trip), 1);
         notify(this.toastCtrl, 'Trip deleted.');
       });
