@@ -272,8 +272,8 @@ export class Map {
     this.el.style.display = 'none';
   }
 
-  public addMarker(location: Location, markerType?: string) {
-    let marker = new Marker(location, markerType);
+  public addMarker(location: Location, markerType?: string, size = 36) {
+    let marker = new Marker(location, markerType, size);
     this.markers.push(marker);
     if (this.loaded) marker.addTo(this.map);
     return marker;

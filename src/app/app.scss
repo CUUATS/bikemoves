@@ -22,3 +22,17 @@
 ion-content.cards-background {
   background-color: #eeeeee;
 }
+
+/* Map markers */
+.marker-current {
+  background-image: url(../assets/img/marker-current.svg);
+}
+.marker-incident {
+  background-image: url(../assets/img/marker-incident.svg);
+}
+.marker-origin {
+  background-image: url(../assets/img/marker-origin.svg);
+}
+.marker-destination {
+  background-image: url(../assets/img/marker-destination.svg);
+}

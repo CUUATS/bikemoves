@@ -4,15 +4,24 @@ import { Location } from './location';
 export class Marker {
   static CURRENT = 'current';
   static INCIDENT = 'incident';
+  static ORIGIN = 'origin';
+  static DESTINATION = 'destination';
+
   private _el: HTMLDivElement;
   private _marker: any;
 
-  constructor(private _location: Location, private _type: string = Marker.CURRENT) {
+  constructor(
+      private _location: Location,
+      private _type: string = Marker.CURRENT,
+      size = 36) {
     this._el = document.createElement('div');
+    this._el.style.height = `${size}px`;
+    this._el.style.width = `${size}px`;
     this._el.className = 'marker marker-' + this._type;
+    let offset = Math.round(size / 2);
     this._marker = new mapboxgl.Marker(
       this._el, {
-        offset: [-15, -15]
+        offset: [-offset, -offset]
     });
     this._marker.setLngLat(this._location.toLngLat())
   }
