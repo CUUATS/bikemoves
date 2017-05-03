@@ -11,6 +11,12 @@
         <ion-icon name="close"></ion-icon>
         Cancel
       </button>
+      <button ion-button icon-left color="danger"
+        *ngIf="isStopped() && geo.highAccuracy === false"
+        (click)="geo.requestAccuracy()">
+        <ion-icon name="alert"></ion-icon>
+        GPS
+      </button>
     </ion-buttons>
     <ion-buttons end>
       <button ion-button icon-left *ngIf="isStopped()"

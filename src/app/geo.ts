@@ -1,3 +1,4 @@
+import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
@@ -32,10 +33,12 @@ export class Geo extends Service {
   public locations = new Subject();
   public motion = new Subject();
   public currentLocation: Location;
+  public highAccuracy: boolean = null;
 
   constructor(
       private locationManager: Locations,
-      private tripManager: Trips) {
+      private tripManager: Trips,
+      private locationAccuracy: LocationAccuracy) {
     super();
   }
 
@@ -81,7 +84,7 @@ export class Geo extends Service {
       this.finish(taskId);
     } else {
       return this.locationManager.filterNewLocations()
-        .then((locations) => {
+        .then((locations: Location[]) => {
           if (locations.length === 0) return;
           return this.tripManager.save(Trip.fromLocations(locations))
             .then((trip) => this.locationManager.batchUpdate(
@@ -116,6 +119,7 @@ export class Geo extends Service {
   }
 
   public init() {
+    this.requestAccuracy();
     this.bgGeo = (<any>window).BackgroundGeolocation;
     if (this.bgGeo) this.bgGeo.configure(
       this.getSettings(), () => {
@@ -125,6 +129,22 @@ export class Geo extends Service {
         this.setReady();
       });
     this.getCurrentLocation();
+  }
+
+  public requestAccuracy() {
+    this.locationAccuracy.canRequest()
+      .then((canRequest: boolean) => {
+        if (!canRequest) {
+          this.highAccuracy = false;
+          return;
+        }
+
+        let accuracy = this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY;
+        this.locationAccuracy.request(accuracy).then(
+          () => this.highAccuracy = true,
+          (error) => this.highAccuracy = false
+        );
+      });
   }
 
   public finish(taskId) {

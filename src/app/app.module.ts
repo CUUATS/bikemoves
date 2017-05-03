@@ -22,6 +22,7 @@ import { TripFormPage } from '../pages/trip-form/trip-form';
 import { TripsPage } from '../pages/trips/trips';
 import { File } from '@ionic-native/file';
 import { Device } from '@ionic-native/device';
+import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { ChartistModule } from 'ng-chartist';
 
 @NgModule({
@@ -60,6 +61,7 @@ import { ChartistModule } from 'ng-chartist';
     File,
     Geo,
     Legacy,
+    LocationAccuracy,
     Locations,
     Map,
     Remote,
