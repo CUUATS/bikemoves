@@ -3,7 +3,6 @@ import turf from 'turf';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Location } from './location';
-import { Marker } from './marker';
 import { Path } from './path';
 import { extend, dataURItoBlob } from './utils';
 import { MAP_STYLE, MAPBOX_TOKEN } from './config';

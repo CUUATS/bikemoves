@@ -7,7 +7,6 @@ import { Storage } from './storage';
 import { Location } from './location';
 import { Locations } from './locations';
 import * as moment from 'moment';
-import { bikemoves as messages } from './messages';
 
 @Injectable()
 export class Trips extends ObjectManager {

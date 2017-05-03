@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { File, FileEntry } from '@ionic-native/file';
+import { File } from '@ionic-native/file';
 import { Settings } from './settings';
 import { Trip } from './trip';
 import { Trips } from './trips';

@@ -4,7 +4,7 @@ import { Observable, Subscription } from 'rxjs/Rx';
 import { Geo } from '../../app/geo';
 import { Location } from '../../app/location';
 import { Locations } from '../../app/locations';
-import { Icon, Map, MapOptions } from '../../app/map';
+import { Map, MapOptions } from '../../app/map';
 import { Path } from '../../app/path';
 import { Settings, Preferences } from '../../app/settings';
 import { State } from '../../app/state';
