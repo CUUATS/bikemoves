@@ -28,7 +28,7 @@
     "ionic-angular": "3.0.1",
     "ionic-native": "2.4.1",
     "ionicons": "3.0.0",
-    "mapbox-gl": "^0.34.0",
+    "mapbox-gl": "^0.36.0",
     "moment": "^2.18.1",
     "ng-chartist": "^1.1.0",
     "npm": "^4.4.1",

@@ -3,7 +3,6 @@ import { ModalController, NavParams } from 'ionic-angular';
 import { Trip } from '../../app/trip';
 import { Trips } from '../../app/trips';
 import { Map } from '../../app/map';
-import { Marker } from '../../app/marker';
 import { Path } from '../../app/path';
 import { TripFormPage } from '../trip-form/trip-form';
 
@@ -13,8 +12,6 @@ import { TripFormPage } from '../trip-form/trip-form';
 })
 export class TripDetailPage {
   trip: Trip;
-  originMarker: Marker;
-  destinationMarker: Marker;
 
   constructor(
     private navParams: NavParams,
@@ -31,16 +28,22 @@ export class TripDetailPage {
     this.tripManager.getLocations(this.trip).then((locations) => {
       this.map.path = new Path(locations);
       this.map.zoomToPath();
-      this.originMarker = this.map.addMarker(locations[0], Marker.ORIGIN, 30);
-      this.destinationMarker = this.map.addMarker(
-        locations[locations.length - 1], Marker.DESTINATION, 30);
+      this.map.icons = [
+        {
+          type: 'origin',
+          location: locations[0]
+        },
+        {
+          type: 'destination',
+          location: locations[locations.length - 1]
+        }
+      ];
     });
   }
 
   ionViewWillLeave() {
     this.map.unassign();
-    if (this.originMarker) this.map.removeMarker(this.originMarker);
-    if (this.destinationMarker) this.map.removeMarker(this.destinationMarker);
+    this.map.icons = [];
   }
 
   showTripForm() {

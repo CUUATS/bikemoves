@@ -51,7 +51,7 @@ export class Location extends Persistent {
       super();
   }
 
-  private toPoint() {
+  public toPoint() {
     return turf.point([this.longitude, this.latitude]);
   }
 

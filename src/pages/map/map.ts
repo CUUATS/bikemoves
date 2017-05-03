@@ -4,8 +4,7 @@ import { Observable, Subscription } from 'rxjs/Rx';
 import { Geo } from '../../app/geo';
 import { Location } from '../../app/location';
 import { Locations } from '../../app/locations';
-import { Map, MapOptions } from '../../app/map';
-import { Marker } from '../../app/marker';
+import { Icon, Map, MapOptions } from '../../app/map';
 import { Path } from '../../app/path';
 import { Settings, Preferences } from '../../app/settings';
 import { State } from '../../app/state';
@@ -26,8 +25,7 @@ export class MapPage implements TripStatsProvider {
   static STATE_REPORTING = 'reporting';
 
   private state = MapPage.STATE_STOPPED;
-  private currentMarker: Marker;
-  private incidentMarker: Marker;
+  private incidentLocation: Location;
   private stateChangePending = false;
   private activity: messages.ActivityType;
   private startTime: moment.Moment;
@@ -66,13 +64,17 @@ export class MapPage implements TripStatsProvider {
   }
 
   private initMap() {
-    this.currentMarker = null;
-    this.incidentMarker = null;
-
     let options: MapOptions = {};
     options.interactive = true;
-    if (this.geo.currentLocation) options.center = this.geo.currentLocation;
-
+    if (this.geo.currentLocation) {
+      options.icons = [
+        {
+          type: 'current',
+          location: this.geo.currentLocation
+        }
+      ];
+      options.center = this.geo.currentLocation;
+    }
     this.map.assign('map', options);
   }
 
@@ -115,14 +117,6 @@ export class MapPage implements TripStatsProvider {
     this.events.publish('map:state', this.state);
   }
 
-  private addOrMoveMarker(location: Location) {
-    if (this.currentMarker) {
-      this.currentMarker.location = location;
-    } else {
-      this.currentMarker = this.map.addMarker(location, Marker.CURRENT);
-    }
-  }
-
   private onActiveChange(active: boolean) {
     this.appState.active = active;
     if (this.appState.active) {
@@ -131,10 +125,8 @@ export class MapPage implements TripStatsProvider {
           this.map.path = new Path(locations);
           this.updateDistanceActivity();
         });
-      if (this.geo.currentLocation) {
-        this.addOrMoveMarker(this.geo.currentLocation);
-        this.map.center = this.geo.currentLocation;
-      }
+      if (this.geo.currentLocation) this.map.center = this.geo.currentLocation;
+      this.updateIcons();
     }
     this.updateTimerSubscription();
   }
@@ -142,7 +134,7 @@ export class MapPage implements TripStatsProvider {
   private onLocation(location) {
     if (!this.map || !this.appState.active) return;
     this.map.center = location;
-    this.addOrMoveMarker(location);
+    this.updateIcons();
     if (this.isRecording()) this.map.addLocation(location);
     this.updateDistanceActivity();
   }
@@ -165,11 +157,22 @@ export class MapPage implements TripStatsProvider {
 
   private onClick(location: Location) {
     if (!this.isReporting()) return;
-    if (this.incidentMarker) {
-      this.incidentMarker.location = location;
-    } else {
-      this.incidentMarker = this.map.addMarker(location, Marker.INCIDENT);
-    }
+    this.incidentLocation = location;
+    this.updateIcons();
+  }
+
+  private updateIcons() {
+    if (!this.map) return;
+    let icons = [];
+    if (this.geo.currentLocation && !this.isReporting()) icons.push({
+      type: 'current',
+      location: this.geo.currentLocation
+    });
+    if (this.isReporting() && this.incidentLocation) icons.push({
+      type: 'incident',
+      location: this.incidentLocation
+    });
+    this.map.icons = icons;
   }
 
   private updateTimerSubscription() {
@@ -217,22 +220,19 @@ export class MapPage implements TripStatsProvider {
   startReporting() {
     this.setState(MapPage.STATE_REPORTING);
     this.map.interactive = false;
-    if (this.currentMarker) this.currentMarker.hide();
+    this.updateIcons();
   }
 
   stopReporting() {
     this.setState(MapPage.STATE_STOPPED);
     this.map.interactive = true;
-    if (this.incidentMarker) {
-      this.map.removeMarker(this.incidentMarker);
-      this.incidentMarker = null;
-    }
-    if (this.currentMarker) this.currentMarker.show();
+    this.incidentLocation = null;
+    this.updateIcons();
   }
 
   showIncidentForm() {
     let incidentModal = this.modalCtrl.create(
-      IncidentFormPage, this.incidentMarker.location);
+      IncidentFormPage, this.incidentLocation);
     incidentModal.onWillDismiss(() => this.stopReporting());
     incidentModal.present();
   }

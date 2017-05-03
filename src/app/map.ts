@@ -10,12 +10,16 @@ import { MAP_STYLE, MAPBOX_TOKEN } from './config';
 
 mapboxgl.accessToken = MAPBOX_TOKEN;
 
+export interface Icon {
+  type: 'current' | 'incident' | 'origin' | 'destination';
+  location: Location;
+}
+
 export interface MapOptions {
   center?: Location;
+  icons?: Icon[];
   interactive?: boolean;
   path?: Path;
-  marker?: Location;
-  markerType?: string;
   zoom?: number;
 }
 
@@ -28,26 +32,79 @@ interface PathImageRequest {
 export class Map {
   static DEFAULT_OPTIONS: MapOptions = {
     center: new Location(-88.227203, 40.109403),
+    icons: [],
     interactive: false,
     path: new Path(),
     zoom: 16
   };
+  static ICON_TYPES = ['current', 'incident', 'origin', 'destination'];
+  static ICONS_SOURCE = 'icons';
   static TRIP_SOURCE = 'trip';
-  static TRIP_LAYER = {
-    id: 'bikemoves-trip',
-    type: 'line',
-    source: 'trip',
-    paint: {
-      'line-color': '#FBB03B',
-      'line-width': {
-        base: 1.4,
-        stops: [
-          [6, 0.5],
-          [20, 30]
-        ]
+  static LAYERS = [
+    {
+      id: 'bikemoves-trip',
+      type: 'line',
+      source: 'trip',
+      paint: {
+        'line-color': '#FBB03B',
+        'line-width': {
+          base: 1.4,
+          stops: [
+            [6, 0.5],
+            [20, 30]
+          ]
+        }
+      }
+    },
+    {
+      id: 'bikemoves-icon-shadow',
+      type: 'circle',
+      source: 'icons',
+      paint: {
+        'circle-color': '#000000',
+        'circle-blur': 0.6,
+        'circle-opacity': 0.8,
+        'circle-radius': 19
+      }
+    },
+    {
+      id: 'bikemoves-icon-background',
+      type: 'circle',
+      source: 'icons',
+      paint: {
+        'circle-color': {
+          property: 'icon_type',
+          type: 'categorical',
+          stops: [
+            ['current', '#FBB03B'],
+            ['incident', '#F7533E'],
+            ['origin', '#21C180'],
+            ['destination', '#49CCEA']
+          ]
+        },
+        'circle-radius': 14,
+        'circle-stroke-color': '#FFFFFF',
+        'circle-stroke-width': 2
+      }
+    },
+    {
+      id: 'bikemoves-icon',
+      type: 'symbol',
+      source: 'icons',
+      layout: {
+        'icon-image': {
+          property: 'icon_type',
+          type: 'categorical',
+          stops: [
+            ['current', 'bikemoves-current-15'],
+            ['incident', 'bikemoves-incident-15'],
+            ['origin', 'bikemoves-origin-15'],
+            ['destination', 'bikemoves-destination-15']
+          ]
+        }
       }
     }
-  };
+  ];
   static POPUP_FIELDS = [
   	{name: 'path_type', label: 'Path Type'},
   	{name:'rack_type', label: 'Rack Type'},
@@ -64,7 +121,6 @@ export class Map {
   private map: any;
   private options: MapOptions;
   private loaded = false;
-  private markers: Marker[] = [];
   private pathImageQueue: PathImageRequest[] = [];
   private captureOnLoad = false;
   public click = new Subject();
@@ -89,21 +145,19 @@ export class Map {
   }
 
   private onLoad() {
-    this.addTripSource();
-    this.map.addLayer(Map.TRIP_LAYER);
+    this.addGeoJSONSource(Map.TRIP_SOURCE, this.getTripData());
+    this.addGeoJSONSource(Map.ICONS_SOURCE, this.getIconsData());
+    Map.LAYERS.forEach((layer) => this.map.addLayer(layer));
+
     this.loaded = true;
-    this.updateMap();
+    this.path = this.options.path;
+    this.icons = this.options.icons;
+    if (this.pathImageQueue.length) this.nextPathImage();
   }
 
   private onClick(e) {
     if (this.options.interactive) this.openPopup(e);
     this.click.next(Location.fromLngLat([e.lngLat.lng, e.lngLat.lat]));
-  }
-
-  private updateMap() {
-    this.markers.forEach((marker) => marker.addTo(this.map));
-    this.path = this.options.path;
-    if (this.pathImageQueue.length) this.nextPathImage();
   }
 
   private openPopup(e) {
@@ -174,10 +228,23 @@ export class Map {
     };
   }
 
-  private addTripSource() {
-    this.map.addSource(Map.TRIP_SOURCE, {
+  private getIconsData() {
+    return {
+      type: 'FeatureCollection',
+      features: this.options.icons.map((icon) => {
+        let feature = icon.location.toPoint();
+        feature.properties = {
+          icon_type: icon.type
+        };
+        return feature;
+      })
+    };
+  }
+
+  private addGeoJSONSource(id: string, data: any) {
+    this.map.addSource(id, {
       type: 'geojson',
-      data: this.getTripData()
+      data: data
     });
   }
 
@@ -187,6 +254,16 @@ export class Map {
 
   set center(location: Location) {
     this.map.setCenter(location.toLngLat());
+  }
+
+  get icons() {
+    return this.options.icons;
+  }
+
+  set icons(icons: Icon[]) {
+    this.options.icons = icons;
+    if (this.loaded)
+      this.map.getSource(Map.ICONS_SOURCE).setData(this.getIconsData());
   }
 
   get interactive() {
@@ -242,6 +319,16 @@ export class Map {
   private nextPathImage() {
     if (this.loaded && this.pathImageQueue.length) {
       this.path = this.pathImageQueue[0].path;
+      this.icons = [
+        {
+          type: 'origin',
+          location: this.path.get(0)
+        },
+        {
+          type: 'destination',
+          location: this.path.get(-1)
+        }
+      ];
       this.captureOnLoad = true;
       this.zoomToPath();
     }
@@ -272,24 +359,12 @@ export class Map {
     this.el.style.display = 'none';
   }
 
-  public addMarker(location: Location, markerType?: string, size = 36) {
-    let marker = new Marker(location, markerType, size);
-    this.markers.push(marker);
-    if (this.loaded) marker.addTo(this.map);
-    return marker;
-  }
-
-  public removeMarker(marker: Marker) {
-    marker.remove();
-    this.markers.splice(this.markers.indexOf(marker), 1);
-  }
-
   public reset() {
-    this.markers.forEach((marker) => this.removeMarker(marker));
     this.pathImageQueue = [];
     this.center = this.options.center;
     this.interactive = this.options.interactive;
     this.zoom = this.options.zoom;
+    this.icons = [];
     if (this.loaded) this.path = this.options.path;
   }
 

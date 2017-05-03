@@ -14,6 +14,11 @@ export class Path {
     this.locations.push(location);
   }
 
+  public get(idx) {
+    if (idx < 0) idx = this.locations.length + idx;
+    return this.locations[idx] || null;
+  }
+
   public toLineString(simplify: number = 0) {
     if (this.locations.length < 2) return null;
 

@@ -26,7 +26,7 @@
         <span *ngIf="stateChangePending">Stopping</span>
       </button>
       <button ion-button icon-left *ngIf="isReporting()"
-        (click)="showIncidentForm()" [disabled]="!incidentMarker">
+        (click)="showIncidentForm()" [disabled]="!incidentLocation">
         <ion-icon name="checkmark"></ion-icon>
         OK
       </button>
