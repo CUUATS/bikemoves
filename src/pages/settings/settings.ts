@@ -4,6 +4,9 @@ import { Settings, Preferences, Profile } from '../../app/settings';
 import { getOptions, notify } from '../../app/utils';
 import { Geo } from '../../app/geo';
 import { Remote } from '../../app/remote';
+import { CreditsPage } from '../credits/credits';
+import { TermsPage } from '../terms/terms';
+import { APP_VERSION } from '../../app/config';
 
 @Component({
   selector: 'page-settings',
@@ -15,6 +18,7 @@ export class SettingsPage {
   ageOptions = getOptions(Settings.AGES);
   experienceOptions = getOptions(Settings.EXPERIENCE_LEVELS);
   genderOptions = getOptions(Settings.GENDERS);
+  private version = APP_VERSION;
 
   constructor(
       private navCtrl: NavController,
@@ -43,6 +47,14 @@ export class SettingsPage {
   private saveProfile() {
     this.settings.saveProfile();
     this.remote.postUser(this.profile);
+  }
+
+  private openTerms() {
+    this.navCtrl.push(TermsPage);
+  }
+
+  private openCredits() {
+    this.navCtrl.push(CreditsPage);
   }
 
 }

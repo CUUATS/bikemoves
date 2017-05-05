@@ -62,4 +62,21 @@
       </ion-select>
     </ion-item>
   </ion-list>
+  <ion-list>
+    <ion-item-divider color="light">
+      About BikeMoves Illinois
+    </ion-item-divider>
+    <ion-item>
+      <ion-icon name="appstore" item-left></ion-icon>
+      Version: {{version}}
+    </ion-item>
+    <button ion-item icon-left (click)="openTerms()">
+      <ion-icon name="information-circle" item-left></ion-icon>
+      User Agreement
+    </button>
+    <button ion-item icon-left (click)="openCredits()">
+      <ion-icon name="contacts" item-left></ion-icon>
+      Credits
+    </button>
+  </ion-list>
 </ion-content>

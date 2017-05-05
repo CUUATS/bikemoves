@@ -12,11 +12,13 @@ import { Settings } from './settings';
 import { State } from './state';
 import { Storage } from './storage';
 import { Trips } from './trips';
+import { CreditsPage } from '../pages/credits/credits';
 import { IncidentFormPage } from '../pages/incident-form/incident-form';
 import { MapPage } from '../pages/map/map';
 import { SettingsPage } from '../pages/settings/settings';
 import { StatsPage } from '../pages/stats/stats';
 import { TabsPage } from '../pages/tabs/tabs';
+import { TermsPage } from '../pages/terms/terms';
 import { TripDetailPage } from '../pages/trip-detail/trip-detail';
 import { TripFormPage } from '../pages/trip-form/trip-form';
 import { TripsPage } from '../pages/trips/trips';
@@ -31,11 +33,13 @@ import { ChartistModule } from 'ng-chartist';
 @NgModule({
   declarations: [
     BikeMoves,
+    CreditsPage,
     IncidentFormPage,
     MapPage,
     SettingsPage,
     StatsPage,
     TabsPage,
+    TermsPage,
     TripDetailPage,
     TripFormPage,
     TripsPage
@@ -49,11 +53,13 @@ import { ChartistModule } from 'ng-chartist';
   bootstrap: [IonicApp],
   entryComponents: [
     BikeMoves,
+    CreditsPage,
     IncidentFormPage,
     MapPage,
     SettingsPage,
     StatsPage,
     TabsPage,
+    TermsPage,
     TripDetailPage,
     TripFormPage,
     TripsPage
