@@ -35,6 +35,9 @@ export class Storage extends Service {
 
   constructor(private sqlite: SQLite) {
     super();
+  }
+
+  public init() {
     this.sqlite.create({
       name: 'bikemoves.db',
       location: 'default'

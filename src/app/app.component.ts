@@ -25,8 +25,12 @@ export class BikeMoves {
       private statusBar: StatusBar,
       private legacy: Legacy) {
     platform.ready().then(() => {
+      // Don't initialize native functionality in the browser.
+      if (platform.is('core')) return;
+
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      this.storage.init();
       this.state.init();
       this.geo.init();
       this.ensureGeolocation();
