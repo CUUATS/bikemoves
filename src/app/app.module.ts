@@ -23,6 +23,9 @@ import { TripsPage } from '../pages/trips/trips';
 import { File } from '@ionic-native/file';
 import { Device } from '@ionic-native/device';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
+import { StatusBar } from '@ionic-native/status-bar';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { SQLite } from '@ionic-native/sqlite';
 import { ChartistModule } from 'ng-chartist';
 
 @NgModule({
@@ -67,6 +70,9 @@ import { ChartistModule } from 'ng-chartist';
     Remote,
     Settings,
     State,
+    StatusBar,
+    SplashScreen,
+    SQLite,
     Storage,
     Trips
   ]

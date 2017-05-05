@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
-import { StatusBar, Splashscreen } from 'ionic-native';
+import { StatusBar } from '@ionic-native/status-bar';
+import { SplashScreen } from '@ionic-native/splash-screen';
 import { Geo } from './geo';
 import { Legacy } from './legacy';
 import { Settings } from './settings';
@@ -18,15 +19,16 @@ export class BikeMoves {
       platform: Platform,
       private geo: Geo,
       private settings: Settings,
+      private splashScreen: SplashScreen,
       private state: State,
       private storage: Storage,
+      private statusBar: StatusBar,
       private legacy: Legacy) {
     platform.ready().then(() => {
-      StatusBar.styleDefault();
-      Splashscreen.hide();
-      state.init();
-      storage.init();
-      geo.init();
+      this.statusBar.styleDefault();
+      this.splashScreen.hide();
+      this.state.init();
+      this.geo.init();
       this.ensureGeolocation();
       this.legacy.upgrade();
 

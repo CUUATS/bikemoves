@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SQLite } from 'ionic-native';
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { Service } from './service';
 
 export interface Migration {
@@ -31,13 +31,15 @@ export class Storage extends Service {
     });
   }
 
-  private db = new SQLite();
+  private db: SQLiteObject;
 
-  public init() {
-    return this.db.openDatabase({
+  constructor(private sqlite: SQLite) {
+    super();
+    this.sqlite.create({
       name: 'bikemoves.db',
       location: 'default'
-    }).then(() => this.migrate())
+    }).then((db) => this.db = db)
+      .then(() => this.migrate())
       .then(() => this.enableForeignKeySupport())
       .then(() => this.setReady());
   }
