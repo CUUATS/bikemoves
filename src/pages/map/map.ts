@@ -34,6 +34,7 @@ export class MapPage implements TripStatsProvider {
   private stats: TripStats;
   private timer = Observable.timer(1000, 1000);
   private tick: Subscription;
+  private isActiveTab = false;
 
   constructor(private navCtrl: NavController,
       private cdr: ChangeDetectorRef,
@@ -54,6 +55,7 @@ export class MapPage implements TripStatsProvider {
   }
 
   ionViewDidEnter() {
+    this.isActiveTab = true;
     this.initMap();
     if (this.isStopped() && this.geo.currentLocation)
       this.onLocation(this.geo.currentLocation);
@@ -61,6 +63,7 @@ export class MapPage implements TripStatsProvider {
 
   ionViewWillLeave() {
     this.map.unassign();
+    this.isActiveTab = false;
   }
 
   private initMap() {
@@ -127,6 +130,10 @@ export class MapPage implements TripStatsProvider {
         });
       if (this.geo.currentLocation) this.map.center = this.geo.currentLocation;
       this.updateIcons();
+
+      // Select the map tab if a trip is in progress.
+      if (this.isRecording() && !this.isActiveTab)
+        this.navCtrl.parent.select(0);
     }
     this.updateTimerSubscription();
   }

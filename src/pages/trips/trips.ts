@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AlertController, ModalController, NavController, ToastController } from 'ionic-angular';
+import { AlertController, Events, ModalController, NavController, ToastController } from 'ionic-angular';
 import { Trip } from '../../app/trip';
 import { Trips } from '../../app/trips';
 import { Map } from '../../app/map';
@@ -15,16 +15,34 @@ import { notify } from '../../app/utils';
 export class TripsPage {
   private trips: Trip[] = [];
   private hasTrips: boolean;
+  private isActiveTab = false;
 
   constructor(
     private navCtrl: NavController,
     private alertCtrl: AlertController,
+    private events: Events,
     private tripManager: Trips,
     private modalCtrl: ModalController,
     private toastCtrl: ToastController,
-    private map: Map) {}
+    private map: Map) {
+      this.events.subscribe('state:active', this.onActiveChange.bind(this));
+    }
 
   ionViewWillEnter() {
+    this.isActiveTab = true;
+    this.updateTrips();
+  }
+
+  ionViewWillLeave() {
+    this.isActiveTab = false;
+    this.map.unassign();
+  }
+
+  private onActiveChange(active: boolean) {
+    if (active && this.isActiveTab) this.updateTrips();
+  }
+
+  private updateTrips() {
     this.tripManager.all('start_time DESC').then((trips) => {
       if (trips.length) {
         this.hasTrips = true;
@@ -34,10 +52,6 @@ export class TripsPage {
         this.hasTrips = false;
       }
     });
-  }
-
-  ionViewWillLeave() {
-    this.map.unassign();
   }
 
   private goToMap() {

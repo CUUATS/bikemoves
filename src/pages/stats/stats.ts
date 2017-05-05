@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Content, NavController } from 'ionic-angular';
+import { Content, Events, NavController } from 'ionic-angular';
 import { Trip } from '../../app/trip';
 import { Trips } from '../../app/trips';
 import { TripStatsProvider, TripStats } from '../../app/stats';
@@ -90,11 +90,27 @@ export class StatsPage {
   private stats: TripStats;
   private tripsCount = '0';
   private charts: Chart[] = [];
+  private isActiveTab = false;
 
-  constructor(private navCtrl: NavController,
+  constructor(
+    private navCtrl: NavController,
+    private events: Events,
     private tripManager: Trips) {
     this.stats = new TripStats(this.provider);
+    this.events.subscribe('state:active', this.onActiveChange.bind(this));
+  }
+
+  ionViewWillEnter() {
+    this.isActiveTab = true;
     this.updateRange();
+  }
+
+  ionViewWillLeave() {
+    this.isActiveTab = false;
+  }
+
+  private onActiveChange(active: boolean) {
+    if (active && this.isActiveTab) this.updateRange();
   }
 
   private getStart() {
