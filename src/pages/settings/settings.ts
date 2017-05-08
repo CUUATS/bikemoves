@@ -6,6 +6,7 @@ import { Geo } from '../../app/geo';
 import { Remote } from '../../app/remote';
 import { CreditsPage } from '../credits/credits';
 import { TermsPage } from '../terms/terms';
+import { TutorialPage } from '../tutorial/tutorial';
 import { APP_VERSION } from '../../app/config';
 
 @Component({
@@ -47,6 +48,10 @@ export class SettingsPage {
   private saveProfile() {
     this.settings.saveProfile();
     this.remote.postUser(this.profile);
+  }
+
+  private openTutorial() {
+    this.navCtrl.push(TutorialPage);
   }
 
   private openTerms() {

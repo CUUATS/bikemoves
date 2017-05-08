@@ -22,6 +22,7 @@ import { TermsPage } from '../pages/terms/terms';
 import { TripDetailPage } from '../pages/trip-detail/trip-detail';
 import { TripFormPage } from '../pages/trip-form/trip-form';
 import { TripsPage } from '../pages/trips/trips';
+import { TutorialPage } from '../pages/tutorial/tutorial';
 import { File } from '@ionic-native/file';
 import { Device } from '@ionic-native/device';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
@@ -42,7 +43,8 @@ import { ChartistModule } from 'ng-chartist';
     TermsPage,
     TripDetailPage,
     TripFormPage,
-    TripsPage
+    TripsPage,
+    TutorialPage
   ],
   imports: [
     IonicModule.forRoot(BikeMoves),
@@ -62,7 +64,8 @@ import { ChartistModule } from 'ng-chartist';
     TermsPage,
     TripDetailPage,
     TripFormPage,
-    TripsPage
+    TripsPage,
+    TutorialPage
   ],
   providers: [
     {provide: ErrorHandler, useClass: IonicErrorHandler},
