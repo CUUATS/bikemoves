@@ -33,7 +33,7 @@ export class Geo extends Service {
   public locations = new Subject();
   public motion = new Subject();
   public currentLocation: Location;
-  public highAccuracy: boolean = null;
+  public highAccuracy = true;
 
   constructor(
       private locationManager: Locations,
@@ -107,8 +107,12 @@ export class Geo extends Service {
   		fastestLocationUpdateInterval: 5000,
       locationAuthorizationRequest: 'Always',
       locationAuthorizationAlert: {
+        titleWhenNotEnabled: 'Location Services are Disabled',
+        titleWhenOff: 'Location Services are Off',
         instructions: 'To record trips, you must enable ' +
-          '"Always" in the Location Services settings.'
+          '"Always" in the Location Services settings.',
+        cancelButton: 'Cancel',
+        settingsButton: 'Settings'
       },
   		locationUpdateInterval: 5000,
       maxRecordsToPersist: 0,
@@ -134,11 +138,6 @@ export class Geo extends Service {
   public requestAccuracy() {
     this.locationAccuracy.canRequest()
       .then((canRequest: boolean) => {
-        if (!canRequest) {
-          this.highAccuracy = false;
-          return;
-        }
-
         let accuracy = this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY;
         this.locationAccuracy.request(accuracy).then(
           () => this.highAccuracy = true,
