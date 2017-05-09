@@ -32,8 +32,10 @@ export class Geo extends Service {
   public activity = new Subject();
   public locations = new Subject();
   public motion = new Subject();
+  public currentActivity: messages.ActivityType;
   public currentLocation: Location;
   public highAccuracy = true;
+  private walkTimer: number;
 
   constructor(
       private locationManager: Locations,
@@ -61,7 +63,17 @@ export class Geo extends Service {
       (resolve, reject) => this.bgGeo.getState(resolve, reject));
   }
 
-  private onActivityChange(activity) {
+  private onActivityChange(activityName) {
+    let activity = Geo.ACTIVITIES[activityName],
+      bike = messages.ActivityType.BICYCLE;
+
+    if (this.currentActivity == bike && activity != bike) {
+      this.walkTimer = window.setTimeout(() => this.setMoving(false), 180000);
+    } else if (activity == bike && this.walkTimer) {
+      clearTimeout(this.walkTimer);
+    }
+
+    this.currentActivity = activity;
     this.activity.next(activity);
   }
 
