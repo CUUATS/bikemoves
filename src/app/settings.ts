@@ -6,6 +6,7 @@ import { bikemoves as messages } from './messages';
 
 export interface Preferences {
   autoRecord: boolean;
+  showTutorial: boolean;
 }
 
 export interface Profile {
@@ -91,7 +92,8 @@ export class Settings extends ObjectManager {
 
   public getPreferences(): Promise<Preferences> {
     return this.getSettings(Settings.PREFERENCES, {
-      autoRecord: true
+      autoRecord: true,
+      showTutorial: true
     });
   }
 

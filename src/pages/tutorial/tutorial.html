@@ -1,8 +1,15 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Help
+      <span *ngIf="modal">Introduction</span>
+      <span *ngIf="!modal">Help</span>
     </ion-title>
+    <ion-buttons end *ngIf="modal">
+      <button ion-button icon-left (click)="dismiss()">
+        <ion-icon name="close"></ion-icon>
+        Skip
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 

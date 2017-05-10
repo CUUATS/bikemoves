@@ -12,6 +12,7 @@ import { IncidentFormPage } from '../incident-form/incident-form';
 import { bikemoves as messages } from '../../app/messages';
 import { TripStats, TripStatsProvider } from '../../app/stats';
 import { TripDetailPage } from '../trip-detail/trip-detail';
+import { TutorialPage } from '../tutorial/tutorial';
 import { MILE } from '../../app/utils';
 import * as moment from 'moment';
 
@@ -59,11 +60,23 @@ export class MapPage implements TripStatsProvider {
     this.initMap();
     if (this.isStopped() && this.geo.currentLocation)
       this.onLocation(this.geo.currentLocation);
+    this.showTutorial();
   }
 
   ionViewWillLeave() {
     this.map.unassign();
     this.isActiveTab = false;
+  }
+
+  private showTutorial() {
+    this.settings.getPreferences().then((prefs) => {
+      if (prefs.showTutorial) {
+        let tutorialModal = this.modalCtrl.create(TutorialPage, {modal: true});
+        tutorialModal.present();
+        prefs.showTutorial = false;
+        this.settings.savePreferences();
+      }
+    });
   }
 
   private initMap() {

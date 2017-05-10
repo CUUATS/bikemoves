@@ -1,13 +1,18 @@
 import { Component } from '@angular/core';
-import { ViewController } from 'ionic-angular';
+import { NavParams, ViewController } from 'ionic-angular';
 
 @Component({
   selector: 'page-tutorial',
   templateUrl: 'tutorial.html'
 })
 export class TutorialPage {
+  private modal: boolean;
+
   constructor(
-    private viewCtrl: ViewController) {}
+    private navParams: NavParams,
+    private viewCtrl: ViewController) {
+      this.modal = this.navParams.get('modal');
+    }
 
   private dismiss() {
     this.viewCtrl.dismiss();
