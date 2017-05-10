@@ -79,8 +79,7 @@
       <p>
         The <strong>Stats</strong> tab shows statistics about your trips,
         like the number of miles, average speed, and greenhouse gas reduced.
-        You can view your riding statistics for the current week, month,
-        or year.
+        You can view your riding statistics for the week, month, or year.
       </p>
     </ion-slide>
     <ion-slide padding class="slide slide-settings">
@@ -99,7 +98,10 @@
         Happy Riding!
       </h1>
       <img class="illustration" src="assets/img/tutorial-conclusion.svg" alt="">
-      <button ion-button full (click)="dismiss()">Get Started</button>
+      <button ion-button full icon-left (click)="dismiss()">
+        <ion-icon name="bicycle"></ion-icon>
+        Get Started
+      </button>
     </ion-slide>
   </ion-slides>
 <ion-content>
