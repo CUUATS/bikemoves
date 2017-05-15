@@ -33,7 +33,7 @@ export class Map {
     center: new Location(-88.227203, 40.109403),
     icons: [],
     interactive: false,
-    path: new Path(),
+    path: null,
     zoom: 16
   };
   static ICON_TYPES = ['current', 'incident', 'origin', 'destination'];
@@ -369,6 +369,7 @@ export class Map {
 
   public assign(containerId: string, options: MapOptions) {
     this.options = extend(Map.DEFAULT_OPTIONS, options);
+    this.options.path = new Path();
     document.getElementById(containerId).appendChild(this.el);
     if (!this.map) {
       this.show();

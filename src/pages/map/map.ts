@@ -47,7 +47,6 @@ export class MapPage implements TripStatsProvider {
       private settings: Settings,
       private appState: State) {
     this.stats = new TripStats(this);
-    this.events.subscribe('trip:save', this.navigateToTripDetail.bind(this));
     this.events.subscribe('state:active', this.onActiveChange.bind(this));
     map.click.subscribe(this.onClick.bind(this));
     geo.motion.subscribe(this.onMotion.bind(this));
@@ -214,10 +213,6 @@ export class MapPage implements TripStatsProvider {
     this.distance = this.map.path.distance;
     this.activity = (this.geo.currentLocation) ?
       this.geo.currentLocation.activity : messages.ActivityType.STILL;
-  }
-
-  private navigateToTripDetail(saveInfo) {
-    if (saveInfo.insert && this.appState.active) this.navCtrl.parent.select(1);
   }
 
   startRecording() {
