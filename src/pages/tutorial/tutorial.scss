@@ -13,7 +13,7 @@ page-tutorial {
     margin: 0 auto;
     width: 75%;
   }
-  @media only screen and (min-width: 576px) {
+  @media only screen and (min-width: map-get($grid-breakpoints, sm)) {
     .illustration {
       left: 2.5%;
       height: 100%;

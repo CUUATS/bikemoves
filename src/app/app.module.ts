@@ -4,6 +4,7 @@ import { HttpModule } from '@angular/http';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { BikeMoves } from './app.component';
 import { Geo } from './geo';
+import { GroupPipe } from './pipe';
 import { Legacy } from './legacy';
 import { Locations } from './locations';
 import { Map } from './map';
@@ -35,6 +36,7 @@ import { ChartistModule } from 'ng-chartist';
   declarations: [
     BikeMoves,
     CreditsPage,
+    GroupPipe,
     IncidentFormPage,
     MapPage,
     SettingsPage,

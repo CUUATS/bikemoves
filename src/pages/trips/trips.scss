@@ -51,4 +51,9 @@ page-trips {
     top: -9999px;
     width: 400px;
   }
+  @media only screen and (min-width: map-get($grid-breakpoints, sm)) {
+    ion-card h2 {
+      font-size: 1em !important;
+    }
+  }
 }
