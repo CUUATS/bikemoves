@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { Events, ModalController, NavController } from 'ionic-angular';
+import { Events, ModalController, NavController, PopoverController } from 'ionic-angular';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { Geo } from '../../app/geo';
 import { Location } from '../../app/location';
@@ -10,6 +10,7 @@ import { Settings, Preferences } from '../../app/settings';
 import { State } from '../../app/state';
 import { IncidentFormPage } from '../incident-form/incident-form';
 import { bikemoves as messages } from '../../app/messages';
+import { LegendPage } from '../legend/legend';
 import { TripStats, TripStatsProvider } from '../../app/stats';
 import { TripDetailPage } from '../trip-detail/trip-detail';
 import { TutorialPage } from '../tutorial/tutorial';
@@ -44,6 +45,7 @@ export class MapPage implements TripStatsProvider {
       private modalCtrl: ModalController,
       private events: Events,
       private locationManager: Locations,
+      private popoverCtrl: PopoverController,
       private settings: Settings,
       private appState: State) {
     this.stats = new TripStats(this);
@@ -250,6 +252,11 @@ export class MapPage implements TripStatsProvider {
       IncidentFormPage, this.incidentLocation);
     incidentModal.onWillDismiss(() => this.stopReporting());
     incidentModal.present();
+  }
+
+  showLegend() {
+    let legendPopover = this.popoverCtrl.create(LegendPage);
+    legendPopover.present();
   }
 
   getDuration() {

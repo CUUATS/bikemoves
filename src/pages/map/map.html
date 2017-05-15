@@ -25,6 +25,9 @@
         <span *ngIf="!stateChangePending">Start</span>
         <span *ngIf="stateChangePending">Starting</span>
       </button>
+      <button ion-button icon-only *ngIf="isStopped()" (click)="showLegend()">
+        <ion-icon name="more"></ion-icon>
+      </button>
       <button ion-button icon-left *ngIf="isRecording()"
         (click)="stopRecording()" [disabled]="stateChangePending">
         <ion-icon name="checkmark"></ion-icon>

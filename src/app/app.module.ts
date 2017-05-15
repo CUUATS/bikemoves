@@ -15,6 +15,7 @@ import { Storage } from './storage';
 import { Trips } from './trips';
 import { CreditsPage } from '../pages/credits/credits';
 import { IncidentFormPage } from '../pages/incident-form/incident-form';
+import { LegendPage } from '../pages/legend/legend';
 import { MapPage } from '../pages/map/map';
 import { SettingsPage } from '../pages/settings/settings';
 import { StatsPage } from '../pages/stats/stats';
@@ -38,6 +39,7 @@ import { ChartistModule } from 'ng-chartist';
     CreditsPage,
     GroupPipe,
     IncidentFormPage,
+    LegendPage,
     MapPage,
     SettingsPage,
     StatsPage,
@@ -59,6 +61,7 @@ import { ChartistModule } from 'ng-chartist';
     BikeMoves,
     CreditsPage,
     IncidentFormPage,
+    LegendPage,
     MapPage,
     SettingsPage,
     StatsPage,
