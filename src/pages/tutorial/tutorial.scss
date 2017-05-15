@@ -13,4 +13,18 @@ page-tutorial {
     margin: 0 auto;
     width: 75%;
   }
+  @media only screen and (min-width: 576px) {
+    .illustration {
+      left: 2.5%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      width: 25%;
+    }
+    h1,
+    p {
+      margin-left: 30%;
+      text-align: center;
+    }
+  }
 }
