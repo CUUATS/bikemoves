@@ -21,6 +21,24 @@ page-trips {
       }
     }
   }
+  ion-item-sliding {
+    .trip-summary {
+      font-size: 0.9em;
+      .summary-item {
+        padding: 5px 0 0;
+      }
+    }
+    &.trip-submitted {
+      img {
+        border: 1px solid color($colors, light);
+      }
+    }
+    &.trip-not-submitted {
+      img {
+        border: 1px solid color($colors, danger);
+      }
+    }
+  }
   .icon-large {
     font-size: 6em;
   }

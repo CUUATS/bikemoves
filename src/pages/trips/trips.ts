@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
-import { AlertController, Events, ModalController, NavController, ToastController } from 'ionic-angular';
+import { AlertController, Events, ModalController, NavController, PopoverController, ToastController } from 'ionic-angular';
 import { Trip } from '../../app/trip';
 import { Trips } from '../../app/trips';
 import { Map } from '../../app/map';
 import { Path } from '../../app/path';
+import { Preferences, Settings } from '../../app/settings';
 import { TripDetailPage } from '../trip-detail/trip-detail';
 import { TripFormPage } from '../trip-form/trip-form';
+import { TripsOptionsPage } from '../trips-options/trips-options';
 import { notify } from '../../app/utils';
 
 @Component({
@@ -16,6 +18,7 @@ export class TripsPage {
   private trips: Trip[] = [];
   private hasTrips: boolean;
   private isActiveTab = false;
+  private listView: boolean;
 
   constructor(
     private navCtrl: NavController,
@@ -23,9 +26,13 @@ export class TripsPage {
     private events: Events,
     private tripManager: Trips,
     private modalCtrl: ModalController,
+    private popoverCtrl: PopoverController,
+    private settings: Settings,
     private toastCtrl: ToastController,
     private map: Map) {
       this.events.subscribe('state:active', this.onActiveChange.bind(this));
+      this.events.subscribe('settings:preferences', this.updateView.bind(this));
+      this.settings.getPreferences().then(this.updateView.bind(this));
     }
 
   ionViewWillEnter() {
@@ -107,5 +114,14 @@ export class TripsPage {
         this.trips.splice(this.trips.indexOf(trip), 1);
         notify(this.toastCtrl, 'Trip deleted.');
       });
+  }
+
+  private showOptions() {
+    let optionsPopover = this.popoverCtrl.create(TripsOptionsPage);
+    optionsPopover.present();
+  }
+
+  private updateView(prefs: Preferences) {
+    this.listView = prefs.tripsListView;
   }
 }

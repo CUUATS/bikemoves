@@ -1,0 +1,13 @@
+<ion-list radio-group [(ngModel)]="viewType"
+    *ngIf="prefs" (ionChange)="updatePreferences()">
+  <ion-item>
+    <ion-icon name="grid" item-left></ion-icon>
+    <ion-label>Grid View</ion-label>
+    <ion-radio value="grid"></ion-radio>
+  </ion-item>
+  <ion-item>
+    <ion-icon name="list" item-left></ion-icon>
+    <ion-label>List View</ion-label>
+    <ion-radio value="list"></ion-radio>
+  </ion-item>
+</ion-list>

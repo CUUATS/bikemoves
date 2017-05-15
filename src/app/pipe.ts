@@ -4,9 +4,12 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class GroupPipe implements PipeTransform {
   transform(value: any[], groupSize: string): any[] {
     let size = parseInt(groupSize),
+      start = 0,
       groups = [];
-    while (value.length > 0)
-      groups.push(value.splice(0, size));
+    while (start < value.length) {
+      groups.push(value.slice(start, start + size));
+      start += size;
+    }
     return groups;
   }
 }

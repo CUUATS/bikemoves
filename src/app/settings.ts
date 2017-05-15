@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Events } from 'ionic-angular';
 import { ObjectManager } from './object_manager';
 import { Storage } from './storage';
 import { SettingsGroup } from './settings_group';
@@ -7,6 +8,7 @@ import { bikemoves as messages } from './messages';
 export interface Preferences {
   autoRecord: boolean;
   showTutorial: boolean;
+  tripsListView: boolean;
 }
 
 export interface Profile {
@@ -51,7 +53,9 @@ export class Settings extends ObjectManager {
   ];
   protected cache: any = {};
 
-  constructor(protected storage: Storage) {
+  constructor(
+      private events: Events,
+      protected storage: Storage) {
     super();
   }
 
@@ -87,13 +91,15 @@ export class Settings extends ObjectManager {
   private saveSettings(name: string) {
     let group = this.cache[name];
     if (!group) return Promise.reject('No settings group named ' + name);
-    return this.save(group);
+    return this.save(group)
+      .then(() => this.events.publish('settings:' + name, group.data));
   }
 
   public getPreferences(): Promise<Preferences> {
     return this.getSettings(Settings.PREFERENCES, {
       autoRecord: true,
-      showTutorial: true
+      showTutorial: true,
+      tripsListView: true
     });
   }
 

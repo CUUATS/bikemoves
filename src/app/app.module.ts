@@ -23,6 +23,7 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { TermsPage } from '../pages/terms/terms';
 import { TripDetailPage } from '../pages/trip-detail/trip-detail';
 import { TripFormPage } from '../pages/trip-form/trip-form';
+import { TripsOptionsPage } from '../pages/trips-options/trips-options';
 import { TripsPage } from '../pages/trips/trips';
 import { TutorialPage } from '../pages/tutorial/tutorial';
 import { File } from '@ionic-native/file';
@@ -47,6 +48,7 @@ import { ChartistModule } from 'ng-chartist';
     TermsPage,
     TripDetailPage,
     TripFormPage,
+    TripsOptionsPage,
     TripsPage,
     TutorialPage
   ],
@@ -69,6 +71,7 @@ import { ChartistModule } from 'ng-chartist';
     TermsPage,
     TripDetailPage,
     TripFormPage,
+    TripsOptionsPage,
     TripsPage,
     TutorialPage
   ],
