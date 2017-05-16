@@ -19,13 +19,14 @@
 </ion-header>
 
 <ion-content>
-  <p padding>
-    Help improve the bike network by sharing your trip with local planners
-    and officials! The details of your trip will be kept private.
-  </p>
   <ion-list no-margin>
     <ion-item-group>
-      <ion-item-divider color="light">Trip Information</ion-item-divider>
+      <ion-item>
+        <p text-wrap>
+          Help improve the bike network by sharing your trip with
+          local planners! The details of your trip will be kept private.
+        </p>
+      </ion-item>
       <ion-item>
         <ion-label>I biked from</ion-label>
         <ion-select [(ngModel)]="trip.origin">
@@ -40,8 +41,9 @@
       </ion-item>
       <ion-item>
         <ion-label>I took my bike on a bus.</ion-label>
-        <ion-checkbox [(ngModel)]="trip.transit"></ion-checkbox>
+        <ion-toggle [(ngModel)]="trip.transit"></ion-toggle>
       </ion-item>
     </ion-item-group>
   </ion-list>
+  <img *ngIf="trip.imageUrl" src="{{trip.imageUrl}}" alt="An image of the trip">
 </ion-content>
