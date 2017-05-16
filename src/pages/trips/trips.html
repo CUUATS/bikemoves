@@ -82,6 +82,7 @@
           <ion-row>
             <ion-col col-6 col-sm><span class="summary-item time"><ion-icon name="stopwatch"></ion-icon><span class="summary-value">{{trip.stats.formatDuration()}}</span></span></ion-col>
             <ion-col col-6 col-sm><span class="summary-item distance"><ion-icon name="pin"></ion-icon><span class="summary-value">{{trip.stats.formatDistance()}} mi</span></span></ion-col>
+            <ion-col col-12 col-sm *ngIf="!trip.submitted"><span class="summary-item upload"><ion-icon name="cloud-upload" color="danger"></ion-icon><span class="summary-value">Swipe left to upload</span></span></ion-col>
             <ion-col col-12 col-sm *ngIf="trip.origin > 0 || trip.destination > 0"><span class="summary-item origin"><ion-icon name="bicycle"></ion-icon><span class="summary-value">{{trip.formatOrigin()}} <ion-icon name="arrow-forward"></ion-icon> {{trip.formatDestination()}}</span></span></ion-col>
           </ion-row>
         </ion-grid>

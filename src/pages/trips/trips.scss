@@ -38,6 +38,9 @@ page-trips {
         border: 1px solid color($colors, danger);
       }
     }
+    .upload .summary-value {
+      color: color($colors, danger);
+    }
   }
   .icon-large {
     font-size: 6em;
