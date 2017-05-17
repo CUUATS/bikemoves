@@ -135,7 +135,6 @@ export class MapPage implements TripStatsProvider {
   }
 
   private onActiveChange(active: boolean) {
-    this.appState.active = active;
     if (this.appState.active) {
       this.locationManager.filter('trip_id IS NULL', 'time ASC')
         .then((locations) => {
