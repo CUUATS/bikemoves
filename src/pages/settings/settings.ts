@@ -14,12 +14,12 @@ import { APP_VERSION } from '../../app/config';
   templateUrl: 'settings.html'
 })
 export class SettingsPage {
-  preferences: Preferences;
-  profile: Profile;
-  ageOptions = getOptions(Settings.AGES);
-  experienceOptions = getOptions(Settings.EXPERIENCE_LEVELS);
-  genderOptions = getOptions(Settings.GENDERS);
-  private version = APP_VERSION;
+  public preferences: Preferences;
+  public profile: Profile;
+  public ageOptions = getOptions(Settings.AGES);
+  public experienceOptions = getOptions(Settings.EXPERIENCE_LEVELS);
+  public genderOptions = getOptions(Settings.GENDERS);
+  public version = APP_VERSION;
 
   constructor(
       private navCtrl: NavController,
@@ -36,29 +36,29 @@ export class SettingsPage {
       .then((profile) => this.profile = profile);
   }
 
-  private explain(message: string) {
+  public explain(message: string) {
     notify(this.toastCtrl, message, 4000);
   }
 
-  private savePreferences() {
+  public savePreferences() {
     this.settings.savePreferences();
     return this.geo.setGeolocationEnabled(this.preferences.autoRecord);
   }
 
-  private saveProfile() {
+  public saveProfile() {
     this.settings.saveProfile();
     this.remote.postUser(this.profile);
   }
 
-  private openTutorial() {
+  public openTutorial() {
     this.navCtrl.push(TutorialPage);
   }
 
-  private openTerms() {
+  public openTerms() {
     this.navCtrl.push(TermsPage);
   }
 
-  private openCredits() {
+  public openCredits() {
     this.navCtrl.push(CreditsPage);
   }
 

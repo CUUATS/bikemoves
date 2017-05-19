@@ -14,7 +14,7 @@ export class TutorialPage {
       this.modal = this.navParams.get('modal');
     }
 
-  private dismiss() {
+  public dismiss() {
     this.viewCtrl.dismiss();
   }
 }

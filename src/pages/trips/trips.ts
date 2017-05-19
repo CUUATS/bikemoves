@@ -63,7 +63,7 @@ export class TripsPage {
     });
   }
 
-  private goToMap() {
+  public goToMap() {
     this.navCtrl.parent.select(0);
   }
 
@@ -82,16 +82,16 @@ export class TripsPage {
       .then((blob) => this.tripManager.saveImage(trip, blob));
   }
 
-  private goToTripDetail(trip: Trip) {
+  public goToTripDetail(trip: Trip) {
     this.navCtrl.push(TripDetailPage, trip);
   }
 
-  private showTripForm(trip) {
+  public showTripForm(trip) {
     let modal = this.modalCtrl.create(TripFormPage, trip);
     modal.present();
   }
 
-  private confirmDelete(trip: Trip) {
+  public confirmDelete(trip: Trip) {
     let confirm = this.alertCtrl.create({
       title: 'Delete this trip?',
       message: 'Deleting a trip cannot be undone.',
@@ -118,7 +118,7 @@ export class TripsPage {
       });
   }
 
-  private showOptions() {
+  public showOptions() {
     let optionsPopover = this.popoverCtrl.create(TripsOptionsPage);
     optionsPopover.present();
   }

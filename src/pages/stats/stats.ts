@@ -125,7 +125,7 @@ export class StatsPage {
     return ['trips', 'speed'].indexOf(stat) === -1;
   }
 
-  private formatRange() {
+  public formatRange() {
     return {
       week: 'Week',
       month: 'Month',
@@ -267,12 +267,12 @@ export class StatsPage {
     });
   }
 
-  private scrollTo(stat: string) {
+  public scrollTo(stat: string) {
     let card = (document as any).getElementById('chart-' + stat);
     this.content.scrollTo(0, card.offsetTop);
   }
 
-  private scrollToTop() {
+  public scrollToTop() {
     this.content.scrollToTop();
   }
 

@@ -9,7 +9,7 @@ import { notify } from '../../app/utils';
   templateUrl: 'incident-form.html'
 })
 export class IncidentFormPage {
-  private categories = [
+  public categories = [
     'Crash',
     'Hazard',
     'Maintenance Issue',
@@ -29,7 +29,7 @@ export class IncidentFormPage {
     this.viewCtrl.dismiss();
   }
 
-  private sendIncident() {
+  public sendIncident() {
     this.remote.postIncident(this.incident)
       .then(() => notify(this.toastCtrl, 'Report sent successfully!'))
       .catch(() => notify(this.toastCtrl,

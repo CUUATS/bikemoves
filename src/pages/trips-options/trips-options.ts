@@ -19,7 +19,7 @@ export class TripsOptionsPage {
       });
   }
 
-  private updatePreferences() {
+  public updatePreferences() {
     if (this.prefs.tripsListView != (this.viewType == 'list')) {
       this.prefs.tripsListView = this.viewType == 'list';
       this.settings.savePreferences();

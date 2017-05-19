@@ -95,37 +95,37 @@ export class MapPage implements TripStatsProvider {
     this.map.assign('map', options);
   }
 
-  private isStopped() {
+  public isStopped() {
     return this.state === MapPage.STATE_STOPPED;
   }
 
-  private isRecording() {
+  public isRecording() {
     return this.state === MapPage.STATE_RECORDING;
   }
 
-  private isReporting() {
+  public isReporting() {
     return this.state === MapPage.STATE_REPORTING;
   }
 
-  private isStill() {
+  public isStill() {
     return this.activity === messages.ActivityType.STILL;
   }
 
-  private isOnFoot() {
+  public isOnFoot() {
     return this.activity === messages.ActivityType.FOOT ||
       this.activity === messages.ActivityType.WALK ||
       this.activity === messages.ActivityType.RUN;
   }
 
-  private isOnBicycle() {
+  public isOnBicycle() {
     return this.activity === messages.ActivityType.BICYCLE;
   }
 
-  private isInVehicle() {
+  public isInVehicle() {
     return this.activity === messages.ActivityType.VEHICLE;
   }
 
-  private isUnknownActivity() {
+  public isUnknownActivity() {
     return this.activity === messages.ActivityType.UNKNOWN;
   }
 

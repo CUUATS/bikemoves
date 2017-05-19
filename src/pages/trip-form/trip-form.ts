@@ -16,7 +16,7 @@ export class TripFormPage {
   private trip: Trip;
   private isUploading = false;
   private odCache: number[];
-  private locationTypeOptions = getOptions(Location.LOCATION_TYPES);
+  public locationTypeOptions = getOptions(Location.LOCATION_TYPES);
 
   constructor(
       private navParams: NavParams,
@@ -45,7 +45,7 @@ export class TripFormPage {
     this.viewCtrl.dismiss();
   }
 
-  private uploadTrip() {
+  public uploadTrip() {
     this.isUploading = true;
     this.remote.postTrip(this.trip)
       .then(() => {
