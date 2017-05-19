@@ -12,7 +12,6 @@ import { IncidentFormPage } from '../incident-form/incident-form';
 import { bikemoves as messages } from '../../app/messages';
 import { LegendPage } from '../legend/legend';
 import { TripStats, TripStatsProvider } from '../../app/stats';
-import { TripDetailPage } from '../trip-detail/trip-detail';
 import { TutorialPage } from '../tutorial/tutorial';
 import { MILE } from '../../app/utils';
 import * as moment from 'moment';
