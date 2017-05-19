@@ -58,10 +58,9 @@ export class MapPage implements TripStatsProvider {
 
   ionViewDidEnter() {
     console.log('Map Page: entered view');
-    this.isActiveTab = true;
     this.initMap();
-    if (this.isStopped() && this.geo.currentLocation)
-      this.onLocation(this.geo.currentLocation);
+    this.isActiveTab = true; // Only set AFTER the map is initialized.
+    this.updateMap();
     this.showTutorial();
   }
 
@@ -136,26 +135,28 @@ export class MapPage implements TripStatsProvider {
     this.events.publish('map:state', this.state);
   }
 
+  private updateMap() {
+    this.locationManager.filter('trip_id IS NULL', 'time ASC')
+      .then((locations) => {
+        this.map.path = new Path(locations);
+        this.updateDistanceActivity();
+      });
+    if (this.geo.currentLocation) this.map.center = this.geo.currentLocation;
+    this.updateIcons();
+  }
+
+  private isMapVisible() {
+    return this.appState.active && this.isActiveTab;
+  }
+
   private onActiveChange(active: boolean) {
     console.log('App: active change', active);
-    if (this.appState.active) {
-      this.locationManager.filter('trip_id IS NULL', 'time ASC')
-        .then((locations) => {
-          this.map.path = new Path(locations);
-          this.updateDistanceActivity();
-        });
-      if (this.geo.currentLocation) this.map.center = this.geo.currentLocation;
-      this.updateIcons();
-
-      // Select the map tab if a trip is in progress.
-      if (this.isRecording() && !this.isActiveTab)
-        this.navCtrl.parent.select(0);
-    }
+    if (this.isMapVisible()) this.updateMap();
     this.updateTimerSubscription();
   }
 
   private onLocation(location) {
-    if (!this.map || !this.appState.active) return;
+    if (!this.isMapVisible()) return;
     this.map.center = location;
     this.updateIcons();
     if (this.isRecording()) this.map.addLocation(location);
@@ -165,11 +166,14 @@ export class MapPage implements TripStatsProvider {
   private onMotion(moving) {
     this.stateChangePending = false;
     this.setStateFromMoving(moving);
-    if (!moving) this.map.path = null;
     this.startTime = (moving) ? moment() : null;
     this.duration = moment.duration(0);
     this.updateDistanceActivity();
     this.updateTimerSubscription();
+    // Clear the map path if motion has stopped and the map is visible.
+    if (!moving && this.isMapVisible()) this.map.path = null;
+    // Select the map tab if a trip is in progress.
+    if (moving && !this.isActiveTab) this.navCtrl.parent.select(0);
   }
 
   private setStateFromMoving(moving) {
