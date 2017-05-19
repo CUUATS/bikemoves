@@ -57,6 +57,7 @@ export class MapPage implements TripStatsProvider {
   }
 
   ionViewDidEnter() {
+    console.log('Map Page: entered view');
     this.isActiveTab = true;
     this.initMap();
     if (this.isStopped() && this.geo.currentLocation)
@@ -65,6 +66,7 @@ export class MapPage implements TripStatsProvider {
   }
 
   ionViewWillLeave() {
+    console.log('Map Page: will leave view');
     this.map.unassign();
     this.isActiveTab = false;
   }
@@ -135,6 +137,7 @@ export class MapPage implements TripStatsProvider {
   }
 
   private onActiveChange(active: boolean) {
+    console.log('App: active change', active);
     if (this.appState.active) {
       this.locationManager.filter('trip_id IS NULL', 'time ASC')
         .then((locations) => {

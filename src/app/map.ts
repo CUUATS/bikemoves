@@ -130,6 +130,7 @@ export class Map {
   }
 
   private initMap() {
+    console.log('Map: initializing map');
     // Create the map.
     this.map = new mapboxgl.Map({
         container: this.el,
@@ -148,6 +149,7 @@ export class Map {
     this.addGeoJSONSource(Map.ICONS_SOURCE, this.getIconsData());
     Map.LAYERS.forEach((layer) => this.map.addLayer(layer));
 
+    console.log('Map: loaded');
     this.loaded = true;
     this.path = this.options.path;
     this.icons = this.options.icons;
@@ -248,46 +250,56 @@ export class Map {
   }
 
   get center() {
+    console.log('Map: getting center');
     return Location.fromLngLat(this.map.getCenter());
   }
 
   set center(location: Location) {
+    console.log('Map: setting center', location);
     this.map.setCenter(location.toLngLat());
   }
 
   get icons() {
+    console.log('Map: getting icons');
     return this.options.icons;
   }
 
   set icons(icons: Icon[]) {
+    console.log('Map: setting icons', icons);
     this.options.icons = icons;
     if (this.loaded)
       this.map.getSource(Map.ICONS_SOURCE).setData(this.getIconsData());
   }
 
   get interactive() {
+    console.log('Map: getting interactive');
     return this.options.interactive;
   }
 
   set interactive(interactive: boolean) {
+    console.log('Map: setting interactive', interactive);
     this.options.interactive = interactive;
   }
 
   get path() {
+    console.log('Map: getting path');
     return this.options.path;
   }
 
   set path(path: Path | null) {
+    console.log('Map: getting path');
     this.options.path = (path) ? path : new Path();
     if (this.loaded)
       this.map.getSource(Map.TRIP_SOURCE).setData(this.getTripData());
   }
 
   get zoom() {
+    console.log('Map: getting zoom');
     return this.map.getZoom();
   }
 
   set zoom(zoom) {
+    console.log('Map: setting zoom', zoom);
     this.map.setZoom(zoom);
   }
 
@@ -359,6 +371,7 @@ export class Map {
   }
 
   public reset() {
+    console.log('Map: resetting');
     this.pathImageQueue = [];
     this.center = this.options.center;
     this.interactive = this.options.interactive;
@@ -368,6 +381,7 @@ export class Map {
   }
 
   public assign(containerId: string, options: MapOptions) {
+    console.log('Map: assigning to container', containerId);
     this.options = extend(Map.DEFAULT_OPTIONS, options);
     this.options.path = new Path();
     document.getElementById(containerId).appendChild(this.el);
@@ -382,6 +396,7 @@ export class Map {
   }
 
   public unassign() {
+    console.log('Map: unassigning');
     this.hide();
     document.body.appendChild(this.el);
   }
