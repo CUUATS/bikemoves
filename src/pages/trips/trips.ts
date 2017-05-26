@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AlertController, Events, ModalController, NavController, PopoverController, ToastController } from 'ionic-angular';
+import { File } from '@ionic-native/file';
 import { Trip } from '../../app/trip';
 import { Trips } from '../../app/trips';
 import { Map } from '../../app/map';
@@ -16,14 +17,16 @@ import { notify } from '../../app/utils';
 })
 export class TripsPage {
   private trips: Trip[] = [];
-  private hasTrips: boolean;
   private isActiveTab = false;
   private listView: boolean;
+  private imageURLs = [];
+  private hasTrips: boolean;
 
   constructor(
     private navCtrl: NavController,
     private alertCtrl: AlertController,
     private events: Events,
+    private file: File,
     private tripManager: Trips,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
@@ -50,15 +53,13 @@ export class TripsPage {
   }
 
   private updateTrips() {
-    this.tripManager.all('start_time DESC').then((trips) => {
-      if (trips.length) {
-        this.hasTrips = true;
+    let getTrips = this.tripManager.all('start_time DESC').then((trips) => {
         this.trips = trips;
-        this.loadTripImages();
-      } else {
-        this.hasTrips = false;
-      }
-    });
+        this.hasTrips = trips.length > 0;
+      }),
+      getImages = this.loadTripImages();
+    return Promise.all([getTrips, getImages])
+      .then(() => this.createTripImages());
   }
 
   public goToMap() {
@@ -66,26 +67,54 @@ export class TripsPage {
   }
 
   private loadTripImages() {
-    this.trips.forEach((trip) => {
-      if (!trip.imageUrl) this.createTripImage(trip);
-    });
+    return this.file.listDir(this.file.dataDirectory, 'images')
+      .catch((err) => {
+        if (err.code !== 1) throw err;
+      }).then((entries) => {
+        if (!entries) return;
+        entries.forEach((entry) => {
+          let matches = entry.name.match(/trip-(\d+)\.jpg/);
+          if (matches) this.imageURLs[parseInt(matches[1])] = entry.nativeURL;
+        });
+      });
   }
 
-  private createTripImage(trip) {
+  public getImageURL(trip: Trip, defaultURL: string) {
+    let url = this.imageURLs[trip.id];
+    return (url) ? url : defaultURL;
+  }
+
+  private createTripImages() {
+    if (this.hasTrips) {
+      this.trips.forEach((trip) => {
+        if (!this.imageURLs[trip.id])
+          this.createTripImage(trip);
+      });
+    }
+  }
+
+  private createTripImage(trip: Trip) {
     this.map.assign('trip-image-map', {
       interactive: false
     });
     this.tripManager.getLocations(trip)
       .then((locations) => this.map.createPathImage(new Path(locations)))
-      .then((blob) => this.tripManager.saveImage(trip, blob));
+      .then((blob) => this.tripManager.saveImage(trip, blob))
+      .then((entry) => this.imageURLs[trip.id] = entry.nativeURL);
   }
 
   public goToTripDetail(trip: Trip) {
-    this.navCtrl.push(TripDetailPage, trip);
+    this.navCtrl.push(TripDetailPage, {
+      trip: trip,
+      imageURL: this.imageURLs[trip.id]
+    });
   }
 
   public showTripForm(trip) {
-    let modal = this.modalCtrl.create(TripFormPage, trip);
+    let modal = this.modalCtrl.create(TripFormPage, {
+      trip: trip,
+      imageURL: this.imageURLs[trip.id]
+    });
     modal.present();
   }
 
@@ -111,7 +140,8 @@ export class TripsPage {
   private deleteTrip(trip) {
     this.tripManager.delete(trip)
       .then(() => {
-        this.trips.splice(this.trips.indexOf(trip), 1);
+        if (this.imageURLs[trip.id]) delete this.imageURLs[trip.id];
+        this.updateTrips();
         notify(this.toastCtrl, 'Trip deleted.');
       });
   }

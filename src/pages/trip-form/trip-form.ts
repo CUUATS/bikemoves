@@ -17,6 +17,7 @@ export class TripFormPage {
   private isUploading = false;
   private odCache: number[];
   public locationTypeOptions = getOptions(Location.LOCATION_TYPES);
+  public imageURL : string;
 
   constructor(
       private navParams: NavParams,
@@ -25,7 +26,8 @@ export class TripFormPage {
       private locationManager: Locations,
       private tripManager: Trips,
       private remote: Remote) {
-    this.trip = navParams.data;
+    this.trip = navParams.get('trip');
+    this.imageURL = navParams.get('imageURL');
     this.odCache = [this.trip.origin, this.trip.destination];
     this.guessODTypes();
   }

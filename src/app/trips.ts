@@ -20,8 +20,7 @@ export class Trips extends ObjectManager {
     'transit',
     'submitted',
     'desired_accuracy',
-    'app_version',
-    'image_url'
+    'app_version'
   ];
 
   constructor(
@@ -43,8 +42,7 @@ export class Trips extends ObjectManager {
       row.transit === 1,
       row.submitted === 1,
       row.desired_accuracy,
-      row.app_version,
-      row.image_url
+      row.app_version
     )
   }
 
@@ -58,19 +56,16 @@ export class Trips extends ObjectManager {
       + trip.transit,
       + trip.submitted,
       trip.desiredAccuracy,
-      trip.appVersion,
-      trip.imageUrl
+      trip.appVersion
     ];
   }
 
-  protected imagePath(trip) {
+  protected imagePath(trip: Trip) {
     return `images/trip-${trip.id}.jpg`;
   }
 
   public delete(trip: Trip) {
-    let imageDelete = (trip.imageUrl) ?
-        this.deleteImage(trip) : Promise.resolve();
-    return Promise.all([imageDelete, super.delete(trip)])
+    return Promise.all([this.deleteImage(trip), super.delete(trip)])
       .then(() => this.events.publish('trip:delete'));
   }
 
@@ -86,22 +81,22 @@ export class Trips extends ObjectManager {
     });
   }
 
-  public deleteImage(trip) {
+  public deleteImage(trip: Trip) {
     return this.file.removeFile(
-      this.file.dataDirectory, this.imagePath(trip));
+        this.file.dataDirectory, this.imagePath(trip))
+      .catch((err) => {
+        if (err.code !== 1) throw err;
+      });
   }
 
   public saveImage(trip: Trip, blob) {
     return this.file.createDir(this.file.dataDirectory, 'images', false)
-      .catch((err) => { if (err.code !== 12) throw err })
-      .then<FileEntry>(() => this.file.writeFile(
+      .catch((err) => {
+        if (err.code !== 12) throw err;
+      }).then<FileEntry>(() => this.file.writeFile(
         this.file.dataDirectory, this.imagePath(trip), blob, {
           replace: true
-        }))
-      .then((entry) => {
-        trip.imageUrl = entry.nativeURL;
-        return this.save(trip);
-      });
+        }));
   }
 
   public getLocations(trip: Trip): Promise<Location[]> {
@@ -129,7 +124,6 @@ Storage.addMigration(1, `
     transit INTEGER DEFAULT 0,
     submitted INTEGER DEFAULT 0,
     desired_accuracy INTEGER NOT NULL DEFAULT 0,
-    app_version TEXT NOT NULL,
-    image_url TEXT
+    app_version TEXT NOT NULL
   )
 `);

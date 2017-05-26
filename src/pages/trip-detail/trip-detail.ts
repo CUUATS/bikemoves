@@ -12,13 +12,15 @@ import { TripFormPage } from '../trip-form/trip-form';
 })
 export class TripDetailPage {
   trip: Trip;
+  imageURL: string;
 
   constructor(
     private navParams: NavParams,
     private modalCtrl: ModalController,
     private tripManager: Trips,
     private map: Map) {
-    this.trip = navParams.data;
+    this.trip = navParams.get('trip');
+    this.imageURL = navParams.get('imageURL');
   }
 
   ionViewDidEnter() {
@@ -47,7 +49,10 @@ export class TripDetailPage {
   }
 
   showTripForm() {
-    let modal = this.modalCtrl.create(TripFormPage, this.trip);
+    let modal = this.modalCtrl.create(TripFormPage, {
+      trip: this.trip,
+      imageURL: this.imageURL
+    });
     modal.present();
   }
 }

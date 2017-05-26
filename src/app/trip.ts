@@ -30,8 +30,7 @@ export class Trip extends Persistent implements TripStatsProvider {
     public transit: boolean = false,
     public submitted: boolean = false,
     public desiredAccuracy: number = 0,
-    public appVersion: string = APP_VERSION,
-    public imageUrl: string = null) {
+    public appVersion: string = APP_VERSION) {
       super();
       this.stats = new TripStats(this);
     }
