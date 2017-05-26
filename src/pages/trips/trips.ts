@@ -36,13 +36,11 @@ export class TripsPage {
     }
 
   ionViewWillEnter() {
-    console.log('Trips Page: will enter view');
     this.isActiveTab = true;
     this.updateTrips();
   }
 
   ionViewWillLeave() {
-    console.log('Trips Page: will leave view');
     this.isActiveTab = false;
     this.map.unassign();
   }
