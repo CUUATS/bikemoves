@@ -22,7 +22,6 @@ export class TripDetailPage {
   }
 
   ionViewDidEnter() {
-    console.log('Trip Detail Page: entered view');
     this.map.assign('trip-detail-map', {
       interactive: false
     });
@@ -43,7 +42,6 @@ export class TripDetailPage {
   }
 
   ionViewWillLeave() {
-    console.log('Trip Detail Page: will leave view');
     this.map.unassign();
     this.map.icons = [];
   }

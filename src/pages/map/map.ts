@@ -56,7 +56,6 @@ export class MapPage implements TripStatsProvider {
   }
 
   ionViewDidEnter() {
-    console.log('Map Page: entered view');
     this.initMap();
     this.isActiveTab = true; // Only set AFTER the map is initialized.
     this.updateMap();
@@ -64,7 +63,6 @@ export class MapPage implements TripStatsProvider {
   }
 
   ionViewWillLeave() {
-    console.log('Map Page: will leave view');
     this.map.unassign();
     this.isActiveTab = false;
   }
@@ -149,7 +147,6 @@ export class MapPage implements TripStatsProvider {
   }
 
   private onActiveChange(active: boolean) {
-    console.log('App: active change', active);
     if (this.isMapVisible()) this.updateMap();
     this.updateTimerSubscription();
   }
