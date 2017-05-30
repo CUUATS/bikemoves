@@ -28,7 +28,6 @@
         "chartist": "^0.11.0",
         "cordova-android": "~6.1.2",
         "cordova-background-geolocation": "git+https://github.com/transistorsoft/cordova-background-geolocation.git#2.7.1",
-        "cordova-plugin-console": "~1.0.5",
         "cordova-plugin-device": "~1.1.4",
         "cordova-plugin-file": "~4.3.2",
         "cordova-plugin-request-location-accuracy": "~2.2.1",
@@ -98,7 +97,6 @@
             "cordova-background-geolocation": {
                 "LICENSE": "61500f38e27b9bbad808b9c6222bda92828081703445386ecf023ff1f54ecd0c"
             },
-            "cordova-plugin-console": {},
             "cordova-plugin-device": {},
             "cordova-plugin-file": {},
             "cordova-plugin-request-location-accuracy": {},
