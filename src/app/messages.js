@@ -20,9 +20,7 @@ $root.bikemoves = (function() {
 
     /**
      * LocationType enum.
-     * @name LocationType
-     * @memberof bikemoves
-     * @enum {number}
+     * @enum {string}
      * @property {number} NOT_SPECIFIED=0 NOT_SPECIFIED value
      * @property {number} HOME=1 HOME value
      * @property {number} WORK=2 WORK value
@@ -45,9 +43,7 @@ $root.bikemoves = (function() {
 
     /**
      * ActivityType enum.
-     * @name ActivityType
-     * @memberof bikemoves
-     * @enum {number}
+     * @enum {string}
      * @property {number} UNKNOWN=0 UNKNOWN value
      * @property {number} STILL=1 STILL value
      * @property {number} FOOT=2 FOOT value
@@ -70,9 +66,7 @@ $root.bikemoves = (function() {
 
     /**
      * EventType enum.
-     * @name EventType
-     * @memberof bikemoves
-     * @enum {number}
+     * @enum {string}
      * @property {number} LOCATION=0 LOCATION value
      * @property {number} MOTION=1 MOTION value
      * @property {number} GEOFENCE=2 GEOFENCE value
@@ -91,9 +85,7 @@ $root.bikemoves = (function() {
 
     /**
      * Gender enum.
-     * @name Gender
-     * @memberof bikemoves
-     * @enum {number}
+     * @enum {string}
      * @property {number} NOT_SPECIFIED=0 NOT_SPECIFIED value
      * @property {number} MALE=1 MALE value
      * @property {number} FEMALE=2 FEMALE value
@@ -110,9 +102,7 @@ $root.bikemoves = (function() {
 
     /**
      * Age enum.
-     * @name Age
-     * @memberof bikemoves
-     * @enum {number}
+     * @enum {string}
      * @property {number} NOT_SPECIFIED=0 NOT_SPECIFIED value
      * @property {number} AGE_UNDER_15=1 AGE_UNDER_15 value
      * @property {number} AGE_15_TO_19=2 AGE_15_TO_19 value
@@ -141,9 +131,7 @@ $root.bikemoves = (function() {
 
     /**
      * ExperienceLevel enum.
-     * @name ExperienceLevel
-     * @memberof bikemoves
-     * @enum {number}
+     * @enum {string}
      * @property {number} NOT_SPECIFIED=0 NOT_SPECIFIED value
      * @property {number} BEGINNER=1 BEGINNER value
      * @property {number} INTERMEDIATE=2 INTERMEDIATE value
@@ -162,26 +150,27 @@ $root.bikemoves = (function() {
 
         /**
          * Properties of a Location.
-         * @typedef bikemoves.Location$Properties
-         * @type {Object}
-         * @property {number} [longitude] Location longitude.
-         * @property {number} [latitude] Location latitude.
-         * @property {number|Long} [time] Location time.
-         * @property {number} [accuracy] Location accuracy.
-         * @property {number} [altitude] Location altitude.
-         * @property {number} [heading] Location heading.
-         * @property {number} [speed] Location speed.
-         * @property {boolean} [moving] Location moving.
-         * @property {bikemoves.EventType} [event] Location event.
-         * @property {bikemoves.ActivityType} [activity] Location activity.
-         * @property {number} [confidence] Location confidence.
+         * @memberof bikemoves
+         * @interface ILocation
+         * @property {number} [longitude] Location longitude
+         * @property {number} [latitude] Location latitude
+         * @property {number|Long} [time] Location time
+         * @property {number} [accuracy] Location accuracy
+         * @property {number} [altitude] Location altitude
+         * @property {number} [heading] Location heading
+         * @property {number} [speed] Location speed
+         * @property {boolean} [moving] Location moving
+         * @property {bikemoves.EventType} [event] Location event
+         * @property {bikemoves.ActivityType} [activity] Location activity
+         * @property {number} [confidence] Location confidence
          */
 
         /**
          * Constructs a new Location.
-         * @exports bikemoves.Location
+         * @memberof bikemoves
+         * @classdesc Represents a Location.
          * @constructor
-         * @param {bikemoves.Location$Properties=} [properties] Properties to set
+         * @param {bikemoves.ILocation=} [properties] Properties to set
          */
         function Location(properties) {
             if (properties)
@@ -192,73 +181,98 @@ $root.bikemoves = (function() {
 
         /**
          * Location longitude.
-         * @type {number}
+         * @member {number}longitude
+         * @memberof bikemoves.Location
+         * @instance
          */
         Location.prototype.longitude = 0;
 
         /**
          * Location latitude.
-         * @type {number}
+         * @member {number}latitude
+         * @memberof bikemoves.Location
+         * @instance
          */
         Location.prototype.latitude = 0;
 
         /**
          * Location time.
-         * @type {number|Long}
+         * @member {number|Long}time
+         * @memberof bikemoves.Location
+         * @instance
          */
         Location.prototype.time = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
         /**
          * Location accuracy.
-         * @type {number}
+         * @member {number}accuracy
+         * @memberof bikemoves.Location
+         * @instance
          */
         Location.prototype.accuracy = 0;
 
         /**
          * Location altitude.
-         * @type {number}
+         * @member {number}altitude
+         * @memberof bikemoves.Location
+         * @instance
          */
         Location.prototype.altitude = 0;
 
         /**
          * Location heading.
-         * @type {number}
+         * @member {number}heading
+         * @memberof bikemoves.Location
+         * @instance
          */
         Location.prototype.heading = 0;
 
         /**
          * Location speed.
-         * @type {number}
+         * @member {number}speed
+         * @memberof bikemoves.Location
+         * @instance
          */
         Location.prototype.speed = 0;
 
         /**
          * Location moving.
-         * @type {boolean}
+         * @member {boolean}moving
+         * @memberof bikemoves.Location
+         * @instance
          */
         Location.prototype.moving = false;
 
         /**
          * Location event.
-         * @type {bikemoves.EventType}
+         * @member {bikemoves.EventType}event
+         * @memberof bikemoves.Location
+         * @instance
          */
         Location.prototype.event = 0;
 
         /**
          * Location activity.
-         * @type {bikemoves.ActivityType}
+         * @member {bikemoves.ActivityType}activity
+         * @memberof bikemoves.Location
+         * @instance
          */
         Location.prototype.activity = 0;
 
         /**
          * Location confidence.
-         * @type {number}
+         * @member {number}confidence
+         * @memberof bikemoves.Location
+         * @instance
          */
         Location.prototype.confidence = 0;
 
         /**
          * Creates a new Location instance using the specified properties.
-         * @param {bikemoves.Location$Properties=} [properties] Properties to set
+         * @function create
+         * @memberof bikemoves.Location
+         * @static
+         * @param {bikemoves.ILocation=} [properties] Properties to set
          * @returns {bikemoves.Location} Location instance
          */
         Location.create = function create(properties) {
@@ -267,7 +281,10 @@ $root.bikemoves = (function() {
 
         /**
          * Encodes the specified Location message. Does not implicitly {@link bikemoves.Location.verify|verify} messages.
-         * @param {bikemoves.Location$Properties} message Location message or plain object to encode
+         * @function encode
+         * @memberof bikemoves.Location
+         * @static
+         * @param {bikemoves.ILocation} message Location message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
@@ -291,9 +308,9 @@ $root.bikemoves = (function() {
             if (message.moving != null && message.hasOwnProperty("moving"))
                 writer.uint32(/* id 8, wireType 0 =*/64).bool(message.moving);
             if (message.event != null && message.hasOwnProperty("event"))
-                writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.event);
+                writer.uint32(/* id 9, wireType 0 =*/72).int32(message.event);
             if (message.activity != null && message.hasOwnProperty("activity"))
-                writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.activity);
+                writer.uint32(/* id 10, wireType 0 =*/80).int32(message.activity);
             if (message.confidence != null && message.hasOwnProperty("confidence"))
                 writer.uint32(/* id 11, wireType 0 =*/88).uint32(message.confidence);
             return writer;
@@ -301,7 +318,10 @@ $root.bikemoves = (function() {
 
         /**
          * Encodes the specified Location message, length delimited. Does not implicitly {@link bikemoves.Location.verify|verify} messages.
-         * @param {bikemoves.Location$Properties} message Location message or plain object to encode
+         * @function encodeDelimited
+         * @memberof bikemoves.Location
+         * @static
+         * @param {bikemoves.ILocation} message Location message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
@@ -311,6 +331,9 @@ $root.bikemoves = (function() {
 
         /**
          * Decodes a Location message from the specified reader or buffer.
+         * @function decode
+         * @memberof bikemoves.Location
+         * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
          * @returns {bikemoves.Location} Location
@@ -349,10 +372,10 @@ $root.bikemoves = (function() {
                     message.moving = reader.bool();
                     break;
                 case 9:
-                    message.event = reader.uint32();
+                    message.event = reader.int32();
                     break;
                 case 10:
-                    message.activity = reader.uint32();
+                    message.activity = reader.int32();
                     break;
                 case 11:
                     message.confidence = reader.uint32();
@@ -367,6 +390,9 @@ $root.bikemoves = (function() {
 
         /**
          * Decodes a Location message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof bikemoves.Location
+         * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @returns {bikemoves.Location} Location
          * @throws {Error} If the payload is not a reader or valid buffer
@@ -374,14 +400,17 @@ $root.bikemoves = (function() {
          */
         Location.decodeDelimited = function decodeDelimited(reader) {
             if (!(reader instanceof $Reader))
-                reader = $Reader(reader);
+                reader = new $Reader(reader);
             return this.decode(reader, reader.uint32());
         };
 
         /**
          * Verifies a Location message.
+         * @function verify
+         * @memberof bikemoves.Location
+         * @static
          * @param {Object.<string,*>} message Plain object to verify
-         * @returns {?string} `null` if valid, otherwise the reason why it is not
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
         Location.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
@@ -442,6 +471,9 @@ $root.bikemoves = (function() {
 
         /**
          * Creates a Location message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof bikemoves.Location
+         * @static
          * @param {Object.<string,*>} object Plain object
          * @returns {bikemoves.Location} Location
          */
@@ -530,18 +562,12 @@ $root.bikemoves = (function() {
         };
 
         /**
-         * Creates a Location message from a plain object. Also converts values to their respective internal types.
-         * This is an alias of {@link bikemoves.Location.fromObject}.
-         * @function
-         * @param {Object.<string,*>} object Plain object
-         * @returns {bikemoves.Location} Location
-         */
-        Location.from = Location.fromObject;
-
-        /**
          * Creates a plain object from a Location message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof bikemoves.Location
+         * @static
          * @param {bikemoves.Location} message Location
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
         Location.toObject = function toObject(message, options) {
@@ -566,22 +592,22 @@ $root.bikemoves = (function() {
                 object.confidence = 0;
             }
             if (message.longitude != null && message.hasOwnProperty("longitude"))
-                object.longitude = message.longitude;
+                object.longitude = options.json && !isFinite(message.longitude) ? String(message.longitude) : message.longitude;
             if (message.latitude != null && message.hasOwnProperty("latitude"))
-                object.latitude = message.latitude;
+                object.latitude = options.json && !isFinite(message.latitude) ? String(message.latitude) : message.latitude;
             if (message.time != null && message.hasOwnProperty("time"))
                 if (typeof message.time === "number")
                     object.time = options.longs === String ? String(message.time) : message.time;
                 else
                     object.time = options.longs === String ? $util.Long.prototype.toString.call(message.time) : options.longs === Number ? new $util.LongBits(message.time.low >>> 0, message.time.high >>> 0).toNumber(true) : message.time;
             if (message.accuracy != null && message.hasOwnProperty("accuracy"))
-                object.accuracy = message.accuracy;
+                object.accuracy = options.json && !isFinite(message.accuracy) ? String(message.accuracy) : message.accuracy;
             if (message.altitude != null && message.hasOwnProperty("altitude"))
-                object.altitude = message.altitude;
+                object.altitude = options.json && !isFinite(message.altitude) ? String(message.altitude) : message.altitude;
             if (message.heading != null && message.hasOwnProperty("heading"))
-                object.heading = message.heading;
+                object.heading = options.json && !isFinite(message.heading) ? String(message.heading) : message.heading;
             if (message.speed != null && message.hasOwnProperty("speed"))
-                object.speed = message.speed;
+                object.speed = options.json && !isFinite(message.speed) ? String(message.speed) : message.speed;
             if (message.moving != null && message.hasOwnProperty("moving"))
                 object.moving = message.moving;
             if (message.event != null && message.hasOwnProperty("event"))
@@ -594,16 +620,10 @@ $root.bikemoves = (function() {
         };
 
         /**
-         * Creates a plain object from this Location message. Also converts values to other types if specified.
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        Location.prototype.toObject = function toObject(options) {
-            return this.constructor.toObject(this, options);
-        };
-
-        /**
          * Converts this Location to JSON.
+         * @function toJSON
+         * @memberof bikemoves.Location
+         * @instance
          * @returns {Object.<string,*>} JSON object
          */
         Location.prototype.toJSON = function toJSON() {
@@ -617,25 +637,26 @@ $root.bikemoves = (function() {
 
         /**
          * Properties of a Trip.
-         * @typedef bikemoves.Trip$Properties
-         * @type {Object}
-         * @property {string} [deviceUuid] Trip deviceUuid.
-         * @property {Array.<bikemoves.Location$Properties>} [locations] Trip locations.
-         * @property {number|Long} [startTime] Trip startTime.
-         * @property {number|Long} [endTime] Trip endTime.
-         * @property {number} [desiredAccuracy] Trip desiredAccuracy.
-         * @property {boolean} [transit] Trip transit.
-         * @property {bikemoves.LocationType} [origin] Trip origin.
-         * @property {bikemoves.LocationType} [destination] Trip destination.
-         * @property {boolean} [debug] Trip debug.
-         * @property {string} [appVersion] Trip appVersion.
+         * @memberof bikemoves
+         * @interface ITrip
+         * @property {string} [deviceUuid] Trip deviceUuid
+         * @property {Array.<bikemoves.ILocation>} [locations] Trip locations
+         * @property {number|Long} [startTime] Trip startTime
+         * @property {number|Long} [endTime] Trip endTime
+         * @property {number} [desiredAccuracy] Trip desiredAccuracy
+         * @property {boolean} [transit] Trip transit
+         * @property {bikemoves.LocationType} [origin] Trip origin
+         * @property {bikemoves.LocationType} [destination] Trip destination
+         * @property {boolean} [debug] Trip debug
+         * @property {string} [appVersion] Trip appVersion
          */
 
         /**
          * Constructs a new Trip.
-         * @exports bikemoves.Trip
+         * @memberof bikemoves
+         * @classdesc Represents a Trip.
          * @constructor
-         * @param {bikemoves.Trip$Properties=} [properties] Properties to set
+         * @param {bikemoves.ITrip=} [properties] Properties to set
          */
         function Trip(properties) {
             this.locations = [];
@@ -647,67 +668,90 @@ $root.bikemoves = (function() {
 
         /**
          * Trip deviceUuid.
-         * @type {string}
+         * @member {string}deviceUuid
+         * @memberof bikemoves.Trip
+         * @instance
          */
         Trip.prototype.deviceUuid = "";
 
         /**
          * Trip locations.
-         * @type {Array.<bikemoves.Location$Properties>}
+         * @member {Array.<bikemoves.ILocation>}locations
+         * @memberof bikemoves.Trip
+         * @instance
          */
         Trip.prototype.locations = $util.emptyArray;
 
         /**
          * Trip startTime.
-         * @type {number|Long}
+         * @member {number|Long}startTime
+         * @memberof bikemoves.Trip
+         * @instance
          */
         Trip.prototype.startTime = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
         /**
          * Trip endTime.
-         * @type {number|Long}
+         * @member {number|Long}endTime
+         * @memberof bikemoves.Trip
+         * @instance
          */
         Trip.prototype.endTime = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
         /**
          * Trip desiredAccuracy.
-         * @type {number}
+         * @member {number}desiredAccuracy
+         * @memberof bikemoves.Trip
+         * @instance
          */
         Trip.prototype.desiredAccuracy = 0;
 
         /**
          * Trip transit.
-         * @type {boolean}
+         * @member {boolean}transit
+         * @memberof bikemoves.Trip
+         * @instance
          */
         Trip.prototype.transit = false;
 
         /**
          * Trip origin.
-         * @type {bikemoves.LocationType}
+         * @member {bikemoves.LocationType}origin
+         * @memberof bikemoves.Trip
+         * @instance
          */
         Trip.prototype.origin = 0;
 
         /**
          * Trip destination.
-         * @type {bikemoves.LocationType}
+         * @member {bikemoves.LocationType}destination
+         * @memberof bikemoves.Trip
+         * @instance
          */
         Trip.prototype.destination = 0;
 
         /**
          * Trip debug.
-         * @type {boolean}
+         * @member {boolean}debug
+         * @memberof bikemoves.Trip
+         * @instance
          */
         Trip.prototype.debug = false;
 
         /**
          * Trip appVersion.
-         * @type {string}
+         * @member {string}appVersion
+         * @memberof bikemoves.Trip
+         * @instance
          */
         Trip.prototype.appVersion = "";
 
         /**
          * Creates a new Trip instance using the specified properties.
-         * @param {bikemoves.Trip$Properties=} [properties] Properties to set
+         * @function create
+         * @memberof bikemoves.Trip
+         * @static
+         * @param {bikemoves.ITrip=} [properties] Properties to set
          * @returns {bikemoves.Trip} Trip instance
          */
         Trip.create = function create(properties) {
@@ -716,7 +760,10 @@ $root.bikemoves = (function() {
 
         /**
          * Encodes the specified Trip message. Does not implicitly {@link bikemoves.Trip.verify|verify} messages.
-         * @param {bikemoves.Trip$Properties} message Trip message or plain object to encode
+         * @function encode
+         * @memberof bikemoves.Trip
+         * @static
+         * @param {bikemoves.ITrip} message Trip message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
@@ -737,9 +784,9 @@ $root.bikemoves = (function() {
             if (message.transit != null && message.hasOwnProperty("transit"))
                 writer.uint32(/* id 6, wireType 0 =*/48).bool(message.transit);
             if (message.origin != null && message.hasOwnProperty("origin"))
-                writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.origin);
+                writer.uint32(/* id 7, wireType 0 =*/56).int32(message.origin);
             if (message.destination != null && message.hasOwnProperty("destination"))
-                writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.destination);
+                writer.uint32(/* id 8, wireType 0 =*/64).int32(message.destination);
             if (message.debug != null && message.hasOwnProperty("debug"))
                 writer.uint32(/* id 9, wireType 0 =*/72).bool(message.debug);
             if (message.appVersion != null && message.hasOwnProperty("appVersion"))
@@ -749,7 +796,10 @@ $root.bikemoves = (function() {
 
         /**
          * Encodes the specified Trip message, length delimited. Does not implicitly {@link bikemoves.Trip.verify|verify} messages.
-         * @param {bikemoves.Trip$Properties} message Trip message or plain object to encode
+         * @function encodeDelimited
+         * @memberof bikemoves.Trip
+         * @static
+         * @param {bikemoves.ITrip} message Trip message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
@@ -759,6 +809,9 @@ $root.bikemoves = (function() {
 
         /**
          * Decodes a Trip message from the specified reader or buffer.
+         * @function decode
+         * @memberof bikemoves.Trip
+         * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
          * @returns {bikemoves.Trip} Trip
@@ -793,10 +846,10 @@ $root.bikemoves = (function() {
                     message.transit = reader.bool();
                     break;
                 case 7:
-                    message.origin = reader.uint32();
+                    message.origin = reader.int32();
                     break;
                 case 8:
-                    message.destination = reader.uint32();
+                    message.destination = reader.int32();
                     break;
                 case 9:
                     message.debug = reader.bool();
@@ -814,6 +867,9 @@ $root.bikemoves = (function() {
 
         /**
          * Decodes a Trip message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof bikemoves.Trip
+         * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @returns {bikemoves.Trip} Trip
          * @throws {Error} If the payload is not a reader or valid buffer
@@ -821,14 +877,17 @@ $root.bikemoves = (function() {
          */
         Trip.decodeDelimited = function decodeDelimited(reader) {
             if (!(reader instanceof $Reader))
-                reader = $Reader(reader);
+                reader = new $Reader(reader);
             return this.decode(reader, reader.uint32());
         };
 
         /**
          * Verifies a Trip message.
+         * @function verify
+         * @memberof bikemoves.Trip
+         * @static
          * @param {Object.<string,*>} message Plain object to verify
-         * @returns {?string} `null` if valid, otherwise the reason why it is not
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
         Trip.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
@@ -894,6 +953,9 @@ $root.bikemoves = (function() {
 
         /**
          * Creates a Trip message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof bikemoves.Trip
+         * @static
          * @param {Object.<string,*>} object Plain object
          * @returns {bikemoves.Trip} Trip
          */
@@ -1003,18 +1065,12 @@ $root.bikemoves = (function() {
         };
 
         /**
-         * Creates a Trip message from a plain object. Also converts values to their respective internal types.
-         * This is an alias of {@link bikemoves.Trip.fromObject}.
-         * @function
-         * @param {Object.<string,*>} object Plain object
-         * @returns {bikemoves.Trip} Trip
-         */
-        Trip.from = Trip.fromObject;
-
-        /**
          * Creates a plain object from a Trip message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof bikemoves.Trip
+         * @static
          * @param {bikemoves.Trip} message Trip
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
         Trip.toObject = function toObject(message, options) {
@@ -1060,7 +1116,7 @@ $root.bikemoves = (function() {
                 else
                     object.endTime = options.longs === String ? $util.Long.prototype.toString.call(message.endTime) : options.longs === Number ? new $util.LongBits(message.endTime.low >>> 0, message.endTime.high >>> 0).toNumber(true) : message.endTime;
             if (message.desiredAccuracy != null && message.hasOwnProperty("desiredAccuracy"))
-                object.desiredAccuracy = message.desiredAccuracy;
+                object.desiredAccuracy = options.json && !isFinite(message.desiredAccuracy) ? String(message.desiredAccuracy) : message.desiredAccuracy;
             if (message.transit != null && message.hasOwnProperty("transit"))
                 object.transit = message.transit;
             if (message.origin != null && message.hasOwnProperty("origin"))
@@ -1075,16 +1131,10 @@ $root.bikemoves = (function() {
         };
 
         /**
-         * Creates a plain object from this Trip message. Also converts values to other types if specified.
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        Trip.prototype.toObject = function toObject(options) {
-            return this.constructor.toObject(this, options);
-        };
-
-        /**
          * Converts this Trip to JSON.
+         * @function toJSON
+         * @memberof bikemoves.Trip
+         * @instance
          * @returns {Object.<string,*>} JSON object
          */
         Trip.prototype.toJSON = function toJSON() {
@@ -1098,20 +1148,21 @@ $root.bikemoves = (function() {
 
         /**
          * Properties of an Incident.
-         * @typedef bikemoves.Incident$Properties
-         * @type {Object}
-         * @property {string} [deviceUuid] Incident deviceUuid.
-         * @property {string} [comment] Incident comment.
-         * @property {number|Long} [time] Incident time.
-         * @property {bikemoves.Location$Properties} [location] Incident location.
-         * @property {string} [category] Incident category.
+         * @memberof bikemoves
+         * @interface IIncident
+         * @property {string} [deviceUuid] Incident deviceUuid
+         * @property {string} [comment] Incident comment
+         * @property {number|Long} [time] Incident time
+         * @property {bikemoves.ILocation} [location] Incident location
+         * @property {string} [category] Incident category
          */
 
         /**
          * Constructs a new Incident.
-         * @exports bikemoves.Incident
+         * @memberof bikemoves
+         * @classdesc Represents an Incident.
          * @constructor
-         * @param {bikemoves.Incident$Properties=} [properties] Properties to set
+         * @param {bikemoves.IIncident=} [properties] Properties to set
          */
         function Incident(properties) {
             if (properties)
@@ -1122,37 +1173,50 @@ $root.bikemoves = (function() {
 
         /**
          * Incident deviceUuid.
-         * @type {string}
+         * @member {string}deviceUuid
+         * @memberof bikemoves.Incident
+         * @instance
          */
         Incident.prototype.deviceUuid = "";
 
         /**
          * Incident comment.
-         * @type {string}
+         * @member {string}comment
+         * @memberof bikemoves.Incident
+         * @instance
          */
         Incident.prototype.comment = "";
 
         /**
          * Incident time.
-         * @type {number|Long}
+         * @member {number|Long}time
+         * @memberof bikemoves.Incident
+         * @instance
          */
         Incident.prototype.time = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
         /**
          * Incident location.
-         * @type {(bikemoves.Location$Properties|null)}
+         * @member {(bikemoves.ILocation|null|undefined)}location
+         * @memberof bikemoves.Incident
+         * @instance
          */
         Incident.prototype.location = null;
 
         /**
          * Incident category.
-         * @type {string}
+         * @member {string}category
+         * @memberof bikemoves.Incident
+         * @instance
          */
         Incident.prototype.category = "";
 
         /**
          * Creates a new Incident instance using the specified properties.
-         * @param {bikemoves.Incident$Properties=} [properties] Properties to set
+         * @function create
+         * @memberof bikemoves.Incident
+         * @static
+         * @param {bikemoves.IIncident=} [properties] Properties to set
          * @returns {bikemoves.Incident} Incident instance
          */
         Incident.create = function create(properties) {
@@ -1161,7 +1225,10 @@ $root.bikemoves = (function() {
 
         /**
          * Encodes the specified Incident message. Does not implicitly {@link bikemoves.Incident.verify|verify} messages.
-         * @param {bikemoves.Incident$Properties} message Incident message or plain object to encode
+         * @function encode
+         * @memberof bikemoves.Incident
+         * @static
+         * @param {bikemoves.IIncident} message Incident message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
@@ -1183,7 +1250,10 @@ $root.bikemoves = (function() {
 
         /**
          * Encodes the specified Incident message, length delimited. Does not implicitly {@link bikemoves.Incident.verify|verify} messages.
-         * @param {bikemoves.Incident$Properties} message Incident message or plain object to encode
+         * @function encodeDelimited
+         * @memberof bikemoves.Incident
+         * @static
+         * @param {bikemoves.IIncident} message Incident message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
@@ -1193,6 +1263,9 @@ $root.bikemoves = (function() {
 
         /**
          * Decodes an Incident message from the specified reader or buffer.
+         * @function decode
+         * @memberof bikemoves.Incident
+         * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
          * @returns {bikemoves.Incident} Incident
@@ -1231,6 +1304,9 @@ $root.bikemoves = (function() {
 
         /**
          * Decodes an Incident message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof bikemoves.Incident
+         * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @returns {bikemoves.Incident} Incident
          * @throws {Error} If the payload is not a reader or valid buffer
@@ -1238,14 +1314,17 @@ $root.bikemoves = (function() {
          */
         Incident.decodeDelimited = function decodeDelimited(reader) {
             if (!(reader instanceof $Reader))
-                reader = $Reader(reader);
+                reader = new $Reader(reader);
             return this.decode(reader, reader.uint32());
         };
 
         /**
          * Verifies an Incident message.
+         * @function verify
+         * @memberof bikemoves.Incident
+         * @static
          * @param {Object.<string,*>} message Plain object to verify
-         * @returns {?string} `null` if valid, otherwise the reason why it is not
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
         Incident.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
@@ -1272,6 +1351,9 @@ $root.bikemoves = (function() {
 
         /**
          * Creates an Incident message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof bikemoves.Incident
+         * @static
          * @param {Object.<string,*>} object Plain object
          * @returns {bikemoves.Incident} Incident
          */
@@ -1303,18 +1385,12 @@ $root.bikemoves = (function() {
         };
 
         /**
-         * Creates an Incident message from a plain object. Also converts values to their respective internal types.
-         * This is an alias of {@link bikemoves.Incident.fromObject}.
-         * @function
-         * @param {Object.<string,*>} object Plain object
-         * @returns {bikemoves.Incident} Incident
-         */
-        Incident.from = Incident.fromObject;
-
-        /**
          * Creates a plain object from an Incident message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof bikemoves.Incident
+         * @static
          * @param {bikemoves.Incident} message Incident
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
         Incident.toObject = function toObject(message, options) {
@@ -1349,16 +1425,10 @@ $root.bikemoves = (function() {
         };
 
         /**
-         * Creates a plain object from this Incident message. Also converts values to other types if specified.
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        Incident.prototype.toObject = function toObject(options) {
-            return this.constructor.toObject(this, options);
-        };
-
-        /**
          * Converts this Incident to JSON.
+         * @function toJSON
+         * @memberof bikemoves.Incident
+         * @instance
          * @returns {Object.<string,*>} JSON object
          */
         Incident.prototype.toJSON = function toJSON() {
@@ -1372,21 +1442,22 @@ $root.bikemoves = (function() {
 
         /**
          * Properties of a User.
-         * @typedef bikemoves.User$Properties
-         * @type {Object}
-         * @property {string} [deviceUuid] User deviceUuid.
-         * @property {string} [platformName] User platformName.
-         * @property {number} [platformVersion] User platformVersion.
-         * @property {bikemoves.Gender} [gender] User gender.
-         * @property {bikemoves.Age} [age] User age.
-         * @property {bikemoves.ExperienceLevel} [cyclingExperience] User cyclingExperience.
+         * @memberof bikemoves
+         * @interface IUser
+         * @property {string} [deviceUuid] User deviceUuid
+         * @property {string} [platformName] User platformName
+         * @property {number} [platformVersion] User platformVersion
+         * @property {bikemoves.Gender} [gender] User gender
+         * @property {bikemoves.Age} [age] User age
+         * @property {bikemoves.ExperienceLevel} [cyclingExperience] User cyclingExperience
          */
 
         /**
          * Constructs a new User.
-         * @exports bikemoves.User
+         * @memberof bikemoves
+         * @classdesc Represents a User.
          * @constructor
-         * @param {bikemoves.User$Properties=} [properties] Properties to set
+         * @param {bikemoves.IUser=} [properties] Properties to set
          */
         function User(properties) {
             if (properties)
@@ -1397,43 +1468,58 @@ $root.bikemoves = (function() {
 
         /**
          * User deviceUuid.
-         * @type {string}
+         * @member {string}deviceUuid
+         * @memberof bikemoves.User
+         * @instance
          */
         User.prototype.deviceUuid = "";
 
         /**
          * User platformName.
-         * @type {string}
+         * @member {string}platformName
+         * @memberof bikemoves.User
+         * @instance
          */
         User.prototype.platformName = "";
 
         /**
          * User platformVersion.
-         * @type {number}
+         * @member {number}platformVersion
+         * @memberof bikemoves.User
+         * @instance
          */
         User.prototype.platformVersion = 0;
 
         /**
          * User gender.
-         * @type {bikemoves.Gender}
+         * @member {bikemoves.Gender}gender
+         * @memberof bikemoves.User
+         * @instance
          */
         User.prototype.gender = 0;
 
         /**
          * User age.
-         * @type {bikemoves.Age}
+         * @member {bikemoves.Age}age
+         * @memberof bikemoves.User
+         * @instance
          */
         User.prototype.age = 0;
 
         /**
          * User cyclingExperience.
-         * @type {bikemoves.ExperienceLevel}
+         * @member {bikemoves.ExperienceLevel}cyclingExperience
+         * @memberof bikemoves.User
+         * @instance
          */
         User.prototype.cyclingExperience = 0;
 
         /**
          * Creates a new User instance using the specified properties.
-         * @param {bikemoves.User$Properties=} [properties] Properties to set
+         * @function create
+         * @memberof bikemoves.User
+         * @static
+         * @param {bikemoves.IUser=} [properties] Properties to set
          * @returns {bikemoves.User} User instance
          */
         User.create = function create(properties) {
@@ -1442,7 +1528,10 @@ $root.bikemoves = (function() {
 
         /**
          * Encodes the specified User message. Does not implicitly {@link bikemoves.User.verify|verify} messages.
-         * @param {bikemoves.User$Properties} message User message or plain object to encode
+         * @function encode
+         * @memberof bikemoves.User
+         * @static
+         * @param {bikemoves.IUser} message User message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
@@ -1456,17 +1545,20 @@ $root.bikemoves = (function() {
             if (message.platformVersion != null && message.hasOwnProperty("platformVersion"))
                 writer.uint32(/* id 3, wireType 5 =*/29).float(message.platformVersion);
             if (message.gender != null && message.hasOwnProperty("gender"))
-                writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.gender);
+                writer.uint32(/* id 4, wireType 0 =*/32).int32(message.gender);
             if (message.age != null && message.hasOwnProperty("age"))
-                writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.age);
+                writer.uint32(/* id 5, wireType 0 =*/40).int32(message.age);
             if (message.cyclingExperience != null && message.hasOwnProperty("cyclingExperience"))
-                writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.cyclingExperience);
+                writer.uint32(/* id 6, wireType 0 =*/48).int32(message.cyclingExperience);
             return writer;
         };
 
         /**
          * Encodes the specified User message, length delimited. Does not implicitly {@link bikemoves.User.verify|verify} messages.
-         * @param {bikemoves.User$Properties} message User message or plain object to encode
+         * @function encodeDelimited
+         * @memberof bikemoves.User
+         * @static
+         * @param {bikemoves.IUser} message User message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
@@ -1476,6 +1568,9 @@ $root.bikemoves = (function() {
 
         /**
          * Decodes a User message from the specified reader or buffer.
+         * @function decode
+         * @memberof bikemoves.User
+         * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
          * @returns {bikemoves.User} User
@@ -1499,13 +1594,13 @@ $root.bikemoves = (function() {
                     message.platformVersion = reader.float();
                     break;
                 case 4:
-                    message.gender = reader.uint32();
+                    message.gender = reader.int32();
                     break;
                 case 5:
-                    message.age = reader.uint32();
+                    message.age = reader.int32();
                     break;
                 case 6:
-                    message.cyclingExperience = reader.uint32();
+                    message.cyclingExperience = reader.int32();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -1517,6 +1612,9 @@ $root.bikemoves = (function() {
 
         /**
          * Decodes a User message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof bikemoves.User
+         * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @returns {bikemoves.User} User
          * @throws {Error} If the payload is not a reader or valid buffer
@@ -1524,14 +1622,17 @@ $root.bikemoves = (function() {
          */
         User.decodeDelimited = function decodeDelimited(reader) {
             if (!(reader instanceof $Reader))
-                reader = $Reader(reader);
+                reader = new $Reader(reader);
             return this.decode(reader, reader.uint32());
         };
 
         /**
          * Verifies a User message.
+         * @function verify
+         * @memberof bikemoves.User
+         * @static
          * @param {Object.<string,*>} message Plain object to verify
-         * @returns {?string} `null` if valid, otherwise the reason why it is not
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
         User.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
@@ -1586,6 +1687,9 @@ $root.bikemoves = (function() {
 
         /**
          * Creates a User message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof bikemoves.User
+         * @static
          * @param {Object.<string,*>} object Plain object
          * @returns {bikemoves.User} User
          */
@@ -1681,18 +1785,12 @@ $root.bikemoves = (function() {
         };
 
         /**
-         * Creates a User message from a plain object. Also converts values to their respective internal types.
-         * This is an alias of {@link bikemoves.User.fromObject}.
-         * @function
-         * @param {Object.<string,*>} object Plain object
-         * @returns {bikemoves.User} User
-         */
-        User.from = User.fromObject;
-
-        /**
          * Creates a plain object from a User message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof bikemoves.User
+         * @static
          * @param {bikemoves.User} message User
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
         User.toObject = function toObject(message, options) {
@@ -1712,7 +1810,7 @@ $root.bikemoves = (function() {
             if (message.platformName != null && message.hasOwnProperty("platformName"))
                 object.platformName = message.platformName;
             if (message.platformVersion != null && message.hasOwnProperty("platformVersion"))
-                object.platformVersion = message.platformVersion;
+                object.platformVersion = options.json && !isFinite(message.platformVersion) ? String(message.platformVersion) : message.platformVersion;
             if (message.gender != null && message.hasOwnProperty("gender"))
                 object.gender = options.enums === String ? $root.bikemoves.Gender[message.gender] : message.gender;
             if (message.age != null && message.hasOwnProperty("age"))
@@ -1723,16 +1821,10 @@ $root.bikemoves = (function() {
         };
 
         /**
-         * Creates a plain object from this User message. Also converts values to other types if specified.
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        User.prototype.toObject = function toObject(options) {
-            return this.constructor.toObject(this, options);
-        };
-
-        /**
          * Converts this User to JSON.
+         * @function toJSON
+         * @memberof bikemoves.User
+         * @instance
          * @returns {Object.<string,*>} JSON object
          */
         User.prototype.toJSON = function toJSON() {
