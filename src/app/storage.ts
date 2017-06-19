@@ -73,8 +73,11 @@ export class Storage extends Service {
     ).then((res) => {
       let migrations = this.getMigrations(res.rows.item(0).current);
 
+      // TODO: Remove "as any" once this bug is fixed:
+      // https://github.com/ionic-team/ionic-native/issues/1596
       if (migrations.length) return this.db.sqlBatch(
-        migrations.map((migration) => [migration.sql, migration.values]));
+        migrations.map((migration) =>
+          [migration.sql, (migration.values) as any]));
     });
   }
 
