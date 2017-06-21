@@ -5,7 +5,8 @@ import { Subject } from 'rxjs/Subject';
 import { Location } from './location';
 import { Path } from './path';
 import { extend, dataURItoBlob } from './utils';
-import { MAP_STYLE, MAPBOX_TOKEN } from './config';
+import { MAP_STYLE } from './config';
+import { MAPBOX_TOKEN } from './private';
 
 mapboxgl.accessToken = MAPBOX_TOKEN;
 
