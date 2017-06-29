@@ -81,8 +81,15 @@ export class Settings extends ObjectManager {
 
     return this.filter('name = ?', null, [name])
       .then((groups) => {
-        group = (groups.length) ? groups[0] : new SettingsGroup(name);
-        this.cache[name] = group;
+        // Try again to get the group from the cache before overwriting it
+        // with changes from the database. Otherwise, we can end up with a
+        // race condition when the database is opening and multiple services
+        // have requested the same group.
+        group = this.cache[name];
+        if (!group) {
+          group = (groups.length) ? groups[0] : new SettingsGroup(name);
+          this.cache[name] = group;
+        }
         group.setDefaults(defaults);
         return group.data;
       });

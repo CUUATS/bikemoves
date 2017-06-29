@@ -60,7 +60,7 @@ export abstract class ObjectManager {
       .then((data) => {
         let results = [];
         for (let i = 0; i < data.rows.length; i++)
-          results.push(this.fromRow(data.rows.item(i)))
+          results.push(this.fromRow(data.rows.item(i)));
         return results;
       });
   }
