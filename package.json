@@ -97,7 +97,11 @@
         ],
         "plugins": {
             "cordova-background-geolocation": {
-                "LICENSE": "61500f38e27b9bbad808b9c6222bda92828081703445386ecf023ff1f54ecd0c"
+                "LICENSE": "61500f38e27b9bbad808b9c6222bda92828081703445386ecf023ff1f54ecd0c",
+                "LOCATION_ALWAYS_USAGE_DESCRIPTION": "Background location tracking is required to record your trips while BikeMoves is in the background. Trips are only recorded while the app is running.",
+                "LOCATION_WHEN_IN_USE_USAGE_DESCRIPTION": "Location tracking is required to record your trips.",
+                "MOTION_USAGE_DESCRIPTION": "Using the accelerometer allows BikeMoves to record your trips more efficiently.",
+                "BACKGROUND_MODE_LOCATION": "<string>location</string>"
             },
             "cordova-plugin-device": {},
             "cordova-plugin-file": {},

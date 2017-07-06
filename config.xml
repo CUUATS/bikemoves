@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="gov.illinois.idot.bikemovesillinois" version="2.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="gov.illinois.idot.bikemovesillinois" version="2.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>BikeMoves Illinois</name>
     <description>Bicycle route recording and assistance.</description>
     <author email="info@bikemoves.me" href="https://bikemoves.me">Illinois Department of Transportation</author>
@@ -82,6 +82,10 @@
     <engine name="android" spec="~6.1.2" />
     <plugin name="cordova-background-geolocation" spec="git+https://github.com/transistorsoft/cordova-background-geolocation.git#2.7.3">
         <variable name="LICENSE" value="61500f38e27b9bbad808b9c6222bda92828081703445386ecf023ff1f54ecd0c" />
+        <variable name="LOCATION_ALWAYS_USAGE_DESCRIPTION" value="Background location tracking is required to record your trips while BikeMoves is in the background. Trips are only recorded while the app is running." />
+        <variable name="LOCATION_WHEN_IN_USE_USAGE_DESCRIPTION" value="Location tracking is required to record your trips." />
+        <variable name="MOTION_USAGE_DESCRIPTION" value="Using the accelerometer allows BikeMoves to record your trips more efficiently." />
+        <variable name="BACKGROUND_MODE_LOCATION" value="&lt;string&gt;location&lt;/string&gt;" />
     </plugin>
     <plugin name="cordova-plugin-device" spec="~1.1.4" />
     <plugin name="cordova-plugin-file" spec="~4.3.2" />
