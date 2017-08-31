@@ -43,11 +43,6 @@ export class TripDetailPage {
     });
   }
 
-  ionViewWillLeave() {
-    this.map.unassign();
-    this.map.icons = [];
-  }
-
   showTripForm() {
     let modal = this.modalCtrl.create(TripFormPage, {
       trip: this.trip,

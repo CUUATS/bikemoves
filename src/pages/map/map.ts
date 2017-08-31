@@ -63,7 +63,6 @@ export class MapPage implements TripStatsProvider {
   }
 
   ionViewWillLeave() {
-    this.map.unassign();
     this.isActiveTab = false;
   }
 

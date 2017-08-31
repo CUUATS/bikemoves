@@ -45,7 +45,6 @@ export class TripsPage {
 
   ionViewWillLeave() {
     this.isActiveTab = false;
-    this.map.unassign();
   }
 
   private onActiveChange(active: boolean) {

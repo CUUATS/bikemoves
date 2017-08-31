@@ -381,9 +381,4 @@ export class Map {
       this.map.resize();
     }
   }
-
-  public unassign() {
-    this.hide();
-    document.body.appendChild(this.el);
-  }
 }
