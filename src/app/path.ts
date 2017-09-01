@@ -1,5 +1,6 @@
 import { Location } from './location';
-import turf from 'turf';
+import { lineString as turfLineString } from '@turf/helpers';
+import * as turfSimplify from '@turf/simplify';
 
 export class Path {
   public locations: Location[] = [];
@@ -22,11 +23,11 @@ export class Path {
   public toLineString(simplify: number = 0) {
     if (this.locations.length < 2) return null;
 
-    let linestring = turf.lineString(
+    let linestring = turfLineString(
       this.locations.map((location) => location.toLngLat()));
 
     if (simplify > 0 && linestring.geometry.coordinates.length > 2)
-      return (turf.simplify(linestring, simplify, false));
+      return (turfSimplify(linestring, simplify, false));
 
     return linestring;
   }

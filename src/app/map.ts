@@ -1,5 +1,7 @@
 import * as mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
-import turf from 'turf';
+import * as turfBbox from '@turf/bbox';
+import * as turfPointOnLine from '@turf/point-on-line';
+import { point as turfPoint } from '@turf/helpers';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Location } from './location';
@@ -198,8 +200,8 @@ export class Map {
     if (feature.geometry.type == 'Point') {
       return feature.geometry.coordinates;
     } else if (feature.geometry.type == 'LineString') {
-      var nearest = turf.pointOnLine(
-        feature, turf.point([lngLat.lng, lngLat.lat]));
+      var nearest = turfPointOnLine(
+        feature, turfPoint([lngLat.lng, lngLat.lat]));
       return nearest.geometry.coordinates;
     }
     return lngLat;
@@ -293,7 +295,7 @@ export class Map {
   }
 
   public zoomToPath() {
-    let bbox = turf.bbox(this.path.toLineString() as any);
+    let bbox = turfBbox(this.path.toLineString() as any);
     this.map.fitBounds([bbox.slice(0, 2), bbox.slice(2)], {
       duration: 0,
       linear: true,

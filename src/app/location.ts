@@ -1,4 +1,7 @@
-import turf from 'turf';
+import * as turfBbox from '@turf/bbox';
+import * as turfBuffer from '@turf/buffer';
+import * as turfDistance from '@turf/distance';
+import { point as turfPoint } from '@turf/helpers';
 import { Persistent } from './persistent';
 import { Geo } from './geo';
 import * as moment from 'moment';
@@ -52,7 +55,7 @@ export class Location extends Persistent {
   }
 
   public toPoint() {
-    return turf.point([this.longitude, this.latitude]);
+    return turfPoint([this.longitude, this.latitude]);
   }
 
   public toLngLat() {
@@ -60,11 +63,11 @@ export class Location extends Persistent {
   }
 
   public distanceTo(loc: Location) {
-    return turf.distance(this.toPoint(), loc.toPoint(), 'kilometers') * 1000;
+    return turfDistance(this.toPoint(), loc.toPoint(), 'kilometers') * 1000;
   }
 
   public getBufferBbox(radius: number) {
-    return turf.bbox(turf.buffer(this.toPoint(), radius, 'meters'));
+    return turfBbox(turfBuffer(this.toPoint(), radius, 'meters'));
   }
 
 }
