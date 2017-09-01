@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Content, Events, NavController } from 'ionic-angular';
+import { Content, Events } from 'ionic-angular';
 import { Trip } from '../../app/trip';
 import { Trips } from '../../app/trips';
 import { TripStatsProvider, TripStats } from '../../app/stats';
@@ -93,7 +93,6 @@ export class StatsPage {
   private isActiveTab = false;
 
   constructor(
-    private navCtrl: NavController,
     private events: Events,
     private tripManager: Trips) {
     this.stats = new TripStats(this.provider);
