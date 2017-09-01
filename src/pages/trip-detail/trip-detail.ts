@@ -19,8 +19,8 @@ export class TripDetailPage {
     private modalCtrl: ModalController,
     private tripManager: Trips,
     private map: Map) {
-    this.trip = navParams.get('trip');
-    this.imageURL = navParams.get('imageURL');
+    this.trip = this.navParams.get('trip');
+    this.imageURL = this.navParams.get('imageURL');
   }
 
   ionViewDidEnter() {

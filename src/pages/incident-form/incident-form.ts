@@ -22,7 +22,7 @@ export class IncidentFormPage {
       private viewCtrl: ViewController,
       private toastCtrl: ToastController,
       private remote: Remote) {
-    this.incident = new Incident(navParams.data);
+    this.incident = new Incident(this.navParams.data);
   }
 
   private closeModal() {

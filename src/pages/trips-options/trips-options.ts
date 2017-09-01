@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { Settings, Preferences } from '../../app/settings';
 
 
@@ -10,7 +10,6 @@ export class TripsOptionsPage {
   private viewType: 'grid' | 'list';
   private prefs: Preferences;
   constructor(
-      private cdr: ChangeDetectorRef,
       private settings: Settings) {
     this.settings.getPreferences()
       .then((prefs) => {

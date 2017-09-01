@@ -26,8 +26,8 @@ export class TripFormPage {
       private locationManager: Locations,
       private tripManager: Trips,
       private remote: Remote) {
-    this.trip = navParams.get('trip');
-    this.imageURL = navParams.get('imageURL');
+    this.trip = this.navParams.get('trip');
+    this.imageURL = this.navParams.get('imageURL');
     this.odCache = [this.trip.origin, this.trip.destination];
     this.guessODTypes();
   }
