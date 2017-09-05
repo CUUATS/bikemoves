@@ -44,20 +44,6 @@ export class Geo extends Service {
     super();
   }
 
-  private doGeoTask(fn, options = undefined) {
-    let task;
-    return this.ready().then(() => {
-      return new Promise((resolve, reject) => {
-        this.bgGeo[fn]((e, taskId) => {
-          resolve(e);
-          this.bgGeo.finish(task);
-        }, (e) => {
-          reject(e);
-        }, options);
-      });
-    });
-  }
-
   private getState() {
     return new Promise(
       (resolve, reject) => this.bgGeo.getState(resolve, reject));
@@ -77,23 +63,20 @@ export class Geo extends Service {
     this.activity.next(activity);
   }
 
-  private onLocation(position, taskId) {
+  private onLocation(position) {
     let location = Location.fromPosition(position);
     this.currentLocation = location;
     this.locations.next(location);
 
     if (!position.sample &&
         (location.moving || location.event == messages.EventType.MOTION)) {
-      this.locationManager.save(location).then(() => this.finish(taskId));
-    } else {
-      this.finish(taskId);
+      this.locationManager.save(location);
     }
   }
 
-  private onMotionChange(moving, position, taskId) {
+  private onMotionChange(moving, position) {
     if (moving) {
       this.motion.next(moving);
-      this.finish(taskId);
     } else {
       return this.locationManager.filterNewLocations()
         .then((locations: Location[]) => {
@@ -104,7 +87,6 @@ export class Geo extends Service {
         })
         .then(() => {
           this.motion.next(moving);
-          this.finish(taskId);
         });
     }
   }
@@ -158,14 +140,12 @@ export class Geo extends Service {
       });
   }
 
-  public finish(taskId) {
-    this.bgGeo.finish(taskId);
-  }
-
   public getCurrentLocation(options?) {
-    return this.doGeoTask('getCurrentPosition', options).then((position) => {
-      return Location.fromPosition(position);
-    });
+    return this.ready()
+      .then(() => this.bgGeo.getCurrentPosition(options))
+      .then((position) => {
+        return Location.fromPosition(position);
+      });
   }
 
   public setGeolocationEnabled(on) {
@@ -230,10 +210,10 @@ export class Geo extends Service {
               confidence: 100
             }
           };
-        if (!first) this.onLocation(position, null);
+        if (!first) this.onLocation(position);
         if (first || last)
-          this.onMotionChange(position.is_moving, position, null);
-        if (first) this.onLocation(position, null);
+          this.onMotionChange(position.is_moving, position);
+        if (first) this.onLocation(position);
       }, (err) => console.log(err));
   }
 
