@@ -1,5 +1,7 @@
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
+import { Device } from '@ionic-native/device';
 import { Injectable } from '@angular/core';
+import { Events } from 'ionic-angular';
 import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
 import { Service } from './service';
@@ -7,8 +9,10 @@ import { Location } from './location';
 import { Locations } from './locations';
 import { Trip } from './trip';
 import { Trips } from './trips';
+import { Settings } from './settings';
 import { DEBUG } from './config';
 import { bikemoves as messages } from './messages';
+import * as moment from 'moment';
 
 @Injectable()
 export class Geo extends Service {
@@ -29,18 +33,21 @@ export class Geo extends Service {
   };
   private bgGeo: any;
 
-  public activity = new Subject();
   public locations = new Subject();
   public motion = new Subject();
-  public currentActivity: messages.ActivityType;
   public currentLocation: Location;
   public highAccuracy = true;
-  private walkTimer: number;
+  private highSpeedCount = 0;
+  private isWatching = false;
+  private canAutoStop = true;
+  private didAutoStop = false;
+  private stopTimer: number;
 
   constructor(
-      private locationManager: Locations,
-      private tripManager: Trips,
-      private locationAccuracy: LocationAccuracy) {
+      private device: Device,
+      private events: Events,
+      private locationAccuracy: LocationAccuracy,
+      private settings: Settings) {
     super();
   }
 
@@ -49,45 +56,65 @@ export class Geo extends Service {
       (resolve, reject) => this.bgGeo.getState(resolve, reject));
   }
 
-  private onActivityChange(activityName) {
-    let activity = Geo.ACTIVITIES[activityName],
-      bike = messages.ActivityType.BICYCLE;
+  private getActivity(position) {
+    if (!position.activity.type) return messages.ActivityType.UNKNOWN;
 
-    if (this.currentActivity == bike && activity != bike) {
-      this.walkTimer = window.setTimeout(() => this.setMoving(false), 180000);
-    } else if (activity == bike && this.walkTimer) {
-      clearTimeout(this.walkTimer);
-    }
+    // iOS is not reporting the correct activity for biking most of the time,
+    // so we guess the activity based on speed. Speeds > 5 MPH and < 25 MPH
+    // are considered biking.
+    if (this.device.platform == 'iOS' &&
+        position.speed > 2.24 &&
+        position.speed < 11.18) messages.ActivityType.BICYCLE;
 
-    this.currentActivity = activity;
-    this.activity.next(activity);
+    return Geo.ACTIVITIES[position.activity.type];
+  }
+
+  private makeLocation(position) {
+    return new Location(
+      position.coords.longitude,
+      position.coords.latitude,
+      position.coords.accuracy,
+      position.coords.altitude,
+      position.coords.heading,
+      position.coords.speed,
+      moment(position.timestamp),
+      position.is_moving,
+      (position.event) ? Geo.EVENTS[position.event] : null,
+      this.getActivity(position),
+      position.activity.confidence,
+      position.sample === true,
+      position.extras && position.extras.watch)
   }
 
   private onLocation(position) {
-    let location = Location.fromPosition(position);
+    let location = this.makeLocation(position);
     this.currentLocation = location;
+    if (this.canAutoStop) this.checkAutoStopConditions(location);
     this.locations.next(location);
-
-    if (!position.sample &&
-        (location.moving || location.event == messages.EventType.MOTION)) {
-      this.locationManager.save(location);
-    }
   }
 
   private onMotionChange(moving, position) {
-    if (moving) {
-      this.motion.next(moving);
-    } else {
-      return this.locationManager.filterNewLocations()
-        .then((locations: Location[]) => {
-          if (locations.length === 0) return;
-          return this.tripManager.save(Trip.fromLocations(locations))
-            .then((trip) => this.locationManager.batchUpdate(
-              ['trip_id'], [trip.id], 'trip_id IS NULL'));
-        })
-        .then(() => {
-          this.motion.next(moving);
-        });
+    this.motion.next({
+      moving: moving,
+      automatic: this.didAutoStop
+    });
+    this.didAutoStop = false;
+  }
+
+  private autoStop() {
+    this.didAutoStop = true;
+    this.setMoving(false);
+  }
+
+  private checkAutoStopConditions(location) {
+    if (location.speed > 13.41) this.highSpeedCount += 1;
+    if (this.highSpeedCount >= 5) {
+      this.highSpeedCount = 0;
+      this.autoStop();
+    } else if (location.activity != messages.ActivityType.BICYCLE) {
+      this.stopTimer = window.setTimeout(() => this.autoStop(), 18000);
+    } else if (this.stopTimer) {
+      clearTimeout(this.stopTimer);
     }
   }
 
@@ -123,10 +150,13 @@ export class Geo extends Service {
       this.getSettings(), () => {
         this.bgGeo.on('location', this.onLocation.bind(this));
         this.bgGeo.on('motionchange', this.onMotionChange.bind(this));
-        this.bgGeo.on('activitychange', this.onActivityChange.bind(this));
         this.setReady();
       });
     this.getCurrentLocation();
+    this.settings.getPreferences()
+      .then((prefs) => this.setGeolocationEnabled(prefs.autoRecord));
+    this.events.subscribe('settings:preferences',
+      (prefs) => this.setGeolocationEnabled(prefs.autoRecord));
   }
 
   public requestAccuracy() {
@@ -142,10 +172,11 @@ export class Geo extends Service {
 
   public getCurrentLocation(options?) {
     return this.ready()
-      .then(() => this.bgGeo.getCurrentPosition(options))
-      .then((position) => {
-        return Location.fromPosition(position);
-      });
+      .then(() => {
+        return new Promise((resolve, reject) => {
+          this.bgGeo.getCurrentPosition(resolve, reject, options);
+        });
+      }).then((position) => this.makeLocation(position));
   }
 
   public setGeolocationEnabled(on) {
@@ -168,12 +199,41 @@ export class Geo extends Service {
   }
 
   public setMoving(moving) {
+    this.canAutoStop = !moving;
+    if (this.stopTimer) clearTimeout(this.stopTimer);
+
     return this.ready().then(() => this.getState()).then((state) => {
       return new Promise((resolve, reject) => {
-        if ((<any>state).isMoving === moving) {
-          resolve();
+        if ((<any>state).enabled) {
+          // Geolocation is enabled (i.e. automatic recording is active).
+          if ((<any>state).isMoving === moving) {
+            resolve();
+          } else {
+            this.bgGeo.changePace(moving, resolve, reject);
+          }
         } else {
-          this.bgGeo.changePace(moving, resolve, reject);
+          // Geolocation is disabled, so we need to use watchPosition.
+          if (this.isWatching === moving) return resolve();
+          this.isWatching = moving;
+
+          if (moving) {
+            let settings = this.getSettings();
+            this.bgGeo.watchPosition(this.onLocation.bind(this), () => {}, {
+              interval: settings.fastestLocationUpdateInterval,
+              desiredAccuacy: settings.desiredAccuracy,
+              persist: false,
+              extras: {
+                watch: true
+              }
+            });
+            this.onMotionChange(true, null);
+            resolve();
+          } else {
+            this.bgGeo.stopWatchPosition(() => {
+              this.onMotionChange(false, null);
+              resolve();
+            }, reject);
+          }
         }
       });
     });

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ObjectManager } from './object_manager';
+import { Geo } from './geo';
 import { Location } from './location';
 import { Storage } from './storage';
 import * as moment from 'moment';
@@ -25,8 +26,11 @@ export class Locations extends ObjectManager {
     'trip_id'
   ];
 
-  constructor(protected storage: Storage) {
+  constructor(
+    protected geo: Geo,
+    protected storage: Storage) {
     super();
+    geo.locations.subscribe(this.onLocation.bind(this));
   }
 
   protected fromRow(row) {
@@ -66,6 +70,13 @@ export class Locations extends ObjectManager {
     ];
   }
 
+  protected onLocation(location) {
+    if (!location.sample && (location.watch ||
+        (location.moving || location.event == messages.EventType.MOTION))) {
+      this.save(location);
+    }
+  }
+
   public guessLocationTypes(locations: Location[]) : Promise<number[]> {
     return Promise.all(locations.map((location) => {
       let bbox = location.getBufferBbox(LOCATION_NEAR_THRESHOLD);
@@ -87,7 +98,7 @@ export class Locations extends ObjectManager {
     }));
   }
 
-  public filterNewLocations() {
+  public filterNewLocations(automatic: boolean) {
     return this.filter('trip_id IS NULL', 'time DESC')
       .then((locations: Location[]) => {
         // If there are fewer than two locations, delete them.
@@ -101,10 +112,14 @@ export class Locations extends ObjectManager {
           .indexOf(messages.ActivityType.BICYCLE);
 
         // Don't delete any locations if:
+        // - This trip was stopped manually (with the stop button).
         // - No bike locations were found.
         // - The last location was on bike.
         // - Removing non-bike locations would result in an invalid trip.
-        if (bikeIdx === -1 || bikeIdx === 0 || bikeIdx > locations.length - 2) {
+        if (!automatic ||
+            bikeIdx === -1 ||
+            bikeIdx === 0 ||
+            bikeIdx > locations.length - 2) {
           locations.reverse();
           return locations;
         }

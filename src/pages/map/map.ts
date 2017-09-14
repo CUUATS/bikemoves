@@ -158,7 +158,8 @@ export class MapPage implements TripStatsProvider {
     this.updateDistanceActivity();
   }
 
-  private onMotion(moving) {
+  private onMotion(movement) {
+    let moving = movement.moving;
     this.stateChangePending = false;
     this.setStateFromMoving(moving);
     this.startTime = (moving) ? moment() : null;
@@ -220,19 +221,12 @@ export class MapPage implements TripStatsProvider {
 
   startRecording() {
     this.stateChangePending = true;
-    return this.geo.setGeolocationEnabled(true)
-      .then(() => this.geo.setMoving(true));
+    this.geo.setMoving(true);
   }
 
   stopRecording() {
     this.stateChangePending = true;
-    let stopMoving = this.geo.setMoving(false),
-      getPrefs = this.settings.getPreferences();
-    return Promise.all([getPrefs, stopMoving])
-      .then((res) => {
-        if (!(res[0] as Preferences).autoRecord)
-          return this.geo.setGeolocationEnabled(false);
-      });
+    this.geo.setMoving(false);
   }
 
   startReporting() {

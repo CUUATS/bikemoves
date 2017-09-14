@@ -4,6 +4,7 @@ import * as turfDistance from '@turf/distance';
 import { point as turfPoint } from '@turf/helpers';
 import { Persistent } from './persistent';
 import { Geo } from './geo';
+import { bikemoves as messages } from './messages';
 import * as moment from 'moment';
 
 export class Location extends Persistent {
@@ -16,21 +17,6 @@ export class Location extends Persistent {
     'Shopping',
     'Other'
   ];
-
-  static fromPosition(position) {
-    return new Location(
-      position.coords.longitude,
-      position.coords.latitude,
-      position.coords.accuracy,
-      position.coords.altitude,
-      position.coords.heading,
-      position.coords.speed,
-      moment(position.timestamp),
-      position.is_moving,
-      (position.event) ? Geo.EVENTS[position.event] : null,
-      (position.activity.type) ? Geo.ACTIVITIES[position.activity.type] : null,
-      position.activity.confidence)
-  }
 
   static fromLngLat(lngLat: [number, number]) {
     return new Location(lngLat[0], lngLat[1]);
@@ -48,6 +34,8 @@ export class Location extends Persistent {
     public event: number = null,
     public activity: number = null,
     public confidence: number = null,
+    public sample: boolean = false,
+    public watch: boolean = false,
     public locationType: number = null,
     public tripId: number = null,
     public id: number = null) {

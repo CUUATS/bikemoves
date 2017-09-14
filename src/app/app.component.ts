@@ -34,17 +34,9 @@ export class BikeMoves {
       this.storage.init();
       this.state.init();
       this.geo.init();
-      this.ensureGeolocation();
       this.legacy.upgrade();
 
       if (DEBUG) (window as any).storage = storage;
     });
-  }
-
-  private ensureGeolocation() {
-    this.settings.getPreferences()
-      .then((prefs) => {
-        if (prefs.autoRecord) this.geo.setGeolocationEnabled(true);
-      });
   }
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Events } from 'ionic-angular';
 import { File, FileEntry } from '@ionic-native/file';
+import { Geo } from './geo';
 import { Trip } from './trip';
 import { ObjectManager } from './object_manager';
 import { Storage } from './storage';
@@ -24,11 +25,13 @@ export class Trips extends ObjectManager {
   ];
 
   constructor(
-      protected locations: Locations,
+      protected geo: Geo,
+      protected locationManager: Locations,
       protected storage: Storage,
       protected file: File,
       protected events: Events) {
     super();
+    geo.motion.subscribe(this.onMotion.bind(this));
   }
 
   protected fromRow(row) {
@@ -58,6 +61,18 @@ export class Trips extends ObjectManager {
       trip.desiredAccuracy,
       trip.appVersion
     ];
+  }
+
+  protected onMotion(movement) {
+    if (!movement.moving) {
+      return this.locationManager.filterNewLocations(movement.automatic)
+        .then((locations: Location[]) => {
+          if (locations.length === 0) return;
+          return this.save(Trip.fromLocations(locations))
+            .then((trip) => this.locationManager.batchUpdate(
+              ['trip_id'], [trip.id], 'trip_id IS NULL'));
+        });
+    }
   }
 
   protected imagePath(trip: Trip) {
@@ -100,14 +115,14 @@ export class Trips extends ObjectManager {
   }
 
   public getLocations(trip: Trip): Promise<Location[]> {
-    return this.locations.filter(`trip_id = ?`,  'time ASC', [trip.id]);
+    return this.locationManager.filter(`trip_id = ?`,  'time ASC', [trip.id]);
   }
 
   public getODLocations(trip: Trip) : Promise<Location[]> {
     let start = trip.startTime.valueOf(),
       end = trip.endTime.valueOf();
     return Promise.all([start, end].map((time) => {
-      return this.locations.filter('trip_id = ? AND time = ?',
+      return this.locationManager.filter('trip_id = ? AND time = ?',
         null, [trip.id, time], 1).then((locations) => locations[0]);
     }));
   }
