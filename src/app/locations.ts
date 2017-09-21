@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Events } from 'ionic-angular';
 import { ObjectManager } from './object_manager';
 import { Geo } from './geo';
 import { Location } from './location';
@@ -27,10 +28,11 @@ export class Locations extends ObjectManager {
   ];
 
   constructor(
+    protected events: Events,
     protected geo: Geo,
     protected storage: Storage) {
     super();
-    geo.locations.subscribe(this.onLocation.bind(this));
+    this.events.subscribe('geo:location', this.onLocation.bind(this));
   }
 
   protected fromRow(row) {
@@ -71,10 +73,7 @@ export class Locations extends ObjectManager {
   }
 
   protected onLocation(location) {
-    if (!location.sample && (location.watch ||
-        (location.moving || location.event == messages.EventType.MOTION))) {
-      this.save(location);
-    }
+    if (!location.sample && this.geo.getMoving()) this.save(location);
   }
 
   public guessLocationTypes(locations: Location[]) : Promise<number[]> {

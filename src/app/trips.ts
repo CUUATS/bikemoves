@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Events } from 'ionic-angular';
 import { File, FileEntry } from '@ionic-native/file';
-import { Geo } from './geo';
 import { Trip } from './trip';
 import { ObjectManager } from './object_manager';
 import { Storage } from './storage';
@@ -25,13 +24,12 @@ export class Trips extends ObjectManager {
   ];
 
   constructor(
-      protected geo: Geo,
       protected locationManager: Locations,
       protected storage: Storage,
       protected file: File,
       protected events: Events) {
     super();
-    geo.motion.subscribe(this.onMotion.bind(this));
+    this.events.subscribe('geo:motion', this.onMotion.bind(this));
   }
 
   protected fromRow(row) {

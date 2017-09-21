@@ -3,8 +3,6 @@ import * as turfBuffer from '@turf/buffer';
 import * as turfDistance from '@turf/distance';
 import { point as turfPoint } from '@turf/helpers';
 import { Persistent } from './persistent';
-import { Geo } from './geo';
-import { bikemoves as messages } from './messages';
 import * as moment from 'moment';
 
 export class Location extends Persistent {
@@ -35,7 +33,6 @@ export class Location extends Persistent {
     public activity: number = null,
     public confidence: number = null,
     public sample: boolean = false,
-    public watch: boolean = false,
     public locationType: number = null,
     public tripId: number = null,
     public id: number = null) {

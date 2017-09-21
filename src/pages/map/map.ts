@@ -1,5 +1,6 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { Events, ModalController, NavController, PopoverController } from 'ionic-angular';
+import { Events, ModalController, NavController, PopoverController }
+  from 'ionic-angular';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { Geo } from '../../app/geo';
 import { Location } from '../../app/location';
@@ -28,7 +29,6 @@ export class MapPage implements TripStatsProvider {
   private state = MapPage.STATE_STOPPED;
   private incidentLocation: Location;
   private stateChangePending = false;
-  private activity: messages.ActivityType;
   private startTime: moment.Moment;
   private duration = moment.duration(0);
   private distance = 0;
@@ -50,9 +50,8 @@ export class MapPage implements TripStatsProvider {
     this.stats = new TripStats(this);
     this.events.subscribe('state:active', this.onActiveChange.bind(this));
     map.click.subscribe(this.onClick.bind(this));
-    geo.motion.subscribe(this.onMotion.bind(this));
-    geo.locations.subscribe(this.onLocation.bind(this));
-    geo.getMoving().then((moving) => this.setStateFromMoving(moving));
+    this.events.subscribe('geo:motion', this.onMotion.bind(this));
+    this.events.subscribe('geo:location', this.onLocation.bind(this));
   }
 
   ionViewDidEnter() {
@@ -67,7 +66,7 @@ export class MapPage implements TripStatsProvider {
   }
 
   private showTutorial() {
-    this.settings.getPreferences().then((prefs) => {
+    this.settings.getPreferences().then((prefs: Preferences) => {
       if (prefs.showTutorial) {
         let tutorialModal = this.modalCtrl.create(TutorialPage, {modal: true});
         tutorialModal.present();
@@ -80,14 +79,15 @@ export class MapPage implements TripStatsProvider {
   private initMap() {
     let options: MapOptions = {};
     options.interactive = true;
-    if (this.geo.currentLocation) {
+    let lastLocation = this.geo.getLastLocation();
+    if (lastLocation) {
       options.icons = [
         {
           type: 'current',
-          location: this.geo.currentLocation
+          location: lastLocation
         }
       ];
-      options.center = this.geo.currentLocation;
+      options.center = lastLocation;
     }
     this.map.assign('map', options);
   }
@@ -105,25 +105,26 @@ export class MapPage implements TripStatsProvider {
   }
 
   public isStill() {
-    return this.activity === messages.ActivityType.STILL;
+    return this.geo.getLastActivity() === messages.ActivityType.STILL;
   }
 
   public isOnFoot() {
-    return this.activity === messages.ActivityType.FOOT ||
-      this.activity === messages.ActivityType.WALK ||
-      this.activity === messages.ActivityType.RUN;
+    let activity = this.geo.getLastActivity();
+    return activity === messages.ActivityType.FOOT ||
+      activity === messages.ActivityType.WALK ||
+      activity === messages.ActivityType.RUN;
   }
 
   public isOnBicycle() {
-    return this.activity === messages.ActivityType.BICYCLE;
+    return this.geo.getLastActivity() === messages.ActivityType.BICYCLE;
   }
 
   public isInVehicle() {
-    return this.activity === messages.ActivityType.VEHICLE;
+    return this.geo.getLastActivity() === messages.ActivityType.VEHICLE;
   }
 
   public isUnknownActivity() {
-    return this.activity === messages.ActivityType.UNKNOWN;
+    return this.geo.getLastActivity() === messages.ActivityType.UNKNOWN;
   }
 
   private setState(state: string) {
@@ -137,7 +138,8 @@ export class MapPage implements TripStatsProvider {
         this.map.path = new Path(locations);
         this.updateDistanceActivity();
       });
-    if (this.geo.currentLocation) this.map.center = this.geo.currentLocation;
+    let lastLocation = this.geo.getLastLocation();
+    if (lastLocation) this.map.center = lastLocation;
     this.updateIcons();
   }
 
@@ -186,10 +188,11 @@ export class MapPage implements TripStatsProvider {
 
   private updateIcons() {
     if (!this.map) return;
-    let icons = [];
-    if (this.geo.currentLocation && !this.isReporting()) icons.push({
+    let icons = [],
+      lastLocation = this.geo.getLastLocation();
+    if (lastLocation && !this.isReporting()) icons.push({
       type: 'current',
-      location: this.geo.currentLocation
+      location: lastLocation
     });
     if (this.isReporting() && this.incidentLocation) icons.push({
       type: 'incident',
@@ -215,8 +218,6 @@ export class MapPage implements TripStatsProvider {
 
   private updateDistanceActivity() {
     this.distance = this.map.path.distance;
-    this.activity = (this.geo.currentLocation) ?
-      this.geo.currentLocation.activity : messages.ActivityType.STILL;
   }
 
   startRecording() {

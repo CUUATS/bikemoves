@@ -23,11 +23,11 @@ export class LogPage {
     this.log.read().then((entries) => this.entries = entries);
   }
 
-  private send() {
+  public send() {
     this.log.send('bikemoves@cuuats.org');
   }
 
-  private clear() {
+  public clear() {
     this.log.clear().then(() => this.updateEntries());
   }
 }
