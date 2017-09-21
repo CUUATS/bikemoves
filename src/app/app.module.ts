@@ -30,6 +30,7 @@ import { TripsPage } from '../pages/trips/trips';
 import { TutorialPage } from '../pages/tutorial/tutorial';
 import { File } from '@ionic-native/file';
 import { Device } from '@ionic-native/device';
+import { EmailComposer } from '@ionic-native/email-composer';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -82,6 +83,7 @@ import { ChartistModule } from 'ng-chartist';
   providers: [
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     Device,
+    EmailComposer,
     File,
     Geo,
     Legacy,

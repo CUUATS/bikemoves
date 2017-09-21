@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Logs
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button icon-left (click)="send()">
+        <ion-icon name="send"></ion-icon>
+        Send
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
+      <button ion-button icon-left color="danger" (click)="clear()">
+        <ion-icon name="trash"></ion-icon>
+        Clear
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item text-wrap *ngFor="let entry of entries">
+      <h2>{{entry.time.format('MM/DD/YYYY h:mm:ss a')}}</h2>
+      <p>{{entry.message}}</p>
+    </ion-item>
+  </ion-list>
+</ion-content>
