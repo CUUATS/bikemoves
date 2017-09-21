@@ -4,6 +4,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Geo } from './geo';
 import { Legacy } from './legacy';
+import { Log } from './log';
 import { Settings } from './settings';
 import { State } from './state';
 import { Storage } from './storage';
@@ -19,6 +20,7 @@ export class BikeMoves {
   constructor(
       platform: Platform,
       private geo: Geo,
+      private log: Log,
       private settings: Settings,
       private splashScreen: SplashScreen,
       private state: State,
@@ -35,6 +37,7 @@ export class BikeMoves {
       this.state.init();
       this.geo.init();
       this.legacy.upgrade();
+      this.log.write('app', 'app initialized');
 
       if (DEBUG) (window as any).storage = storage;
     });

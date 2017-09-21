@@ -7,6 +7,7 @@ import { Geo } from './geo';
 import { GroupPipe } from './pipe';
 import { Legacy } from './legacy';
 import { Locations } from './locations';
+import { Log } from './log';
 import { Map } from './map';
 import { Remote } from './remote';
 import { Settings } from './settings';
@@ -16,6 +17,7 @@ import { Trips } from './trips';
 import { CreditsPage } from '../pages/credits/credits';
 import { IncidentFormPage } from '../pages/incident-form/incident-form';
 import { LegendPage } from '../pages/legend/legend';
+import { LogPage } from '../pages/log/log';
 import { MapPage } from '../pages/map/map';
 import { SettingsPage } from '../pages/settings/settings';
 import { StatsPage } from '../pages/stats/stats';
@@ -41,6 +43,7 @@ import { ChartistModule } from 'ng-chartist';
     GroupPipe,
     IncidentFormPage,
     LegendPage,
+    LogPage,
     MapPage,
     SettingsPage,
     StatsPage,
@@ -64,6 +67,7 @@ import { ChartistModule } from 'ng-chartist';
     CreditsPage,
     IncidentFormPage,
     LegendPage,
+    LogPage,
     MapPage,
     SettingsPage,
     StatsPage,
@@ -83,6 +87,7 @@ import { ChartistModule } from 'ng-chartist';
     Legacy,
     LocationAccuracy,
     Locations,
+    Log,
     Map,
     Remote,
     Settings,

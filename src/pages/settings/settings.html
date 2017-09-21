@@ -62,6 +62,15 @@
       </ion-select>
     </ion-item>
   </ion-list>
+  <ion-list *ngIf="debug">
+    <ion-item-divider color="light">
+      Developer
+    </ion-item-divider>
+    <button ion-item icon-left (click)="openLog()">
+      <ion-icon name="bug" item-left></ion-icon>
+      View Logs
+    </button>
+  </ion-list>
   <ion-list>
     <ion-item-divider color="light">
       About BikeMoves Illinois

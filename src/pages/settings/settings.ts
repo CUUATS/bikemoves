@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { NavController, ToastController } from 'ionic-angular';
+import { Geo } from '../../app/geo';
 import { Settings, Preferences, Profile } from '../../app/settings';
 import { getOptions, notify } from '../../app/utils';
 import { Remote } from '../../app/remote';
 import { CreditsPage } from '../credits/credits';
+import { LogPage } from '../log/log';
 import { TermsPage } from '../terms/terms';
 import { TutorialPage } from '../tutorial/tutorial';
-import { APP_VERSION } from '../../app/config';
+import { APP_VERSION, DEBUG } from '../../app/config';
 
 @Component({
   selector: 'page-settings',
@@ -19,8 +21,10 @@ export class SettingsPage {
   public experienceOptions = getOptions(Settings.EXPERIENCE_LEVELS);
   public genderOptions = getOptions(Settings.GENDERS);
   public version = APP_VERSION;
+  public debug = DEBUG;
 
   constructor(
+      private geo: Geo,
       private navCtrl: NavController,
       private toastCtrl: ToastController,
       private settings: Settings,
@@ -58,5 +62,19 @@ export class SettingsPage {
   public openCredits() {
     this.navCtrl.push(CreditsPage);
   }
+
+  public openLog() {
+    this.navCtrl.push(LogPage);
+  }
+
+  // public clearLogs() {
+  //   this.geo.clearLogs()
+  //     .then(() => console.log('Logs removed'))
+  //     .then(() => notify(this.toastCtrl, 'Geolocation logs cleared.'));
+  // }
+  //
+  // public sendLogs() {
+  //   this.geo.sendLogs('bikemoves@cuuats.org');
+  // }
 
 }

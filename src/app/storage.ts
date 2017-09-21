@@ -10,7 +10,7 @@ export interface Migration {
 
 @Injectable()
 export class Storage extends Service {
-  private static DB_VERSION = 7;
+  private static DB_VERSION = 9;
   private static SQL_CREATE_TABLE = `
     CREATE TABLE IF NOT EXISTS db_version (
       id INTEGER PRIMARY KEY ASC NOT NULL,

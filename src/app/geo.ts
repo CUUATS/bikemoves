@@ -7,6 +7,7 @@ import { Subject } from 'rxjs/Subject';
 import { Service } from './service';
 import { Location } from './location';
 import { Locations } from './locations';
+import { Log } from './log';
 import { Trip } from './trip';
 import { Trips } from './trips';
 import { Settings } from './settings';
@@ -47,6 +48,7 @@ export class Geo extends Service {
       private device: Device,
       private events: Events,
       private locationAccuracy: LocationAccuracy,
+      private log: Log,
       private settings: Settings) {
     super();
   }
@@ -88,6 +90,11 @@ export class Geo extends Service {
 
   private onLocation(position) {
     let location = this.makeLocation(position);
+    this.log.write('geo', `location: accuracy=${location.accuracy} ` +
+      `speed=${location.speed} moving=${location.moving} ` +
+      `event=${location.event} activity=${location.activity} ` +
+      `confidence=${location.confidence} sample=${location.sample} ` +
+      `watch=${location.watch}`)
     this.currentLocation = location;
     if (this.canAutoStop) this.checkAutoStopConditions(location);
     this.locations.next(location);
@@ -121,7 +128,8 @@ export class Geo extends Service {
   private getSettings() {
     return {
       activityRecognitionInterval: 10000,
-  		activityType: 'OtherNavigation',
+  		activityType: 'Fitness',
+      debug: false,
   		desiredAccuracy: 0,
   		distanceFilter: 20,
   		disableElasticity: true,
@@ -136,11 +144,32 @@ export class Geo extends Service {
         settingsButton: 'Settings'
       },
   		locationUpdateInterval: 5000,
+      logLevel: (DEBUG) ?
+        this.bgGeo.LOG_LEVEL_VERBOSE : this.bgGeo.LOG_LEVEL_OFF,
       maxRecordsToPersist: 0,
   		stationaryRadius: 20,
   		stopTimeout: 3,
       triggerActivities: 'on_bicycle'
   	};
+  }
+
+  public clearLogs() {
+    if (!DEBUG) return;
+    return this.ready().then(() => {
+      return new Promise((resolve, reject) => {
+        console.log('Removing logs');
+        this.bgGeo.destroyLog(resolve, reject);
+      });
+    });
+  }
+
+  public sendLogs(address: string) {
+    if (!DEBUG) return;
+    return this.ready().then(() => {
+      return new Promise((resolve, reject) => {
+        this.bgGeo.emailLog(address, resolve);
+      });
+    });
   }
 
   public init() {
