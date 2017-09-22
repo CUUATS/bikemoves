@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Events } from 'ionic-angular';
+import { Device } from '@ionic-native/device';
 import { EmailComposer } from '@ionic-native/email-composer';
 import { ObjectManager } from './object_manager';
 import { Storage } from './storage';
 import { LogEntry } from './log_entry';
-import { DEBUG } from './config';
+import { APP_VERSION, DEBUG } from './config';
 import * as moment from 'moment';
 
 @Injectable()
@@ -18,6 +19,7 @@ export class Log extends ObjectManager {
 
   constructor(
     protected storage: Storage,
+    protected device: Device,
     protected events: Events,
     private emailComposer: EmailComposer) {
     super();
@@ -38,6 +40,20 @@ export class Log extends ObjectManager {
       logEntry.category,
       logEntry.message
     ];
+  }
+
+  private getMessageBody() {
+    let time = moment().format('YYYY-MM-DD kk:mm:ss.SSS');
+    return [
+      `Date and Time: ${time}`,
+      `App Version: ${APP_VERSION}`,
+      `Cordova Version: ${this.device.cordova}`,
+      `Platform: ${this.device.platform}`,
+      `Platform Version: ${this.device.version}`,
+      `Manufacturer: ${this.device.manufacturer}`,
+      `Model: ${this.device.model}`,
+      `UUID: ${this.device.uuid}`
+    ].join('\n')
   }
 
   public read() {
@@ -65,7 +81,7 @@ export class Log extends ObjectManager {
       return this.emailComposer.open({
         to: address,
         subject: 'BikeMoves Illinois logs: ' + moment().format('YYYY-MM-DD'),
-        body: 'Logs: ' + moment().format('YYYY-MM-DD kk:mm:ss.SSS'),
+        body: this.getMessageBody(),
         isHtml: false,
         attachments: [
           'base64:bikemoves-' + moment().format('YYYYMMDD') + '.log//' +
