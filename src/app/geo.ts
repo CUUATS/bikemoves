@@ -36,7 +36,7 @@ export class Geo extends Service {
   private enabled = false;
   private moving = false;
   private bgMoving = false;
-  private stopTimer: number;
+  private activityTimer: number;
 
   constructor(
       private device: Device,
@@ -58,6 +58,10 @@ export class Geo extends Service {
         position.speed < 11.18) messages.ActivityType.BICYCLE;
 
     return Geo.ACTIVITIES[position.activity.type];
+  }
+
+  private onBike(position) {
+    return this.guessActivity(position) === messages.ActivityType.BICYCLE;
   }
 
   private makeLocation(position) {
@@ -91,12 +95,31 @@ export class Geo extends Service {
   private onMotionChange(moving, position) {
     this.log.write('geo', `bg motion change: moving=${moving}`);
     this.bgMoving = moving;
-    if (this.guessActivity(position) === messages.ActivityType.BICYCLE)
+    if (!this.moving && moving && this.onBike(position)) {
+      this.clearActivityTimer();
       this.setMoving(true, true);
+    } else if (this.moving && !moving) {
+      this.setActivityTimer();
+    }
+  }
+
+  private setActivityTimer() {
+    if (this.activityTimer) return;
+    this.activityTimer = window.setTimeout(() => {
+      this.log.write('geo', 'auto stop: activity timer');
+      this.setMoving(false, true);
+    }, 18000);
+    this.log.write('geo', 'activity timer: set');
+  }
+
+  private clearActivityTimer() {
+    if (!this.activityTimer) return;
+    clearTimeout(this.activityTimer);
+    this.log.write('geo', 'activity timer: cleared');
   }
 
   private checkAutoStopConditions(position) {
-    let onBike = this.guessActivity(position) === messages.ActivityType.BICYCLE;
+    let onBike = this.onBike(position);
     if (position.coords.speed > 13.41) {
       this.highSpeedCount += 1;
       this.log.write('geo', 'high speed count: ' + this.highSpeedCount);
@@ -105,15 +128,10 @@ export class Geo extends Service {
       this.highSpeedCount = 0;
       this.log.write('geo', 'auto stop: high speed count');
       this.setMoving(false, true);
-    } else if (!this.stopTimer && !onBike) {
-      this.log.write('geo', 'activity timer: set');
-      this.stopTimer = window.setTimeout(() => {
-        this.log.write('geo', 'auto stop: activity timer');
-        this.setMoving(false, true);
-      }, 18000);
-    } else if (this.stopTimer && onBike) {
-      this.log.write('geo', 'activity timer: cleared');
-      clearTimeout(this.stopTimer);
+    } else if (onBike) {
+      this.clearActivityTimer();
+    } else if (!onBike) {
+      this.setActivityTimer();
     }
   }
 
@@ -174,6 +192,7 @@ export class Geo extends Service {
         this.bgGeo.on('location', this.onLocation.bind(this));
         this.bgGeo.on('motionchange', this.onMotionChange.bind(this));
         this.setReady();
+        this.clearActivityTimer();
         this.setMoving(this.moving, true);
       });
     this.getCurrentLocation();
