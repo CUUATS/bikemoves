@@ -93,7 +93,8 @@ export class Geo extends Service {
   }
 
   private onMotionChange(moving, position) {
-    this.log.write('geo', `bg motion change: moving=${moving}`);
+    this.log.write('geo',
+      `bg motion change: prev=${this.moving} moving=${moving}`);
     this.bgMoving = moving;
     if (!this.moving && moving && this.onBike(position)) {
       this.clearActivityTimer();
@@ -104,17 +105,22 @@ export class Geo extends Service {
   }
 
   private setActivityTimer() {
-    if (this.activityTimer) return;
+    if (this.activityTimer)
+      return this.log.write('geo', 'activity timer: already set');
+
     this.activityTimer = window.setTimeout(() => {
       this.log.write('geo', 'auto stop: activity timer');
       this.setMoving(false, true);
     }, 18000);
+
     this.log.write('geo', 'activity timer: set');
   }
 
   private clearActivityTimer() {
-    if (!this.activityTimer) return;
+    if (!this.activityTimer)
+      return this.log.write('geo', 'activity timer: does not exist');
     clearTimeout(this.activityTimer);
+    this.activityTimer = undefined;
     this.log.write('geo', 'activity timer: cleared');
   }
 
