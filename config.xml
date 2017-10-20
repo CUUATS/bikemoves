@@ -101,4 +101,5 @@
         <variable name="MOTION_USAGE_DESCRIPTION" value="Using the accelerometer allows BikeMoves to record your trips more efficiently." />
         <variable name="BACKGROUND_MODE_LOCATION" value="&lt;string&gt;location&lt;/string&gt;" />
     </plugin>
+    <plugin name="cordova-plugin-ionic-webview" spec="^1.1.16" />
 </widget>

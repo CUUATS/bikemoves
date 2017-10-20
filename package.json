@@ -38,6 +38,7 @@
     "cordova-plugin-device": "~1.1.4",
     "cordova-plugin-email-composer": "^0.8.9",
     "cordova-plugin-file": "~4.3.2",
+    "cordova-plugin-ionic-webview": "^1.1.16",
     "cordova-plugin-request-location-accuracy": "~2.2.1",
     "cordova-plugin-splashscreen": "~4.0.2",
     "cordova-plugin-statusbar": "~2.2.1",
@@ -118,7 +119,8 @@
       "cordova-sqlite-storage": {},
       "ionic-plugin-keyboard": {},
       "cordova-plugin-console": {},
-      "cordova-plugin-email-composer": {}
+      "cordova-plugin-email-composer": {},
+      "cordova-plugin-ionic-webview": {}
     }
   }
 }

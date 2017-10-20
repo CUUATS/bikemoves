@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { AlertController, Events, ModalController, NavController, PopoverController, ToastController } from 'ionic-angular';
+import { AlertController, Events, ModalController, NavController,
+  PopoverController, ToastController, normalizeURL } from 'ionic-angular';
 import { File } from '@ionic-native/file';
 import { Trip } from '../../app/trip';
 import { Trips } from '../../app/trips';
@@ -73,7 +74,8 @@ export class TripsPage {
         if (!entries) return;
         entries.forEach((entry) => {
           let matches = entry.name.match(/trip-(\d+)\.jpg/);
-          if (matches) this.imageURLs[parseInt(matches[1])] = entry.nativeURL;
+          if (matches) this.imageURLs[parseInt(matches[1])] =
+            normalizeURL(entry.nativeURL);
         });
       });
   }
@@ -99,7 +101,7 @@ export class TripsPage {
     this.tripManager.getLocations(trip)
       .then((locations) => this.map.createPathImage(new Path(locations)))
       .then((blob) => this.tripManager.saveImage(trip, blob))
-      .then((entry) => this.imageURLs[trip.id] = entry.nativeURL);
+      .then((entry) => this.imageURLs[trip.id] = normalizeURL(entry.nativeURL));
   }
 
   public goToTripDetail(trip: Trip) {
