@@ -19,37 +19,38 @@
     "@angular/http": "^4.4.3",
     "@angular/platform-browser": "^4.4.3",
     "@angular/platform-browser-dynamic": "^4.4.3",
-    "@ionic-native/core": "^4.2.1",
-    "@ionic-native/device": "^4.2.1",
-    "@ionic-native/email-composer": "^4.2.1",
-    "@ionic-native/file": "^4.2.1",
-    "@ionic-native/location-accuracy": "^4.2.1",
-    "@ionic-native/splash-screen": "^4.2.1",
-    "@ionic-native/sqlite": "^4.2.1",
-    "@ionic-native/status-bar": "^4.2.1",
-    "@turf/turf": "^4.6.1",
+    "@ionic-native/core": "^4.3.2",
+    "@ionic-native/device": "^4.3.2",
+    "@ionic-native/email-composer": "^4.3.2",
+    "@ionic-native/file": "^4.3.2",
+    "@ionic-native/location-accuracy": "^4.3.2",
+    "@ionic-native/splash-screen": "^4.3.2",
+    "@ionic-native/sqlite": "^4.3.2",
+    "@ionic-native/status-bar": "^4.3.2",
+    "@turf/turf": "^4.7.3",
     "@types/geojson": "^1.0.3",
     "chartist": "^0.11.0",
-    "cordova-android": "^6.2.3",
-    "cordova-background-geolocation": "git+https://github.com/transistorsoft/cordova-background-geolocation.git#2.8.4",
-    "cordova-ios": "^4.4.0",
-    "cordova-plugin-background-fetch": "^5.0.0",
-    "cordova-plugin-console": "^1.0.7",
-    "cordova-plugin-device": "~1.1.4",
-    "cordova-plugin-email-composer": "^0.8.9",
-    "cordova-plugin-file": "~4.3.2",
+    "cordova-android": "^6.3.0",
+    "cordova-background-geolocation": "git+https://github.com/transistorsoft/cordova-background-geolocation.git#2.8.5",
+    "cordova-ios": "^4.5.2",
+    "cordova-plugin-background-fetch": "^5.1.1",
+    "cordova-plugin-cocoalumberjack": "0.0.4",
+    "cordova-plugin-compat": "^1.2.0",
+    "cordova-plugin-device": "^1.1.6",
+    "cordova-plugin-email-composer": "^0.8.10",
+    "cordova-plugin-file": "^4.3.3",
     "cordova-plugin-ionic-webview": "^1.1.16",
-    "cordova-plugin-request-location-accuracy": "~2.2.1",
-    "cordova-plugin-splashscreen": "~4.0.2",
-    "cordova-plugin-statusbar": "~2.2.1",
-    "cordova-plugin-whitelist": "1.3.1",
-    "cordova-sqlite-storage": "~2.0.2",
+    "cordova-plugin-request-location-accuracy": "^2.2.2",
+    "cordova-plugin-splashscreen": "^4.0.3",
+    "cordova-plugin-statusbar": "^2.2.3",
+    "cordova-plugin-whitelist": "^1.3.2",
+    "cordova-sqlite-storage": "^2.0.4",
     "install": "^0.8.7",
     "ionic-angular": "^3.7.1",
-    "ionic-plugin-keyboard": "~2.2.1",
+    "ionic-plugin-keyboard": "^2.2.1",
     "ionicons": "3.0.0",
-    "mapbox-gl": "^0.39.1",
-    "moment": "^2.18.1",
+    "mapbox-gl": "^0.41.0",
+    "moment": "^2.19.1",
     "ng-chartist": "^1.1.0",
     "npm": "^4.4.1",
     "protobufjs": "6.8.0",
@@ -63,34 +64,6 @@
     "array-flatten": "^2.1.1",
     "typescript": "2.3.4"
   },
-  "cordovaPlugins": [
-    "ionic-plugin-keyboard",
-    "cordova-plugin-whitelist",
-    "cordova-plugin-statusbar",
-    "cordova-plugin-device",
-    "cordova-plugin-splashscreen",
-    "cordova-sqlite-storage",
-    {
-      "locator": "https://github.com/transistorsoft/cordova-background-geolocation.git",
-      "id": "cordova-background-geolocation"
-    },
-    "cordova-plugin-dialogs",
-    "cordova-plugin-background-fetch",
-    "cordova-plugin-cocoalumberjack"
-  ],
-  "cordovaPlatforms": [
-    "ios",
-    {
-      "platform": "ios",
-      "version": "",
-      "locator": "ios"
-    },
-    {
-      "platform": "android",
-      "version": "",
-      "locator": "android"
-    }
-  ],
   "description": "BikeMoves Illinois: Bicycle route recording and assistance",
   "config": {
     "ionic_copy": "./config/copy.config.js",
@@ -98,12 +71,13 @@
   },
   "cordova": {
     "platforms": [
-      "android",
-      "ios"
+      "ios",
+      "android"
     ],
     "plugins": {
       "cordova-background-geolocation": {
         "LICENSE": "61500f38e27b9bbad808b9c6222bda92828081703445386ecf023ff1f54ecd0c",
+        "GOOGLE_API_VERSION": "11.0.1",
         "LOCATION_ALWAYS_USAGE_DESCRIPTION": "Background location tracking is required to record your trips while BikeMoves is in the background. Trips are only recorded while the app is running.",
         "LOCATION_ALWAYS_AND_WHEN_IN_USE_USAGE_DESCRIPTION": "The Always setting is required to record trips while BikeMoves is in the background. Trips are only recorded while the app is running.",
         "LOCATION_WHEN_IN_USE_USAGE_DESCRIPTION": "Location tracking is required to record your trips.",
@@ -118,7 +92,6 @@
       "cordova-plugin-whitelist": {},
       "cordova-sqlite-storage": {},
       "ionic-plugin-keyboard": {},
-      "cordova-plugin-console": {},
       "cordova-plugin-email-composer": {},
       "cordova-plugin-ionic-webview": {}
     }

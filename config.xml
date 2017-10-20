@@ -81,9 +81,6 @@
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
     <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
-    <engine name="android" spec="^6.2.3" />
-    <engine name="ios" spec="^4.4.0" />
-    <plugin name="cordova-plugin-console" spec="^1.0.7" />
     <plugin name="cordova-plugin-device" spec="~1.1.4" />
     <plugin name="cordova-plugin-email-composer" spec="^0.8.9" />
     <plugin name="cordova-plugin-file" spec="~4.3.2" />
@@ -93,13 +90,16 @@
     <plugin name="cordova-plugin-whitelist" spec="1.3.1" />
     <plugin name="cordova-sqlite-storage" spec="~2.0.2" />
     <plugin name="ionic-plugin-keyboard" spec="~2.2.1" />
-    <plugin name="cordova-background-geolocation" spec="https://github.com/transistorsoft/cordova-background-geolocation.git#2.8.4">
+    <plugin name="cordova-plugin-ionic-webview" spec="^1.1.16" />
+    <engine name="ios" spec="~4.5.2" />
+    <engine name="android" spec="~6.3.0" />
+    <plugin name="cordova-background-geolocation" spec="https://github.com/transistorsoft/cordova-background-geolocation.git#2.8.5">
         <variable name="LICENSE" value="61500f38e27b9bbad808b9c6222bda92828081703445386ecf023ff1f54ecd0c" />
+        <variable name="GOOGLE_API_VERSION" value="11.0.1" />
         <variable name="LOCATION_ALWAYS_USAGE_DESCRIPTION" value="Background location tracking is required to record your trips while BikeMoves is in the background. Trips are only recorded while the app is running." />
         <variable name="LOCATION_ALWAYS_AND_WHEN_IN_USE_USAGE_DESCRIPTION" value="The Always setting is required to record trips while BikeMoves is in the background. Trips are only recorded while the app is running." />
         <variable name="LOCATION_WHEN_IN_USE_USAGE_DESCRIPTION" value="Location tracking is required to record your trips." />
         <variable name="MOTION_USAGE_DESCRIPTION" value="Using the accelerometer allows BikeMoves to record your trips more efficiently." />
         <variable name="BACKGROUND_MODE_LOCATION" value="&lt;string&gt;location&lt;/string&gt;" />
     </plugin>
-    <plugin name="cordova-plugin-ionic-webview" spec="^1.1.16" />
 </widget>
