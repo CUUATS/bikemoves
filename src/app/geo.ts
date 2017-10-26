@@ -88,20 +88,14 @@ export class Geo extends Service {
       `confidence=${location.confidence} sample=${location.sample}`)
     this.lastLocation = location;
     this.lastActivity = this.guessActivity(position);
+    if (this.enabled) this.checkMoving(location);
     this.events.publish('geo:location', location);
-    if (this.moving && this.enabled) this.checkAutoStopConditions(location);
   }
 
   private onMotionChange(moving, position) {
     this.log.write('geo',
       `bg motion change: prev=${this.moving} moving=${moving}`);
     this.bgMoving = moving;
-    if (!this.moving && moving && this.onBike(position)) {
-      this.clearActivityTimer();
-      this.setMoving(true, true);
-    } else if (this.moving && !moving) {
-      this.setActivityTimer();
-    }
   }
 
   private setActivityTimer() {
@@ -124,9 +118,8 @@ export class Geo extends Service {
     this.log.write('geo', 'activity timer: cleared');
   }
 
-  private checkAutoStopConditions(position) {
-    let onBike = this.onBike(position);
-    if (position.coords.speed > 13.41) {
+  private checkHighSpeed(location) {
+    if (location.coords.speed > 13.41) {
       this.highSpeedCount += 1;
       this.log.write('geo', 'high speed count: ' + this.highSpeedCount);
     }
@@ -134,10 +127,21 @@ export class Geo extends Service {
       this.highSpeedCount = 0;
       this.log.write('geo', 'auto stop: high speed count');
       this.setMoving(false, true);
-    } else if (onBike) {
+      return true;
+    }
+    return false;
+  }
+
+  private checkMoving(location) {
+    let onBike = this.onBike(location);
+
+    if (!this.moving && location.moving && onBike) {
       this.clearActivityTimer();
-    } else if (!onBike) {
-      this.setActivityTimer();
+      this.setMoving(true, true);
+    }
+
+    if (this.moving && !this.checkHighSpeed(location)) {
+      (onBike) ?  this.clearActivityTimer() : this.setActivityTimer();
     }
   }
 
