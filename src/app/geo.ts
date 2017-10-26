@@ -55,7 +55,7 @@ export class Geo extends Service {
     // are considered biking.
     if (this.device.platform == 'iOS' &&
         position.speed > 2.24 &&
-        position.speed < 11.18) messages.ActivityType.BICYCLE;
+        position.speed < 11.18) return messages.ActivityType.BICYCLE;
 
     return Geo.ACTIVITIES[position.activity.type];
   }
