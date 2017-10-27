@@ -47,21 +47,22 @@ export class Geo extends Service {
     super();
   }
 
-  private guessActivity(position) {
-    if (!position.activity.type) return messages.ActivityType.UNKNOWN;
+  private guessActivity(location: Location) {
+    if (!location.moving) return messages.ActivityType.STILL;
+    if (!location.activity) return messages.ActivityType.UNKNOWN;
 
     // iOS is not reporting the correct activity for biking most of the time,
     // so we guess the activity based on speed. Speeds > 5 MPH and < 25 MPH
     // are considered biking.
     if (this.device.platform == 'iOS' &&
-        position.speed > 2.24 &&
-        position.speed < 11.18) return messages.ActivityType.BICYCLE;
+        location.speed > 2.24 &&
+        location.speed < 11.18) return messages.ActivityType.BICYCLE;
 
-    return Geo.ACTIVITIES[position.activity.type];
+    return location.activity;
   }
 
-  private onBike(position) {
-    return this.guessActivity(position) === messages.ActivityType.BICYCLE;
+  private onBike(location: Location) {
+    return this.guessActivity(location) === messages.ActivityType.BICYCLE;
   }
 
   private makeLocation(position) {
@@ -85,10 +86,11 @@ export class Geo extends Service {
     this.log.write('geo', `location: accuracy=${location.accuracy} ` +
       `speed=${location.speed} moving=${location.moving} ` +
       `event=${location.event} activity=${location.activity} ` +
-      `confidence=${location.confidence} sample=${location.sample}`)
-    this.lastLocation = location;
-    this.lastActivity = this.guessActivity(position);
+      `confidence=${location.confidence} sample=${location.sample}`);
+
     if (this.enabled) this.checkMoving(location);
+    this.lastLocation = location;
+    this.lastActivity = this.guessActivity(location);
     this.events.publish('geo:location', location);
   }
 
@@ -119,7 +121,7 @@ export class Geo extends Service {
   }
 
   private checkHighSpeed(location) {
-    if (location.coords.speed > 13.41) {
+    if (location.speed > 13.41) {
       this.highSpeedCount += 1;
       this.log.write('geo', 'high speed count: ' + this.highSpeedCount);
     }
@@ -134,13 +136,14 @@ export class Geo extends Service {
 
   private checkMoving(location) {
     let onBike = this.onBike(location);
+    this.log.write('geo', `checking moving: onBike=${onBike} ` +
+      `this.moving=${this.moving} location.moving=${location.moving} ` +
+      `highSpeed=${this.checkHighSpeed(location)}`);
 
-    if (!this.moving && location.moving && onBike) {
+    if (!this.moving && onBike) {
       this.clearActivityTimer();
       this.setMoving(true, true);
-    }
-
-    if (this.moving && !this.checkHighSpeed(location)) {
+    } else if (this.moving && !this.checkHighSpeed(location)) {
       (onBike) ?  this.clearActivityTimer() : this.setActivityTimer();
     }
   }
@@ -249,6 +252,7 @@ export class Geo extends Service {
   }
 
   public setEnabled(enabled) {
+    this.log.write('geo', `setting enabled: enabled=${enabled}`);
     return this.ready().then(() => {
       return new Promise((resolve, reject) => {
         if (this.enabled === enabled) return resolve();
@@ -269,6 +273,8 @@ export class Geo extends Service {
   }
 
   public setMoving(moving, automatic = false) {
+    this.log.write('geo',
+      `setting moving: moving=${moving} automatic=${automatic}`);
     return this.ready().then(() => {
       return new Promise((resolve, reject) => {
         if (this.moving === moving) return resolve();
