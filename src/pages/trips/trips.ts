@@ -4,6 +4,7 @@ import { AlertController, Events, ModalController, NavController,
 import { File } from '@ionic-native/file';
 import { Trip } from '../../app/trip';
 import { Trips } from '../../app/trips';
+import { Log } from '../../app/log';
 import { Map } from '../../app/map';
 import { Path } from '../../app/path';
 import { Preferences, Settings } from '../../app/settings';
@@ -28,6 +29,7 @@ export class TripsPage {
     private alertCtrl: AlertController,
     private events: Events,
     private file: File,
+    private log: Log,
     private tripManager: Trips,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
@@ -53,6 +55,7 @@ export class TripsPage {
   }
 
   private updateTrips() {
+    this.log.write('trips page', `updating trips`);
     let getTrips = this.tripManager.all('start_time DESC').then((trips) => {
         this.trips = trips;
         this.hasTrips = trips.length > 0;
@@ -67,6 +70,7 @@ export class TripsPage {
   }
 
   private loadTripImages() {
+    this.log.write('trips page', `loading trip images`);
     return this.file.listDir(this.file.dataDirectory, 'images')
       .catch((err) => {
         if (err.code !== 1) throw err;
@@ -95,6 +99,7 @@ export class TripsPage {
   }
 
   private createTripImage(trip: Trip) {
+    this.log.write('trips page', `creating image for trip: id=${trip.id}`);
     this.map.assign('trip-image-map', {
       interactive: false
     });
@@ -139,6 +144,7 @@ export class TripsPage {
   }
 
   private deleteTrip(trip) {
+    this.log.write('trips page', `deleting trip: id=${trip.id}`);
     this.tripManager.delete(trip)
       .then(() => {
         if (this.imageURLs[trip.id]) delete this.imageURLs[trip.id];

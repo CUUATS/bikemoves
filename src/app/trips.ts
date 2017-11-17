@@ -6,6 +6,7 @@ import { ObjectManager } from './object_manager';
 import { Storage } from './storage';
 import { Location } from './location';
 import { Locations } from './locations';
+import { Log } from './log';
 import * as moment from 'moment';
 
 @Injectable()
@@ -25,6 +26,7 @@ export class Trips extends ObjectManager {
 
   constructor(
       protected locationManager: Locations,
+      protected log: Log,
       protected storage: Storage,
       protected file: File,
       protected events: Events) {
@@ -62,6 +64,9 @@ export class Trips extends ObjectManager {
   }
 
   protected onMotion(movement) {
+    this.log.write('trips',
+      `received motion event: moving=${movement.moving} ` +
+      `automatic=${movement.automatic}`);
     if (!movement.moving) {
       return this.locationManager.filterNewLocations(movement.automatic)
         .then((locations: Location[]) => {
@@ -78,12 +83,14 @@ export class Trips extends ObjectManager {
   }
 
   public delete(trip: Trip) {
+    this.log.write('trips', `deleting trip: id=${trip.id}`);
     return Promise.all([this.deleteImage(trip), super.delete(trip)])
       .then(() => this.events.publish('trip:delete'));
   }
 
   public save(trip: Trip) {
     let insert = trip.id === null;
+    this.log.write('trips', `saving trip: insert=${insert}`);
     return super.save(trip).then((trip) => {
       this.events.publish('trip:save', {
         insert: insert,
@@ -95,6 +102,7 @@ export class Trips extends ObjectManager {
   }
 
   public deleteImage(trip: Trip) {
+    this.log.write('trips', `deleting trip image: id=${trip.id}`);
     return this.file.removeFile(
         this.file.dataDirectory, this.imagePath(trip))
       .catch((err) => {
@@ -103,6 +111,7 @@ export class Trips extends ObjectManager {
   }
 
   public saveImage(trip: Trip, blob) {
+    this.log.write('trips', `saving trip image: id=${trip.id}`);
     return this.file.createDir(this.file.dataDirectory, 'images', false)
       .catch((err) => {
         if (err.code !== 12) throw err;
@@ -113,10 +122,12 @@ export class Trips extends ObjectManager {
   }
 
   public getLocations(trip: Trip): Promise<Location[]> {
+    this.log.write('trips', `getting locations for trip: id=${trip.id}`);
     return this.locationManager.filter(`trip_id = ?`,  'time ASC', [trip.id]);
   }
 
   public getODLocations(trip: Trip) : Promise<Location[]> {
+    this.log.write('trips', `getting o-d locations for trip: id=${trip.id}`);
     let start = trip.startTime.valueOf(),
       end = trip.endTime.valueOf();
     return Promise.all([start, end].map((time) => {
