@@ -62,6 +62,7 @@ export class Log extends ObjectManager {
 
   public write(category: string, message: string) {
     if (!DEBUG) return Promise.resolve();
+    console.log(`[${category}] ${message}`);
     let entry = new LogEntry(moment(), category, message);
     return this.save(entry)
       .then(() => this.events.publish('log:write', entry));
