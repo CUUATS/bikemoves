@@ -89,6 +89,10 @@ export class Geo extends Service {
       `confidence=${location.confidence} sample=${location.sample}`);
 
     if (this.enabled) this.checkMoving(location);
+    this.handleLocation(location);
+  }
+
+  private handleLocation(location: Location) {
     this.lastLocation = location;
     this.lastActivity = this.guessActivity(location);
     this.events.publish('geo:location', location);
@@ -142,7 +146,7 @@ export class Geo extends Service {
 
     if (!this.moving && onBike) {
       this.clearActivityTimer();
-      this.setMoving(true, true);
+      this.setMoving(true, true).then(() => this.handleLocation(location));
     } else if (this.moving && !this.checkHighSpeed(location)) {
       (onBike) ?  this.clearActivityTimer() : this.setActivityTimer();
     }
