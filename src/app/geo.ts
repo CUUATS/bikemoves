@@ -111,7 +111,8 @@ export class Geo extends Service {
     this.activityTimer = window.setTimeout(() => {
       this.log.write('geo', 'auto stop: activity timer');
       this.setMoving(false, true);
-    }, 18000);
+      this.activityTimer = undefined;
+    }, 180000);
 
     this.log.write('geo', 'activity timer: set');
   }
