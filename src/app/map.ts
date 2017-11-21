@@ -128,6 +128,7 @@ export class Map {
   public click = new Subject();
 
   constructor() {
+    this.resetOptions();
     this.el.id = 'bikemoves-map';
     document.body.appendChild(this.el);
   }
@@ -263,7 +264,8 @@ export class Map {
   }
 
   set icons(icons: Icon[]) {
-    this.options.icons = icons;
+    this.options.icons = icons
+      .filter((icon) => icon.location !== null && icon.location !== undefined);
     if (this.loaded)
       this.map.getSource(Map.ICONS_SOURCE).setData(this.getIconsData());
   }
@@ -281,7 +283,8 @@ export class Map {
   }
 
   set path(path: Path | null) {
-    this.options.path = (path) ? path : new Path();
+    this.options.path = (path && path.locations && path.locations.length) ?
+      path : new Path();
     if (this.loaded)
       this.map.getSource(Map.TRIP_SOURCE).setData(this.getTripData());
   }
@@ -295,6 +298,7 @@ export class Map {
   }
 
   public zoomToPath() {
+    if (!this.path || !this.path.locations.length) return;
     let bbox = turfBbox(this.path.toLineString() as any);
     this.map.fitBounds([bbox.slice(0, 2), bbox.slice(2)], {
       duration: 0,
@@ -304,6 +308,7 @@ export class Map {
   }
 
   public addLocation(location: Location) {
+    if (!this.options.path) return;
     this.options.path.push(location);
     this.path = this.options.path;
   }
@@ -349,6 +354,11 @@ export class Map {
     if (this.captureOnLoad && this.map.loaded()) this.capturePathImage();
   }
 
+  private resetOptions(options?: MapOptions) {
+    this.options = extend(Map.DEFAULT_OPTIONS, options || {});
+    this.options.path = new Path();
+  }
+
   public remove() {
     this.map.remove();
   }
@@ -371,8 +381,7 @@ export class Map {
   }
 
   public assign(containerId: string, options: MapOptions) {
-    this.options = extend(Map.DEFAULT_OPTIONS, options);
-    this.options.path = new Path();
+    this.resetOptions(options);
     document.getElementById(containerId).appendChild(this.el);
     if (!this.map) {
       this.show();
