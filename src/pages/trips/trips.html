@@ -105,5 +105,11 @@
 
     </ion-item-sliding>
   </ion-list>
+  <ion-infinite-scroll *ngIf="hasMoreTrips"
+      (ionInfinite)="$event.waitFor(loadNextTrips())"
+      threshold="100px">
+    <ion-infinite-scroll-content loadingText="Loading trips...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
   <div id="trip-image-map"></div>
 </ion-content>

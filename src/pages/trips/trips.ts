@@ -24,6 +24,8 @@ export class TripsPage {
   private hasImage = [];
   private hasTrips: boolean;
   private imagesLoaded = false;
+  private tripsLimit = 50;
+  private hasMoreTrips = false;
 
   constructor(
     private navCtrl: NavController,
@@ -58,9 +60,11 @@ export class TripsPage {
 
   private updateTrips() {
     this.log.write('trips page', `updating trips`);
-    let getTrips = this.tripManager.all('start_time DESC').then((trips) => {
+    return this.tripManager.filter(
+          null, 'start_time DESC', [], this.tripsLimit).then((trips) => {
         this.trips = trips;
         this.hasTrips = trips.length > 0;
+        this.hasMoreTrips = trips.length == this.tripsLimit;
       }).then(() => {
         if (this.imagesLoaded) this.createTripImages();
       });
@@ -161,5 +165,10 @@ export class TripsPage {
 
   private updateView(prefs: Preferences) {
     this.listView = prefs.tripsListView;
+  }
+
+  public loadNextTrips(): Promise<any> {
+    this.tripsLimit += 50;
+    return this.updateTrips();
   }
 }
