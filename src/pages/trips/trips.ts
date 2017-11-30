@@ -21,8 +21,9 @@ export class TripsPage {
   private trips: Trip[] = [];
   private isActiveTab = false;
   private listView: boolean;
-  private imageURLs = [];
+  private hasImage = [];
   private hasTrips: boolean;
+  private imagesLoaded = false;
 
   constructor(
     private navCtrl: NavController,
@@ -39,6 +40,7 @@ export class TripsPage {
       this.events.subscribe('state:active', this.onActiveChange.bind(this));
       this.events.subscribe('settings:preferences', this.updateView.bind(this));
       this.settings.getPreferences().then(this.updateView.bind(this));
+      this.loadTripImages();
     }
 
   ionViewWillEnter() {
@@ -59,10 +61,9 @@ export class TripsPage {
     let getTrips = this.tripManager.all('start_time DESC').then((trips) => {
         this.trips = trips;
         this.hasTrips = trips.length > 0;
-      }),
-      getImages = this.loadTripImages();
-    return Promise.all([getTrips, getImages])
-      .then(() => this.createTripImages());
+      }).then(() => {
+        if (this.imagesLoaded) this.createTripImages();
+      });
   }
 
   public goToMap() {
@@ -78,22 +79,22 @@ export class TripsPage {
         if (!entries) return;
         entries.forEach((entry) => {
           let matches = entry.name.match(/trip-(\d+)\.jpg/);
-          if (matches) this.imageURLs[parseInt(matches[1])] =
-            normalizeURL(entry.nativeURL);
+          if (matches) this.hasImage[parseInt(matches[1])] = true;
         });
+        this.imagesLoaded = true;
       });
   }
 
-  public getImageURL(trip: Trip, defaultURL: string) {
-    let url = this.imageURLs[trip.id];
-    return (url) ? url : defaultURL;
+  public getImageURL(trip: Trip, defaultURL?: string) {
+    let hasImage = this.hasImage[trip.id];
+    return (hasImage) ? normalizeURL(this.file.dataDirectory +
+      'images/trip-' + trip.id + '.jpg') : defaultURL || null;
   }
 
   private createTripImages() {
     if (this.hasTrips) {
       this.trips.forEach((trip) => {
-        if (!this.imageURLs[trip.id])
-          this.createTripImage(trip);
+        if (!this.hasImage[trip.id]) this.createTripImage(trip);
       });
     }
   }
@@ -106,20 +107,20 @@ export class TripsPage {
     this.tripManager.getLocations(trip)
       .then((locations) => this.map.createPathImage(new Path(locations)))
       .then((blob) => this.tripManager.saveImage(trip, blob))
-      .then((entry) => this.imageURLs[trip.id] = normalizeURL(entry.nativeURL));
+      .then((entry) => this.hasImage[trip.id] = true);
   }
 
   public goToTripDetail(trip: Trip) {
     this.navCtrl.push(TripDetailPage, {
       trip: trip,
-      imageURL: this.imageURLs[trip.id]
+      imageURL: this.getImageURL(trip)
     });
   }
 
   public showTripForm(trip) {
     let modal = this.modalCtrl.create(TripFormPage, {
       trip: trip,
-      imageURL: this.imageURLs[trip.id]
+      imageURL: this.getImageURL(trip)
     });
     modal.present();
   }
@@ -147,7 +148,7 @@ export class TripsPage {
     this.log.write('trips page', `deleting trip: id=${trip.id}`);
     this.tripManager.delete(trip)
       .then(() => {
-        if (this.imageURLs[trip.id]) delete this.imageURLs[trip.id];
+        if (this.hasImage[trip.id]) delete this.hasImage[trip.id];
         this.updateTrips();
         notify(this.toastCtrl, 'Trip deleted.');
       });
