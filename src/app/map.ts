@@ -147,6 +147,7 @@ export class Map {
     this.map.on('load', () => this.onLoad());
     this.map.on('click', (e) => this.onClick(e));
     this.map.on('render', (e) => this.onRender(e));
+    window.addEventListener('resize', (e) => this.onResize(e));
   }
 
   private onLoad() {
@@ -163,6 +164,13 @@ export class Map {
   private onClick(e) {
     if (this.options.interactive) this.openPopup(e);
     this.click.next(Location.fromLngLat([e.lngLat.lng, e.lngLat.lat]));
+  }
+
+  public onResize(e) {
+    window.setTimeout(() => {
+      console.log('Resizing map', e);
+      this.map.resize();
+    }, 150);
   }
 
   private openPopup(e) {

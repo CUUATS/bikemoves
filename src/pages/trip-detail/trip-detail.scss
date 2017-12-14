@@ -8,4 +8,17 @@ page-trip-detail {
     margin-top: 56px;
     padding-top: 50%;
   }
+  @media (orientation: landscape) {
+    #trip-detail-map {
+      height: 100%;
+      width: 50%;
+    }
+    .trip-stats {
+      left: 50%;
+      margin-top: 0;
+      padding-top: 0;
+      position: absolute;
+      width: 50%;
+    }
+  }
 }
