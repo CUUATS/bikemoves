@@ -17,7 +17,7 @@ export class Legacy {
     private locationManager: Locations,
     private tripManager: Trips) {}
 
-  private upgradeApp(collection: any) {
+  private upgradeApp(collection: any): Promise<void> {
     let data = null;
     collection.data.forEach((obj) => {
       if (obj._name == 'profile') data = obj;
@@ -30,13 +30,13 @@ export class Legacy {
             profile.cyclingExperience = data.cyclingExperience;
           if (data.gender) profile.gender = data.gender;
         })
-        .then(() => this.settings.saveProfile());
+        .then(() => this.settings.saveProfile()).then(() => {});
     } else {
       return Promise.resolve();
     }
   }
 
-  private upgradeTrips(collection: any) {
+  private upgradeTrips(collection: any): Promise<void> {
     if (!collection.data || collection.data.length === 0)
       return Promise.resolve();
 

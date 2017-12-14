@@ -61,7 +61,7 @@
     "@ionic/app-scripts": "^3.1.5",
     "@types/chartist": "^0.9.34",
     "array-flatten": "^2.1.1",
-    "typescript": "2.3.4"
+    "typescript": "^2.4.2"
   },
   "description": "BikeMoves Illinois: Bicycle route recording and assistance",
   "config": {
