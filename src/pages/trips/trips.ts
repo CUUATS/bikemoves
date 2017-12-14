@@ -89,10 +89,14 @@ export class TripsPage {
       });
   }
 
-  public getImageURL(trip: Trip, defaultURL?: string) {
-    let hasImage = this.hasImage[trip.id];
+  public hasTripImage(trip: Trip) {
+    return this.hasImage[trip.id] == true;
+  }
+
+  public getImageURL(trip: Trip) {
+    let hasImage = this.hasTripImage(trip);
     return (hasImage) ? normalizeURL(this.file.dataDirectory +
-      'images/trip-' + trip.id + '.jpg') : defaultURL || null;
+      'images/trip-' + trip.id + '.jpg') : null;
   }
 
   private createTripImages() {

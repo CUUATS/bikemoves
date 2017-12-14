@@ -29,17 +29,26 @@ page-trips {
       }
     }
     &.trip-submitted {
-      img {
+      ion-thumbnail {
         border: 1px solid color($colors, light);
       }
     }
     &.trip-not-submitted {
-      img {
+      ion-thumbnail {
         border: 1px solid color($colors, danger);
       }
     }
     .upload .summary-value {
       color: color($colors, danger);
+    }
+    ion-thumbnail {
+      position: relative;
+    }
+    ion-spinner {
+      left: 50%;
+      margin: -14px 0 0 -14px;
+      position: absolute;
+      top: 50%;
     }
   }
   .icon-large {

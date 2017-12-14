@@ -32,7 +32,7 @@
         <ion-card>
           <div class="trip-wrapper trip-{{(trip.submitted) ? 'submitted' : 'not-submitted'}}">
             <img id="trip-{{trip.id}}-image" class="trip-image"
-              [src]="getImageURL(trip, 'assets/img/map-loading-grid.svg')"
+              *ngIf="hasTripImage(trip)" [src]="getImageURL(trip)"
               (click)="goToTripDetail(trip)">
             <ion-item>
               <button ion-button icon-only clear color="dark"
@@ -73,9 +73,9 @@
   <ion-list *ngIf="hasTrips && listView">
     <ion-item-sliding *ngFor="let trip of trips" class="trip-{{(trip.submitted) ? 'submitted' : 'not-submitted'}}">
       <ion-item>
-        <ion-thumbnail item-left>
-          <img [src]="getImageURL(trip, 'assets/img/map-loading-list.svg')"
-            (click)="goToTripDetail(trip)">
+        <ion-thumbnail item-start (click)="goToTripDetail(trip)">
+          <img *ngIf="hasTripImage(trip)" [src]="getImageURL(trip)">
+          <ion-spinner *ngIf="!hasTripImage(trip)"></ion-spinner>
         </ion-thumbnail>
         <h2>{{trip.startTime.calendar(null, {sameElse: 'MMMM D, YYYY [at] h:mm A'})}}</h2>
         <ion-grid no-padding class="trip-summary">
