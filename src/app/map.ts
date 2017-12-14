@@ -20,6 +20,7 @@ export interface Icon {
 export interface MapOptions {
   center?: Location;
   icons?: Icon[];
+  imageCapture?: boolean;
   interactive?: boolean;
   path?: Path;
   zoom?: number;
@@ -35,6 +36,7 @@ export class Map {
   static DEFAULT_OPTIONS: MapOptions = {
     center: new Location(-88.227203, 40.109403),
     icons: [],
+    imageCapture: false,
     interactive: false,
     path: null,
     zoom: 16
@@ -314,6 +316,7 @@ export class Map {
   }
 
   public createPathImage(path: Path) {
+    if (!this.options.imageCapture) return;
     return new Promise((resolve, reject) => {
       this.pathImageQueue.push({
         path: path,
@@ -324,6 +327,7 @@ export class Map {
   }
 
   private nextPathImage() {
+    if (!this.options.imageCapture) return;
     if (this.loaded && this.pathImageQueue.length) {
       this.path = this.pathImageQueue[0].path;
       this.icons = [
@@ -342,6 +346,7 @@ export class Map {
   }
 
   private capturePathImage() {
+    if (!this.options.imageCapture) return;
     this.captureOnLoad = false;
     if (!this.pathImageQueue.length) return;
     let jpg = this.map.getCanvas().toDataURL('image/jpeg', 0.75),
@@ -372,7 +377,11 @@ export class Map {
   }
 
   public reset() {
-    this.pathImageQueue = [];
+    if (!this.options.imageCapture) {
+      this.captureOnLoad = false;
+      this.pathImageQueue.forEach((request) => request.resolve(null));
+      this.pathImageQueue = [];
+    }
     this.center = this.options.center;
     this.interactive = this.options.interactive;
     this.zoom = this.options.zoom;

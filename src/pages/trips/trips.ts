@@ -96,8 +96,9 @@ export class TripsPage {
   }
 
   private createTripImages() {
-    if (this.hasTrips) {
+    if (this.hasTrips && this.isActiveTab) {
       this.trips.forEach((trip) => {
+        if (!this.isActiveTab) return;
         if (!this.hasImage[trip.id]) this.createTripImage(trip);
       });
     }
@@ -106,12 +107,17 @@ export class TripsPage {
   private createTripImage(trip: Trip) {
     this.log.write('trips page', `creating image for trip: id=${trip.id}`);
     this.map.assign('trip-image-map', {
-      interactive: false
+      interactive: false,
+      imageCapture: true
     });
     this.tripManager.getLocations(trip)
       .then((locations) => this.map.createPathImage(new Path(locations)))
-      .then((blob) => this.tripManager.saveImage(trip, blob))
-      .then((entry) => this.hasImage[trip.id] = true);
+      .then((blob) => {
+        if (blob) return this.tripManager.saveImage(trip, blob)
+          .then((entry) => true);
+        return false;
+      })
+      .then((created) => this.hasImage[trip.id] = created);
   }
 
   public goToTripDetail(trip: Trip) {
