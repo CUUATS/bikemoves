@@ -80,7 +80,7 @@ export class TripsPage {
       .catch((err) => {
         if (err.code !== 1) throw err;
       }).then((entries) => {
-        if (!entries) return;
+        entries = entries || [];
         entries.forEach((entry) => {
           let matches = entry.name.match(/trip-(\d+)\.jpg/);
           if (matches) this.hasImage[parseInt(matches[1])] = true;
